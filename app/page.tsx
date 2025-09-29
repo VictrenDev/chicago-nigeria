@@ -335,7 +335,7 @@ export default function Home() {
                     <h2 className=" text-6xl font-bold">
                         Ready to join your <br /> <span className="text-[#00FF95]">Chicago Nigerian Family</span>?
                     </h2>
-                    <p>Don't wait! Start connecting, networking, and growing with the most vibrant Nigerian community in Chicago. </p>
+                    <p>Don&apos;t wait! Start connecting, networking, and growing with the most vibrant Nigerian community in Chicago. </p>
                     <div className="flex gap-2 justify-center mt-8">
                         <Link className="bg-linear-to-r from-[#037244] to-[#04C977] text-white inline-block px-4 py-1 rounded-lg" href={"/community"}>
                             Join our community
