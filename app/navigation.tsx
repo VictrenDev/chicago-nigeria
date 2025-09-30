@@ -40,9 +40,14 @@ export default function Navbar() {
                             Home
                         </Link>
                     </li>
+                    <li>
+                        <Link className="px-4 py-8 inline-block" href={"/"}>
+                            About
+                        </Link>
+                    </li>
                     <li className="group/about relative">
                         <button className="px-4 py-8 inline-flex items-center gap-1" onClick={() => toggleDropdown("about")}>
-                            About Us <ChevronDown size={16} />
+                            Marketplace <ChevronDown size={16} />
                         </button>
                         <ul className="absolute hidden flex-col flex-wrap left-0 gap-4 group-hover/about:flex bg-white shadow-md rounded-md p-6 max-h-100 w-140 hover-effect-for-dropdown-links">
                             <li>
@@ -149,11 +154,16 @@ export default function Navbar() {
                             Home
                         </Link>
                     </li>
+                    <li>
+                        <Link className="px-6 py-3 block" href="/" onClick={() => setMobileOpen(false)}>
+                            About
+                        </Link>
+                    </li>
 
                     {/* Dropdown inside drawer */}
                     <li>
                         <button className="w-full flex justify-between items-center px-6 py-3" onClick={() => toggleDropdown("about")}>
-                            About Us <ChevronDown size={16} />
+                            Marketplace <ChevronDown size={16} />
                         </button>
                         {dropdownOpen === "about" && (
                             <ul className="pl-10 bg-gray-50">
