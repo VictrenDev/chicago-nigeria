@@ -3,10 +3,11 @@
 :root {
     --orange-color: #FE6F17;
     --primary-color: #037244;
-    --blue: #0045F8;
+    --primary-color-light:#03724421;
+    --blue-color: #0045F8;
 }
 .container-custom {
-    width: 100%;
+    width: 90%;
     margin-inline: auto;
 }
 
@@ -34,12 +35,9 @@
     }
 }
 
-/* @media (min-width: 1536px) {
-    .container-custom {
-        max-width: 1536px;
-    }
-} */
-
+.hover-effect-for-dropdown-links a, .hover-effect-for-dropdown-links li>button{
+    @apply flex px-4 py-2 hover:bg-[var(--primary-color-light)] rounded-md;
+}
 /* etc */
 
 body {
