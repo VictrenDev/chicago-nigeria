@@ -8,11 +8,14 @@ export default function Home() {
         <>
             <main className=" ">
                 <Navbar />
-                <header className="bg-linear-60 from-[#DCFFF0] to-[#FFF3F3] pt-12">
-                    <section className="container-custom mx-auto grid grid-cols-1 md:grid-cols-2 items-center gap-8">
-                        <div>
+                <header className="bg-linear-60 from-[#DCFFF0] to-[#FFF3F3]">
+                    <section className="text-white md:text-black relative  md:bg-none bg-[url(/hero-image.png)] bg-center bg-cover bg-no-repeat py-12">
+                      <div className="absolute inset-0 bg-black/85 md:hidden"></div>
+                    <div className="container-custom grid grid-cols-1 md:grid-cols-2 items-center gap-8 ">
+
+                        <div className="relative mx-auto">
                             <p className="font-bold text-4xl md:text-5xl md:leading-13">
-                                <span className="text-[var(--primary-color)] ">Connecting Nigerians in Chicago </span> - Socially & Professionally.
+                                <span className="text-[#00FF95] md:text-[var(--primary-color)] ">Connecting Nigerians in Chicago </span> - Socially & Professionally.
                             </p>
                             <p className="mt-8 text-sm md:text-[20px] font-normal leading-6">
                                 Join the fastest-growing Nigerian professional network in Chicago. Connect, collaborate, and celebrate your heritage
@@ -25,7 +28,7 @@ export default function Home() {
                                     Join our community
                                 </Link>
                                 <Link
-                                    className=" inline-block text-xs md:text-base px-4 py-2 md:py-1 rounded-lg border-1 border-gray-800"
+                                    className=" inline-block text-xs md:text-base px-4 py-2 md:py-1 rounded-lg border-1 border-white bg-white md:bg-transparent  text-black md:border-gray-800"
                                     href={"/community"}>
                                     Explore Marketplace
                                 </Link>
@@ -45,7 +48,7 @@ export default function Home() {
                                 </p>
                             </div>
                         </div>
-                        <div className="justify-self-end hidden md:block relative shadow-[0_4px_59.1px_0_rgba(0, 0, 0, 0.25)]">
+                        <div className="mx-auto justify-self-end hidden md:block relative shadow-[0_4px_59.1px_0_rgba(0, 0, 0, 0.25)]">
                             <Image src={"/hero-image.png"} alt="hero image" width={521} height={592} />
                             <div className="absolute top-10 -left-20 bg-white py-4 px-6 rounded-xl flex items-center justify-center gap-2 text-sm shadow-[0_4px_59.1px_0_rgba(0, 0, 0, 0.25)]">
                                 <Image src={"/octicon_people-24.png"} alt="hero image" width={16} height={16} />
@@ -65,9 +68,10 @@ export default function Home() {
                             </div>
                           
                         </div>
+                    </div>
                     </section>
 
-                    <section className="flex flex-wrap gap-4 justify-around items-center w-[90%] mx-auto pt-18 py-12">
+                    <section className="flex flex-wrap gap-4 justify-around items-center w-[90%] mx-auto py-12">
                         <div className="flex flex-col gap-2 min-h-50 md:min-h-50 min-w-full md:min-w-70 bg-white justify-center items-center p-4 rounded-md">
                             <p>
                                 <Image src={"/icons/people.png"} alt="icon" height={32} width={32} />
