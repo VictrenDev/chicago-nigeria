@@ -10,7 +10,7 @@ export default function Home() {
                 <Navbar />
                 <header className="bg-linear-60 from-[#DCFFF0] to-[#FFF3F3]">
                     <section className="text-white md:text-black relative  md:bg-none bg-[url(/hero-image.png)] bg-center bg-cover bg-no-repeat py-12">
-                      <div className="absolute inset-0 bg-black/85 md:hidden"></div>
+                      <div className="absolute inset-0 bg-black/78 md:hidden"></div>
                     <div className="container-custom grid grid-cols-1 md:grid-cols-2 items-center gap-8 ">
 
                         <div className="relative mx-auto">
@@ -18,7 +18,7 @@ export default function Home() {
                                 <span className="text-[#00FF95] md:text-[var(--primary-color)] ">Connecting Nigerians in Chicago </span> - Socially & Professionally.
                             </p>
                             <p className="mt-8 text-sm md:text-[20px] font-normal leading-6">
-                                Join the fastest-growing Nigerian professional network in Chicago. Connect, collaborate, and celebrate your heritage
+                                Join the fastest-growing Nigerian community in Chicago. Connect, collaborate, and celebrate your heritage
                                 while building your future.
                             </p>
                             <div className="flex gap-2 mt-12">

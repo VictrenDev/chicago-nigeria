@@ -2,6 +2,7 @@
 
 :root {
     --orange-color: #FE6F17;
+    --purple-color: #ac0ea1;
     --primary-color: #037244;
     --primary-color-light:#03724421;
     --blue-color: #0045F8;
@@ -38,10 +39,45 @@
 .hover-effect-for-dropdown-links a, .hover-effect-for-dropdown-links li>button{
     @apply flex px-4 py-2 hover:bg-[var(--primary-color-light)] rounded-md;
 }
-/* etc */
+.community-stats-items:not(.quick-actions) > div{
+    @apply flex justify-between items-center;
+    p{
 
+        &:first-child{
+            @apply text-sm;
+        }
+        &:last-child{
+            @apply text-[var(--primary-color)]
+        }
+    }
+}
+.community-stats-items.quick-actions > div{
+    @apply flex justify-start gap-2 items-center text-gray-700;
+    p{
+
+        @apply text-sm ;
+       
+       
+    }
+}
+
+.user-page-top{
+>button{
+    @apply cursor-pointer text-sm;
+}
+    > button:not(:last-child) {
+       @apply py-2 px-4 border border-gray-400 rounded-md mb-0;
+   }
+}
+/* etc */
+.sidebar-buttons > button {
+    @apply hover:bg-[var(--primary-color)] hover:text-white transition-colors duration-100 text-[15px] rounded-md text-left px-4 py-2 cursor-pointer flex gap-2 items-center w-full;
+}
+
+.feed-post-actions > *{
+    @apply inline-flex font-light items-center gap-1 mb-0;
+}
 body {
-    background: var(--background);
-    color: var(--foreground);
+   @apply bg-gray-50;
     font-family: var(--font-inter);
 }

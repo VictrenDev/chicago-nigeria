@@ -1,0 +1,114 @@
+"use client";
+
+import { useState } from "react";
+import Feed from "./feed";
+import Badge from "./badge";
+import Marketplace from "./marketplace";
+import Events from "./events";
+import { Bell, Calendar, Home, MessageCircle, Settings, ShoppingBag, Users } from "lucide-react";
+
+export default function SideNavigation() {
+    const [page, setPage] = useState("feed");
+
+    const switchPage = () => {
+        switch (page) {
+            case "feed":
+                return <Feed />;
+            case "marketplace":
+                return <Marketplace />;
+            case "events":
+                return <Events />;
+            default:
+                return <div>no page</div>;
+        }
+    };
+    return (
+        <main className="container-custom grid grid-cols-1 lg:grid-cols-[1fr_4fr] gap-12 py-12 bg-gray-50">
+            <section className="sticky top-0 h-screen pt-4 md:block hidden">
+                <div className="space-y-8 w-full">
+                    <aside className=" flex-col gap-2 bg-white p-4 rounded-lg sidebar-buttons">
+                        <button
+                            onClick={() => {
+                                setPage("feed");
+                            }}>
+                            <Home className="w-4 h-4" />
+                            <span>Feeds</span>
+                        </button>
+                        <button
+                            onClick={() => {
+                                setPage("events");
+                            }}>
+                            <Calendar className="w-4 h-4" />
+
+                            <span>Events</span>
+                        </button>
+                        <button
+                            onClick={() => {
+                                setPage("marketplace");
+                            }}>
+                            <ShoppingBag className="w-4 h-4" />
+
+                            <span>Marketplace</span>
+                        </button>
+                        <button
+                            onClick={() => {
+                                setPage("something else");
+                            }}>
+                              <MessageCircle className="w-4 h-4" />
+
+                            <span>Messages</span>
+                            <Badge value={2} />
+                        </button>
+                        <button
+                            onClick={() => {
+                                setPage("something else");
+                            }}>
+                            <Users className="w-4 h-4" />
+
+                            <span>Groups</span>
+                        </button>
+                        <button
+                            onClick={() => {
+                                setPage("something else");
+                            }}>
+                            <Bell className="w-4 h-4" />
+
+                            <span>Notifications</span>
+                            <Badge value={12} />
+                        </button>
+                        <button
+                            onClick={() => {
+                                setPage("something else");
+                            }}>
+                            <Settings className="w-4 h-4" />
+
+                            <span>Settings</span>
+                        </button>
+                    </aside>
+                    <div className=" bg-white p-4 rounded-lg space-y-4">
+                        <h2>Trending Now</h2>
+                        <div className="space-y-3">
+                            <div>
+                                <h3 className="text-sm">Nigeria at 65 Celebration</h3>
+                                <p className="text-xs text-gray-400 font-light">234 discussing</p>
+                            </div>
+                            <div>
+                                <h3 className="text-sm">Chicago Tech Jobs</h3>
+                                <p className="text-xs text-gray-400 font-light">234 discussing</p>
+                            </div>
+                            <div>
+                                <h3 className="text-sm">Nigerian Business Network</h3>
+                                <p className="text-xs text-gray-400 font-light">234 discussing</p>
+                            </div>
+                            <div>
+                                <h3 className="text-sm">Cultural Heritage Month</h3>
+                                <p className="text-xs text-gray-400 font-light">234 discussing</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section className="bg-gray-50">{switchPage()}</section>
+        </main>
+    );
+}
