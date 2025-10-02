@@ -45,7 +45,7 @@ export default function Navbar() {
                             About
                         </Link>
                     </li>
-                    <li className="group/about relative">
+                    {/* <li className="group/about relative">
                         <button className="px-4 py-8 inline-flex items-center gap-1" onClick={() => toggleDropdown("about")}>
                             Marketplace <ChevronDown size={16} />
                         </button>
@@ -97,7 +97,7 @@ export default function Navbar() {
                                 <Link href="/mission">others</Link>
                             </li>
                         </ul>
-                    </li>
+                    </li> */}
                     <li>
                         <Link className="px-4 py-8 inline-block" href={"/"}>
                             Marketplace
@@ -161,7 +161,7 @@ export default function Navbar() {
                     </li>
 
                     {/* Dropdown inside drawer */}
-                    <li>
+                    {/* <li>
                         <button className="w-full flex justify-between items-center px-6 py-3" onClick={() => toggleDropdown("about")}>
                             Marketplace <ChevronDown size={16} />
                         </button>
@@ -199,7 +199,7 @@ export default function Navbar() {
                                 </li>
                             </ul>
                         )}
-                    </li>
+                    </li> */}
 
                     <li>
                         <Link className="px-6 py-3 block" href="/" onClick={() => setMobileOpen(false)}>

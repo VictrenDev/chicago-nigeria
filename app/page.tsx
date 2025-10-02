@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "./navigation";
-import ReviewsSection from "./reviews";
+import { TickIcon } from "./icons";
+import { Search } from "lucide-react";
 
 export default function Home() {
     return (
@@ -10,65 +11,82 @@ export default function Home() {
                 <Navbar />
                 <header className="bg-linear-60 from-[#DCFFF0] to-[#FFF3F3]">
                     <section className="text-white md:text-black relative  md:bg-none bg-[url(/hero-image.png)] bg-center bg-cover bg-no-repeat py-12">
-                      <div className="absolute inset-0 bg-black/78 md:hidden"></div>
-                    <div className="container-custom grid grid-cols-1 md:grid-cols-2 items-center gap-8 ">
-
-                        <div className="relative mx-auto">
-                            <p className="font-bold text-4xl md:text-5xl md:leading-13">
-                                <span className="text-[#00FF95] md:text-[var(--primary-color)] ">Connecting Nigerians in Chicago </span> - Socially & Professionally.
-                            </p>
-                            <p className="mt-8 text-sm md:text-[20px] font-normal leading-6">
-                                Join the fastest-growing Nigerian community in Chicago. Connect, collaborate, and celebrate your heritage
-                                while building your future.
-                            </p>
-                            <div className="flex gap-2 mt-12">
-                                <Link
-                                    className="bg-linear-to-r from-[#037244] to-[#04C977] text-white text-xs md:text-base inline-block px-4 py-2 md:py-1 rounded-lg"
-                                    href={"/community"}>
-                                    Join our community
-                                </Link>
-                                <Link
-                                    className=" inline-block text-xs md:text-base px-4 py-2 md:py-1 rounded-lg border-1 border-white bg-white md:bg-transparent  text-black md:border-gray-800"
-                                    href={"/community"}>
-                                    Explore Marketplace
-                                </Link>
+                        <div className="absolute inset-0 bg-black/78 md:hidden"></div>
+                        <div className="container-custom grid grid-cols-1 md:grid-cols-2 items-center gap-8 ">
+                            <div className="relative mx-auto">
+                                <p className="font-bold text-4xl md:text-5xl md:leading-13">
+                                    <span className="text-[#00FF95] md:text-[var(--primary-color)] ">Connecting Nigerians in Chicago </span> -
+                                    Socially & Professionally.
+                                </p>
+                                <p className="mt-8 text-sm md:text-[20px] font-normal leading-6">
+                                    Join the fastest-growing Nigerian community in Chicago. Connect, collaborate, and celebrate your heritage while
+                                    building your future.
+                                </p>
+                                <div className="flex gap-2 mt-12">
+                                    <Link
+                                        className="bg-linear-to-r from-[#037244] to-[#04C977] text-white text-xs md:text-base inline-block px-4 py-2 md:py-1 rounded-lg"
+                                        href={"/community"}>
+                                        Join our community
+                                    </Link>
+                                    <Link
+                                        className=" inline-block text-xs md:text-base px-4 py-2 md:py-1 rounded-lg border-1 border-white bg-white md:bg-transparent  text-black md:border-gray-800"
+                                        href={"/community"}>
+                                        Explore Marketplace
+                                    </Link>
+                                </div>
+                                <div className="mt-14 flex gap-2 md:gap-4">
+                                    <p className="flex gap-1 items-center text-xs md:text-base">
+                                        <Image
+                                            className="w-4 h-4 md:w-6 md:h-6  object-cover"
+                                            src={"/icons/star-icon.png"}
+                                            height={16}
+                                            width={24}
+                                            alt="icon"
+                                        />
+                                        4.5/5.0 rating
+                                    </p>
+                                    <p className="flex gap-1 items-center text-xs md:text-base">
+                                        <Image
+                                            className="w-4 h-4 md:w-6 md:h-6  object-cover"
+                                            src={"/icons/trend-icon.png"}
+                                            height={16}
+                                            width={16}
+                                            alt="icon"
+                                        />
+                                        Growing fast
+                                    </p>
+                                    <p className="flex gap-1 items-center text-xs md:text-base">
+                                        <Image
+                                            className="w-4 h-4 md:w-6 md:h-6  object-cover"
+                                            src={"/icons/heart-icon.png"}
+                                            height={16}
+                                            width={24}
+                                            alt="icon"
+                                        />
+                                        Community loved
+                                    </p>
+                                </div>
                             </div>
-                            <div className="mt-14 flex gap-2 md:gap-4">
-                                <p className="flex gap-1 items-center text-xs md:text-base">
-                                    <Image className="w-4 h-4 md:w-6 md:h-6  object-cover" src={"/icons/star-icon.png"} height={16} width={24} alt="icon" />
-                                    4.5/5.0 rating
-                                </p>
-                                <p className="flex gap-1 items-center text-xs md:text-base">
-                                    <Image className="w-4 h-4 md:w-6 md:h-6  object-cover" src={"/icons/trend-icon.png"} height={16} width={16} alt="icon" />
-                                    Growing fast
-                                </p>
-                                <p className="flex gap-1 items-center text-xs md:text-base">
-                                    <Image className="w-4 h-4 md:w-6 md:h-6  object-cover" src={"/icons/heart-icon.png"} height={16} width={24} alt="icon" />
-                                    Community loved
-                                </p>
+                            <div className="mx-auto justify-self-end hidden md:block relative shadow-[0_4px_59.1px_0_rgba(0, 0, 0, 0.25)]">
+                                <Image src={"/hero-image.png"} alt="hero image" width={521} height={592} />
+                                <div className="absolute top-10 -left-20 bg-white py-4 px-6 rounded-xl flex items-center justify-center gap-2 text-sm shadow-[0_4px_59.1px_0_rgba(0, 0, 0, 0.25)]">
+                                    <Image src={"/octicon_people-24.png"} alt="hero image" width={16} height={16} />
+                                    <p>Network</p>
+                                </div>
+                                <div className="absolute top-20 -right-18 bg-white py-4 px-6  rounded-xl flex items-center justify-center gap-2 text-sm shadow-[0_4px_59.1px_0_rgba(0, 0, 0, 0.25)]">
+                                    <Image src={"/circum_globe.png"} alt="hero image" width={16} height={16} />
+                                    <p>Culture</p>
+                                </div>
+                                <div className="absolute bottom-10 -right-12 bg-white py-4 px-6  rounded-xl flex items-center justify-center gap-2 text-sm shadow-[0_4px_59.1px_0_rgba(0, 0, 0, 0.25)]">
+                                    <Image src={"/material-symbols-light_event-outline-sharp.png"} alt="hero image" width={16} height={16} />
+                                    <p>Events</p>
+                                </div>
+                                <div className="absolute -bottom-6 -left-10 bg-white py-4 px-6  rounded-xl flex items-center justify-center gap-2 text-sm shadow-[0_4px_59.1px_0_rgba(0, 0, 0, 0.25)]">
+                                    <Image src={"/lsicon_marketplace-outline.png"} alt="hero image" width={16} height={16} />
+                                    <p>Business</p>
+                                </div>
                             </div>
                         </div>
-                        <div className="mx-auto justify-self-end hidden md:block relative shadow-[0_4px_59.1px_0_rgba(0, 0, 0, 0.25)]">
-                            <Image src={"/hero-image.png"} alt="hero image" width={521} height={592} />
-                            <div className="absolute top-10 -left-20 bg-white py-4 px-6 rounded-xl flex items-center justify-center gap-2 text-sm shadow-[0_4px_59.1px_0_rgba(0, 0, 0, 0.25)]">
-                                <Image src={"/octicon_people-24.png"} alt="hero image" width={16} height={16} />
-                                <p>Network</p>
-                            </div>
-                            <div className="absolute top-20 -right-18 bg-white py-4 px-6  rounded-xl flex items-center justify-center gap-2 text-sm shadow-[0_4px_59.1px_0_rgba(0, 0, 0, 0.25)]">
-                                <Image src={"/circum_globe.png"} alt="hero image" width={16} height={16} />
-                                <p>Culture</p>
-                            </div>
-                            <div className="absolute bottom-10 -right-12 bg-white py-4 px-6  rounded-xl flex items-center justify-center gap-2 text-sm shadow-[0_4px_59.1px_0_rgba(0, 0, 0, 0.25)]">
-                                <Image src={"/material-symbols-light_event-outline-sharp.png"} alt="hero image" width={16} height={16} />
-                                <p>Events</p>
-                            </div>
-                            <div className="absolute -bottom-6 -left-10 bg-white py-4 px-6  rounded-xl flex items-center justify-center gap-2 text-sm shadow-[0_4px_59.1px_0_rgba(0, 0, 0, 0.25)]">
-                                <Image src={"/lsicon_marketplace-outline.png"} alt="hero image" width={16} height={16} />
-                                <p>Business</p>
-                            </div>
-                          
-                        </div>
-                    </div>
                     </section>
 
                     <section className="flex flex-wrap gap-4 justify-around items-center w-[90%] mx-auto py-12">
@@ -165,7 +183,7 @@ export default function Home() {
                                 "Join private groups and discussions",
                             ].map((item, index) => (
                                 <li key={index} className="flex gap-1 items-center text-sm md:text-base">
-                                    <Image src={"/tick-icon.png"} alt="tick-icon" height={30} width={30} />
+                                    <TickIcon size={24} />
                                     {item}
                                 </li>
                             ))}
@@ -190,6 +208,29 @@ export default function Home() {
                     </div>
                     <div className="justify-self-end hidden md:block">
                         <Image src={"/why-join-chicago-nigerians-img.png"} width={589} height={717} alt="why join chicago nigerians image" />
+                    </div>
+                </section>
+                {/* Chicago Nigerian Business Directory  */}
+                <section className="py-40 md:py-60 text-center relative overflow-clip">
+                 
+                    <div className="hidden md:block absolute bg-[#0A8E5740] h-60 w-60 md:h-100 md:w-100 rounded-full -top-10 -left-10 md:top-20 md:-left-60"></div>
+                    <div className="absolute hidden md:block bg-[#0A8E5740] h-40 w-40 md:h-75 md:w-75 rounded-full bottom-0 -right-15 md:-top-10 md:-right-45"></div>
+                    <div className="relative container-custom max-w-200 space-y-4 text-center">
+                        <h2 className=" text-3xl md:text-6xl font-bold">
+                            Chicago Nigerian <span className="text-[var(--primary-color)]">Business Directory?</span>
+                        </h2>
+                        <p className="text-sm md:text-base max-w-200 mx-auto">
+                            Your go-to guide for local Nigerian-owned businesses and services in Chicago. Find trusted professionals and businesses
+                            within the community.
+                        </p>
+                       
+                       <form action="" className="mt-12">
+                        <fieldset className="md:max-w-200 md:mx-auto px-2 flex items-center gap-2 bg-white border border-gray-300 focus-within:ring focus-within:ring-blue-300 rounded-lg">
+
+                        <input type="text" className="w-full p-4 focus-visible:outline-none" placeholder="Search for apartments, real estate, daycare, restaurants..."/>
+                        <button className="flex items-center gap-1 py-2 px-4 text-white bg-[var(--primary-color)] rounded-xl text-sm md:text-base"><Search className="w-4 h-4 md:w-6 md:h-6"/> <p>Submit</p></button>
+                        </fieldset>
+                       </form>
                     </div>
                 </section>
                 {/* business and culture  */}
@@ -248,9 +289,48 @@ export default function Home() {
                         </div>
                     </div>
                 </section>
-                {/* what our community says  */}
-                <ReviewsSection />
+                {/* expand research, boost sales  */}
+                <section className="bg-[url(/layer3.png)] bg-cover bg-center">
+                    <div className="container-custom grid grid-cols-1 md:grid-cols-2 gap-20 py-20">
+                        <div className="hidden md:block">
+                            <Image
+                                src={"/african-american-woman-checking-social-media-phone.png"}
+                                alt="landing event image"
+                                height={521}
+                                width={490}
+                            />
+                        </div>
+                        <div className="justify-self-end">
+                            <h2 className="font-semibold text-4xl md:text-5xl">
+                                Expand your reach.
+                                <br />
+                                <span className="text-[var(--primary-color)] ">Boost your Sales</span>
+                            </h2>
+                            <p className=" lg:max-w-140 text-sm md:text-lg  mt-2">
+                                For just <span className="text-[var(--primary-color)] ">$65/month</span> , we&apos;ll manage your presence across
+                                Instagram, TikTok, Facebook, and LinkedIn.
+                            </p>
 
+                            <ul className="list-none mt-12 flex items-start flex-col gap-4">
+                                {["Build your online brand", "Generate quality leads", "Turn clicks into customers"].map((item, index) => (
+                                    <li key={index} className="flex gap-2 items-start px-4 py-4 border-1 min-w-100 bg-white rounded-lg">
+                                        <TickIcon size={24} />
+                                        <div>
+                                            <h3 className="font-bold">{item}</h3>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+
+                            <Link
+                                className="bg-linear-to-r from-[#037244] to-[#04C977] text-white inline-block px-4 py-1 rounded-lg mt-12"
+                                href={"/community"}>
+                                Get started for $65/month
+                            </Link>
+                        </div>
+                    </div>
+                </section>
+                {/* ready to join chicago family */}
                 <section className=" py-40 text-center relative bg-[url('/banner.png')] bg-cover bg-center text-white overflow-clip">
                     <div className="absolute inset-0 bg-[#02331FF2]"></div>
                     <div className="absolute bg-[#0A8E5740] h-60 w-60 md:h-150 md:w-150 rounded-full -top-20 -left-20 md:-top-20 md:-left-100"></div>
