@@ -99,7 +99,7 @@ export default function Navbar() {
                         </ul>
                     </li> */}
                     <li>
-                        <Link className="px-4 py-8 inline-block" href={"/"}>
+                        <Link className="px-4 py-8 inline-block" href={"/marketplace"}>
                             Marketplace
                         </Link>
                     </li>
@@ -202,7 +202,7 @@ export default function Navbar() {
                     </li> */}
 
                     <li>
-                        <Link className="px-6 py-3 block" href="/" onClick={() => setMobileOpen(false)}>
+                        <Link className="px-6 py-3 block" href="/marketplace" onClick={() => setMobileOpen(false)}>
                             Marketplace
                         </Link>
                     </li>

@@ -1,4 +1,19 @@
-import { BookmarkIcon, Clock, EllipsisVertical, Heart, MessageCircle, Share2Icon } from "lucide-react";
+import {
+    BookmarkIcon,
+    BriefcaseConveyorBelt,
+    Calendar,
+    Camera,
+    ChartNoAxesColumnIncreasing,
+    Clock,
+    EllipsisVertical,
+    Heart,
+    MapPin,
+    MessageCircle,
+    SendIcon,
+    Share2Icon,
+    UsersRound,
+    Video,
+} from "lucide-react";
 import Image from "next/image";
 
 export default function Feed() {
@@ -28,10 +43,17 @@ export default function Feed() {
                     </div>
 
                     <div className=" mt-12 border-t border-t-gray-200 flex gap-2 items-center bg-white py-4 space-y-4 user-page-top">
-                        <button>Photo</button>
-                        <button>Video</button>
-                        <button>Event</button>
-                        <button className="ml-auto px-4 py-2">post</button>
+                        <button>
+                            <Camera className="w-5 h-5"/>
+                            <span>Photo</span>
+                        </button>
+                        <button>
+                            <Video className="w-5 h-5"/> <span>Video</span>
+                        </button>
+                        <button>
+                            <Calendar className="w-5 h-5"/> <span>Event</span>
+                        </button>
+                        <button className="ml-auto px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg"><SendIcon className="w-5 h-5"/> <span>Post</span></button>
                     </div>
                 </div>
                 <div className="space-y-4">
@@ -146,7 +168,7 @@ export default function Feed() {
             </section>
             <section className="space-y-8 sticky top-0 h-screen pt-4 hidden md:block">
                 <div className=" bg-white p-4 rounded-lg space-y-4">
-                    <h2>Community stats</h2>
+                    <h2 className="flex items-center gap-1"><span>Community stats</span> <ChartNoAxesColumnIncreasing className="w-6 h-6 text-[var(--primary-color)]"/></h2>
                     <div className="space-y-3 community-stats-items">
                         <div>
                             <p>Active Members</p>
@@ -163,23 +185,42 @@ export default function Feed() {
                     </div>
                 </div>
                 <div className=" bg-white p-4 rounded-lg space-y-4">
-                    <h2>Trending Now</h2>
-                    <div className="space-y-3">
+                    <h2>Popular Categories</h2>
+                    <div className="space-y-3 community-stats-items">
                         <div>
-                            <h3 className="text-sm">Nigeria at 65 Celebration</h3>
-                            <p className="text-xs text-gray-400">234 discussing</p>
+                            <p>Fashion</p>
+                            <p>28</p>
                         </div>
                         <div>
-                            <h3 className="text-sm">Chicago Tech Jobs</h3>
-                            <p className="text-xs text-gray-400">234 discussing</p>
+                            <p>Services</p>
+                            <p>34</p>
                         </div>
                         <div>
-                            <h3 className="text-sm">Nigerian Business Network</h3>
-                            <p className="text-xs text-gray-400">234 discussing</p>
+                            <p>Food </p>
+                            <p>23</p>
                         </div>
                         <div>
-                            <h3 className="text-sm">Cultural Heritage Month</h3>
-                            <p className="text-xs text-gray-400">234 discussing</p>
+                            <p>Housing </p>
+                            <p>8</p>
+                        </div>
+                    </div>
+                    <hr className="border border-gray-200 my-4" />
+
+                    <div className="space-y-3 ">
+                        <h2>Quick Links</h2>
+                        <div className="ml-4 space-y-3 community-stats-items quick-actions">
+                            <div>
+                                <MapPin className="w-4 h-4" />
+                                <p>Find Local Events</p>
+                            </div>
+                            <div>
+                                <UsersRound className="w-4 h-4" />
+                                <p>Join Groups</p>
+                            </div>
+                            <div>
+                                <BriefcaseConveyorBelt className="w-4 h-4" />
+                                <p>Browse Jobs</p>
+                            </div>
                         </div>
                     </div>
                 </div>
