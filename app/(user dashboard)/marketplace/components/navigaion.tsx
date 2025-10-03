@@ -8,7 +8,7 @@ import Marketplace from "./marketplace";
 import { Bell, Calendar, Home, MessageCircle, Settings, ShoppingBag, Users } from "lucide-react";
 
 export default function SideNavigation() {
-    const [page, setPage] = useState("feed");
+    const [page, setPage] = useState("marketplace");
     
     let activePage
     const switchPage = () => {

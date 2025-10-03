@@ -20,7 +20,7 @@ export default function Marketplace() {
     return (
         <main className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-12">
             <section className="space-y-4 pt-4">
-                <div className=" flex gap-2 items-center justify-between bg-white px-8 py-4 md:rounded-lg space-y-4 user-page-top">
+                <div className=" flex gap-2 flex-wrap items-center justify-between bg-white px-8 py-4 md:rounded-lg space-y-4 user-page-top">
                     <div>
                         <h2 className="text-lg font-bold">Marketplace</h2>
                         <p className="text-sm">Discover amazing products and services from the Nigerian community</p>
@@ -32,7 +32,7 @@ export default function Marketplace() {
                         <span className="whitespace-nowrap">Create Listing</span>
                     </Link>
                 </div>
-                <div className="py-2  md:rounded-xl">
+                <div className="py-2  md:rounded-xl max-w-screen overflow-clip scroll-auto">
                     <div className="flex justify-between">
                         <div className="p-6 rounded-lg bg-white flex items-center gap-8">
                             <div>
@@ -77,7 +77,7 @@ export default function Marketplace() {
                     <button>
                         <ChevronLeft />
                     </button>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 overflow-clip max-w-45 md:max-w-full scroll-auto">
                         <div className="py-2 px-4 rounded-lg  bg-[var(--primary-color)] text-white flex items-center gap-1.5">
                             <p className="whitespace-nowrap">All Categories</p>
                             <p className="bg-[#0dd884] p-1 rounded-md text-sm">156</p>
