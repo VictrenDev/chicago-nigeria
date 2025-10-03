@@ -1,18 +1,13 @@
 import {
-    BookmarkIcon,
     BriefcaseConveyorBelt,
     ChartNoAxesColumnIncreasing,
     ChevronLeft,
     ChevronRight,
-    Clock,
-    EllipsisVertical,
     Eye,
     Heart,
     MapPin,
-    MessageCircle,
     Package,
     Plus,
-    Share2Icon,
     Star,
     TrendingUp,
     Users,
@@ -119,7 +114,6 @@ export default function Marketplace() {
                     </div>
                 </div> */}
                 <div className="space-y-4 grid grid-col-1 md:grid-cols-2 gap-8">
-
                    
                     <div className="space-y-4 rounded-2xl overflow-clip border bg-white border-gray-200">
                         <div className="min-h-58 bg-gray-200 relative">
@@ -132,7 +126,9 @@ export default function Marketplace() {
                             <p className="justify-self-end text-[var(--primary-color)]">$85</p>
                             <p className="col-span-2 max-w-55 text-sm font-medium">Authentic Nigerian Ankara Dresses - Made to Order</p>
                             <div className="flex">
-                                <div className="w-10 h-10 rounded-full bg-gray-100 mr-2 shrink-0"></div>
+                                <div className="w-10 h-10 rounded-full bg-gray-100 mr-2 shrink-0">
+                                    <Image className="object-cover" src="/reviewer-image-1.png" height={56} width={56} alt="user" />
+                                </div>
                                 <p className="text-sm w-full ">Adebayo Ogundimu</p>
                             </div>
                             <div className="justify-self-end items-center">
@@ -160,8 +156,7 @@ export default function Marketplace() {
                                 </div>
                             </div>
                         </div>
-                    </div>
-                   
+                    </div>   
                     <div className="space-y-4 rounded-2xl overflow-clip border bg-white border-gray-200">
                         <div className="min-h-58 bg-gray-200 relative">
                             <button className="absolute right-4 top-4 w-10 h-10 flex items-center justify-center rounded-full bg-white">
@@ -173,7 +168,9 @@ export default function Marketplace() {
                             <p className="justify-self-end text-[var(--primary-color)]">$85</p>
                             <p className="col-span-2 max-w-55 text-sm font-medium">Authentic Nigerian Ankara Dresses - Made to Order</p>
                             <div className="flex">
-                                <div className="w-10 h-10 rounded-full bg-gray-100 mr-2 shrink-0"></div>
+                                <div className="w-10 h-10 rounded-full bg-gray-100 mr-2 shrink-0">
+                                    <Image className="object-cover" src="/reviewer-image-1.png" height={56} width={56} alt="user" />
+                                </div>
                                 <p className="text-sm w-full ">Adebayo Ogundimu</p>
                             </div>
                             <div className="justify-self-end items-center">
@@ -201,8 +198,7 @@ export default function Marketplace() {
                                 </div>
                             </div>
                         </div>
-                    </div>
-                   
+                    </div>   
                     <div className="space-y-4 rounded-2xl overflow-clip border bg-white border-gray-200">
                         <div className="min-h-58 bg-gray-200 relative">
                             <button className="absolute right-4 top-4 w-10 h-10 flex items-center justify-center rounded-full bg-white">
@@ -214,7 +210,9 @@ export default function Marketplace() {
                             <p className="justify-self-end text-[var(--primary-color)]">$85</p>
                             <p className="col-span-2 max-w-55 text-sm font-medium">Authentic Nigerian Ankara Dresses - Made to Order</p>
                             <div className="flex">
-                                <div className="w-10 h-10 rounded-full bg-gray-100 mr-2 shrink-0"></div>
+                                <div className="w-10 h-10 rounded-full bg-gray-100 mr-2 shrink-0">
+                                    <Image className="object-cover" src="/reviewer-image-1.png" height={56} width={56} alt="user" />
+                                </div>
                                 <p className="text-sm w-full ">Adebayo Ogundimu</p>
                             </div>
                             <div className="justify-self-end items-center">
@@ -242,8 +240,7 @@ export default function Marketplace() {
                                 </div>
                             </div>
                         </div>
-                    </div>
-                   
+                    </div>   
                     <div className="space-y-4 rounded-2xl overflow-clip border bg-white border-gray-200">
                         <div className="min-h-58 bg-gray-200 relative">
                             <button className="absolute right-4 top-4 w-10 h-10 flex items-center justify-center rounded-full bg-white">
@@ -255,7 +252,9 @@ export default function Marketplace() {
                             <p className="justify-self-end text-[var(--primary-color)]">$85</p>
                             <p className="col-span-2 max-w-55 text-sm font-medium">Authentic Nigerian Ankara Dresses - Made to Order</p>
                             <div className="flex">
-                                <div className="w-10 h-10 rounded-full bg-gray-100 mr-2 shrink-0"></div>
+                                <div className="w-10 h-10 rounded-full bg-gray-100 mr-2 shrink-0">
+                                    <Image className="object-cover" src="/reviewer-image-1.png" height={56} width={56} alt="user" />
+                                </div>
                                 <p className="text-sm w-full ">Adebayo Ogundimu</p>
                             </div>
                             <div className="justify-self-end items-center">
@@ -283,49 +282,7 @@ export default function Marketplace() {
                                 </div>
                             </div>
                         </div>
-                    </div>
-                   
-                    <div className="space-y-4 rounded-2xl overflow-clip border bg-white border-gray-200">
-                        <div className="min-h-58 bg-gray-200 relative">
-                            <button className="absolute right-4 top-4 w-10 h-10 flex items-center justify-center rounded-full bg-white">
-                                <Heart className=""/>
-                            </button>
-                        </div>
-                        <div className="grid grid-cols-2 gap-3 p-4 pt-0">
-                            <p className="text-xs justify-self-start py-1 px-2 border border-gray-200 rounded-md">Fashion</p>
-                            <p className="justify-self-end text-[var(--primary-color)]">$85</p>
-                            <p className="col-span-2 max-w-55 text-sm font-medium">Authentic Nigerian Ankara Dresses - Made to Order</p>
-                            <div className="flex">
-                                <div className="w-10 h-10 rounded-full bg-gray-100 mr-2 shrink-0"></div>
-                                <p className="text-sm w-full ">Adebayo Ogundimu</p>
-                            </div>
-                            <div className="justify-self-end items-center">
-                                <div className="flex gap-0.5 justify-center">
-                                    <Star className="w-4 h-4 fill-amber-200 text-amber-200"/>
-                                    <Star className="w-4 h-4 fill-amber-200 text-amber-200"/>
-                                    <Star className="w-4 h-4 fill-amber-200 text-amber-200"/>
-                                    <Star className="w-4 h-4 fill-amber-200 text-amber-200"/>
-                                    <Star className="w-4 h-4 fill-gray-200 text-gray-200"/>
-                                </div>
-                                <p className="text-xs">127 verified ratings</p>
-                            </div>
-                            <div className="inline-flex gap-1 items-center text-xs text-gray-400 ">
-                                {" "}
-                                <MapPin className="w-4 h-4" /> <p>Chicago</p>
-                            </div>
-                            <div className="text-gray-400 flex gap-2 text-xs [&>*]:flex [&>*]:gap-1 [&>*]:items-center justify-self-end">
-                                <div>
-                                    <Eye className="w-4 h-4"/>
-                                    <p>234</p>
-                                </div>
-                                <div>
-                                    <Heart className="w-4 h-4"/>
-                                    <p>18</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                   
+                    </div>   
                 </div>
             </section>
             {/* marketplace right side bar  */}

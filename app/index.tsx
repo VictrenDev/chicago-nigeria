@@ -69,12 +69,12 @@ export default function Index() {
                                 >
                                     <Link
                                         className="bg-linear-to-r from-[#037244] to-[#04C977] text-white text-xs md:text-base inline-block px-4 py-2 md:py-1 rounded-lg"
-                                        href={"/community"}>
+                                        href={"/signup"}>
                                         Join our community
                                     </Link>
                                     <Link
                                         className=" inline-block text-xs md:text-base px-4 py-2 md:py-1 rounded-lg border-1 border-white bg-white md:bg-transparent  text-black md:border-gray-800"
-                                        href={"/community"}>
+                                        href={"/marketplace"}>
                                         Explore Marketplace
                                     </Link>
                                 </motion.div>
@@ -332,7 +332,7 @@ export default function Index() {
                         >
                             <Link
                                 className="bg-linear-to-r from-[#037244] to-[#04C977] text-white inline-block px-4 py-1 rounded-lg mt-12"
-                                href={"/community"}>
+                                href={"/signup"}>
                                 Join our community
                             </Link>
                         </motion.div>
@@ -467,7 +467,7 @@ export default function Index() {
                             >
                                 <Link
                                     className="bg-linear-to-r from-[#037244] to-[#04C977] text-white inline-block px-4 py-1 rounded-lg mt-12"
-                                    href={"/community"}>
+                                    href={"/free-ticket"}>
                                     Get your free ticket
                                 </Link>
                             </motion.div>
@@ -540,7 +540,7 @@ export default function Index() {
                             >
                                 <Link
                                     className="bg-linear-to-r from-[#037244] to-[#04C977] text-white inline-block px-4 py-1 rounded-lg mt-12"
-                                    href={"/get-started"}>
+                                    href={"/vendors"}>
                                     Get started for $65/month
                                 </Link>
                             </motion.div>
@@ -580,12 +580,12 @@ export default function Index() {
                         >
                             <Link
                                 className="bg-linear-to-r from-[#037244] to-[#04C977] text-white text-xs md:text-base inline-block px-4 py-2 md:py-1 rounded-lg"
-                                href={"/community"}>
+                                href={"/signup"}>
                                 Join our community
                             </Link>
                             <Link
                                 className=" inline-block px-4 py-2 md:py-1 rounded-lg border-1 border-gray-800 text-black bg-white text-xs md:text-base"
-                                href={"/community"}>
+                                href={"/marketplace"}>
                                 Explore Marketplace
                             </Link>
                         </motion.div>
@@ -639,27 +639,27 @@ export default function Index() {
                                 </Link>
                             </li>
                             <li>
-                                <Link className="" href={"/"}>
+                                <Link className="" href={"/about"}>
                                     About Us
                                 </Link>
                             </li>
                             <li>
-                                <Link className="" href={"/"}>
+                                <Link className="" href={"/marketplace"}>
                                     Marketplace
                                 </Link>
                             </li>
                             <li>
-                                <Link className="" href={"/"}>
+                                <Link className="" href={"/events"}>
                                     Event/Ticketing
                                 </Link>
                             </li>
                             <li>
-                                <Link className="" href={"/"}>
+                                <Link className="" href={"/news"}>
                                     News/Trending
                                 </Link>
                             </li>
                             <li>
-                                <Link className="" href={"/"}>
+                                <Link className="" href={"/contacts"}>
                                     Contact Us
                                 </Link>
                             </li>
@@ -675,14 +675,14 @@ export default function Index() {
                         <ul className="space-y-2">
                             <li className="">
                                 <p className="font-semibold">Email:</p>
-                                <Link className="text-gray-400" href={"/"}>
+                                <Link className="text-gray-400" href={"mailto:info@chicagonigeria.com"}>
                                     info@chicagonigeria.com
                                 </Link>
                             </li>
                             <li className="">
                                 <p className="font-semibold">Phone:</p>
-                                <Link className="text-gray-400" href={"/"}>
-                                    info@chicagonigeria.com
+                                <Link className="text-gray-400"  href={"tel:+1(312)555-0123"}>
+                                   +1 (312) 555-0123
                                 </Link>
                             </li>
                             <li className="">

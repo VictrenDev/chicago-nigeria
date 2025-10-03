@@ -4,24 +4,29 @@ import { useState } from "react";
 import Feed from "./feed";
 import Badge from "./badge";
 import Marketplace from "./marketplace";
-import Events from "./events";
+// import Events from "./events";
 import { Bell, Calendar, Home, MessageCircle, Settings, ShoppingBag, Users } from "lucide-react";
 
 export default function SideNavigation() {
     const [page, setPage] = useState("feed");
-
+    
+    let activePage
     const switchPage = () => {
         switch (page) {
             case "feed":
+             
                 return <Feed />;
             case "marketplace":
+             
                 return <Marketplace />;
-            case "events":
-                return <Events />;
+            // case "events":
+                
+            //     return <Events />;
             default:
-                return <div>no page</div>;
+                return <div className="flex justify-center items-center md:min-h-screen"><h1 className="text-5xl text-gray-800 font-bold">Page under construction</h1></div>;
         }
     };
+    console.log(activePage)
     return (
         <main className="container-custom grid grid-cols-1 lg:grid-cols-[1fr_4fr] gap-12 py-12 bg-gray-50">
             <section className="sticky top-0 h-screen pt-4 md:block hidden">
@@ -30,14 +35,14 @@ export default function SideNavigation() {
                         <button
                             onClick={() => {
                                 setPage("feed");
-                            }}>
+                            }} className={page === "feed" ? "activeSideNav" : ""}>
                             <Home className="w-4 h-4" />
                             <span>Feeds</span>
                         </button>
                         <button
                             onClick={() => {
                                 setPage("events");
-                            }}>
+                            }}  className={page === "events" ? "activeSideNav" : ""}>
                             <Calendar className="w-4 h-4" />
 
                             <span>Events</span>
@@ -45,7 +50,7 @@ export default function SideNavigation() {
                         <button
                             onClick={() => {
                                 setPage("marketplace");
-                            }}>
+                            }}  className={page === "marketplace" ? "activeSideNav" : ""}>
                             <ShoppingBag className="w-4 h-4" />
 
                             <span>Marketplace</span>
@@ -53,7 +58,7 @@ export default function SideNavigation() {
                         <button
                             onClick={() => {
                                 setPage("something else");
-                            }}>
+                            }}  className={page === "feed" ? "messages" : ""}>
                               <MessageCircle className="w-4 h-4" />
 
                             <span>Messages</span>
@@ -62,7 +67,7 @@ export default function SideNavigation() {
                         <button
                             onClick={() => {
                                 setPage("something else");
-                            }}>
+                            }}  className={page === "groups" ? "activeSideNav" : ""}>
                             <Users className="w-4 h-4" />
 
                             <span>Groups</span>
@@ -70,7 +75,7 @@ export default function SideNavigation() {
                         <button
                             onClick={() => {
                                 setPage("something else");
-                            }}>
+                            }}  className={page === "notifications" ? "activeSideNav" : ""}>
                             <Bell className="w-4 h-4" />
 
                             <span>Notifications</span>
@@ -79,7 +84,7 @@ export default function SideNavigation() {
                         <button
                             onClick={() => {
                                 setPage("something else");
-                            }}>
+                            }}  className={page === "Settings" ? "activeSideNav" : ""}>
                             <Settings className="w-4 h-4" />
 
                             <span>Settings</span>

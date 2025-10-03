@@ -6,6 +6,7 @@ import {
     ChartNoAxesColumnIncreasing,
     Clock,
     EllipsisVertical,
+    Filter,
     Heart,
     MapPin,
     MessageCircle,
@@ -21,14 +22,17 @@ export default function Feed() {
         <main className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-12">
             <section className="space-y-8 pt-4">
                 <div className=" flex gap-2 items-center bg-white p-8 md:rounded-lg space-y-4 user-page-top">
-                    <button>All Posts</button>
+                    <button className="text-white bg-[var(--primary-color)] font-semibold">All Posts</button>
                     <button>Following</button>
                     <button>My Networks</button>
-                    <button className="ml-auto px-4 py-2">Filters</button>
+                    <button className="ml-auto px-4 py-2"> <Filter className="w-4 h-4"/> Filters</button>
                 </div>
                 <div className="md:p-8 py-2 bg-white md:rounded-xl">
                     <div className="flex">
-                        <div className="w-14 h-14 rounded-full bg-gray-100 mr-4 "></div>
+                        <div className="w-14 h-14 rounded-full bg-gray-100 mr-4 ">
+                            {" "}
+                            <Image className="object-cover" src="/reviewer-image-1.png" height={56} width={56} alt="user" />
+                        </div>
                         <form action="" className="bg-red flex-1">
                             <label htmlFor="post" className="hidden">
                                 Post
@@ -44,22 +48,27 @@ export default function Feed() {
 
                     <div className=" mt-12 border-t border-t-gray-200 flex gap-2 items-center bg-white py-4 space-y-4 user-page-top">
                         <button>
-                            <Camera className="w-5 h-5"/>
+                            <Camera className="w-5 h-5" />
                             <span>Photo</span>
                         </button>
                         <button>
-                            <Video className="w-5 h-5"/> <span>Video</span>
+                            <Video className="w-5 h-5" /> <span>Video</span>
                         </button>
                         <button>
-                            <Calendar className="w-5 h-5"/> <span>Event</span>
+                            <Calendar className="w-5 h-5" /> <span>Event</span>
                         </button>
-                        <button className="ml-auto px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg"><SendIcon className="w-5 h-5"/> <span>Post</span></button>
+                        <button className="ml-auto px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg">
+                            <SendIcon className="w-5 h-5" /> <span>Post</span>
+                        </button>
                     </div>
                 </div>
                 <div className="space-y-4">
                     <div className="md:p-8 py-2 md:rounded-lg bg-white">
                         <div className="flex">
-                            <div className="w-14 h-14 rounded-full bg-gray-100 mr-4 "></div>
+                            <div className="w-14 h-14 rounded-full bg-gray-100 mr-4 ">
+                                {" "}
+                                <Image className="object-cover" src="/reviewer-image-1.png" height={56} width={56} alt="user" />
+                            </div>
                             <div>
                                 <p>Adebayo Ogundimu</p>
                                 <p className="text-sm space-x-1 text-gray-400 font-light">
@@ -107,7 +116,10 @@ export default function Feed() {
                     </div>
                     <div className="md:p-8 py-2 mdLrounded-lg bg-white">
                         <div className="flex">
-                            <div className="w-14 h-14 rounded-full bg-gray-100 mr-4 "></div>
+                            <div className="w-14 h-14 rounded-full bg-gray-100 mr-4 ">
+                                {" "}
+                                <Image className="object-cover" src="/reviewer-image-1.png" height={56} width={56} alt="user" />
+                            </div>
                             <div>
                                 <p>Adebayo Ogundimu</p>
                                 <p className="text-sm space-x-1 text-gray-400 font-light">
@@ -168,7 +180,9 @@ export default function Feed() {
             </section>
             <section className="space-y-8 sticky top-0 h-screen pt-4 hidden md:block">
                 <div className=" bg-white p-4 rounded-lg space-y-4">
-                    <h2 className="flex items-center gap-1"><span>Community stats</span> <ChartNoAxesColumnIncreasing className="w-6 h-6 text-[var(--primary-color)]"/></h2>
+                    <h2 className="flex items-center gap-1">
+                        <span>Community stats</span> <ChartNoAxesColumnIncreasing className="w-6 h-6 text-[var(--primary-color)]" />
+                    </h2>
                     <div className="space-y-3 community-stats-items">
                         <div>
                             <p>Active Members</p>

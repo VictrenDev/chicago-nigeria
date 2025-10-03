@@ -3,15 +3,15 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 export default function Navbar() {
     const [mobileOpen, setMobileOpen] = useState(false);
-    const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
+    // const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
 
-    const toggleDropdown = (name: string) => {
-        setDropdownOpen(dropdownOpen === name ? null : name);
-    };
+    // const toggleDropdown = (name: string) => {
+    //     setDropdownOpen(dropdownOpen === name ? null : name);
+    // };
 
     useEffect(() => {
         if (mobileOpen) {
@@ -41,7 +41,7 @@ export default function Navbar() {
                         </Link>
                     </li>
                     <li>
-                        <Link className="px-4 py-8 inline-block" href={"/"}>
+                        <Link className="px-4 py-8 inline-block" href={"/about"}>
                             About
                         </Link>
                     </li>
@@ -104,17 +104,17 @@ export default function Navbar() {
                         </Link>
                     </li>
                     <li>
-                        <Link className="px-4 py-8 inline-block" href={"/"}>
+                        <Link className="px-4 py-8 inline-block" href={"/events"}>
                             Event/Ticketing
                         </Link>
                     </li>
                     <li>
-                        <Link className="px-4 py-8 inline-block" href={"/"}>
+                        <Link className="px-4 py-8 inline-block" href={"/news"}>
                             News/Trending
                         </Link>
                     </li>
                     <li>
-                        <Link className="px-4 py-8 inline-block" href={"/"}>
+                        <Link className="px-4 py-8 inline-block" href={"/contact"}>
                             Contact Us
                         </Link>
                     </li>
@@ -155,7 +155,7 @@ export default function Navbar() {
                         </Link>
                     </li>
                     <li>
-                        <Link className="px-6 py-3 block" href="/" onClick={() => setMobileOpen(false)}>
+                        <Link className="px-6 py-3 block" href="/about" onClick={() => setMobileOpen(false)}>
                             About
                         </Link>
                     </li>
@@ -207,17 +207,17 @@ export default function Navbar() {
                         </Link>
                     </li>
                     <li>
-                        <Link className="px-6 py-3 block" href="/" onClick={() => setMobileOpen(false)}>
+                        <Link className="px-6 py-3 block" href="/events" onClick={() => setMobileOpen(false)}>
                             Event/Ticketing
                         </Link>
                     </li>
                     <li>
-                        <Link className="px-6 py-3 block" href="/" onClick={() => setMobileOpen(false)}>
+                        <Link className="px-6 py-3 block" href="/news" onClick={() => setMobileOpen(false)}>
                             News/Trending
                         </Link>
                     </li>
                     <li>
-                        <Link className="px-6 py-3 block" href="/" onClick={() => setMobileOpen(false)}>
+                        <Link className="px-6 py-3 block" href="/contact" onClick={() => setMobileOpen(false)}>
                             Contact Us
                         </Link>
                     </li>
