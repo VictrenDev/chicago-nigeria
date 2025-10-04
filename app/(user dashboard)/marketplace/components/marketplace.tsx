@@ -32,7 +32,7 @@ export default function Marketplace() {
                         <span className="whitespace-nowrap">Create Listing</span>
                     </Link>
                 </div>
-                <div className="py-2  md:rounded-xl max-w-screen overflow-clip scroll-auto">
+                <div className="py-2  md:rounded-xl max-w-screen overflow-hidden scroll-auto">
                     <div className="flex justify-between">
                         <div className="p-6 rounded-lg bg-white flex items-center gap-8">
                             <div>
