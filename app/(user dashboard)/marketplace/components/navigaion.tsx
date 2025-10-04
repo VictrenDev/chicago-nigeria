@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Feed from "./feed";
+import Feed from "../../pages/feed";
 import Badge from "./badge";
-import Marketplace from "./marketplace";
+import Marketplace from "../../pages/marketplace";
 // import Events from "./events";
 import { Bell, Calendar, Home, MessageCircle, Settings, ShoppingBag, Users } from "lucide-react";
 

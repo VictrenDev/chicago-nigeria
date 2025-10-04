@@ -123,7 +123,7 @@ export default function Navbar() {
                 {/* CTA button */}
                 <Link
                     className="hidden md:inline-block bg-gradient-to-r from-[#037244] to-[#04C977] text-white px-4 py-1 rounded-lg"
-                    href="/community">
+                    href="/signup">
                     Join Us +
                 </Link>
 

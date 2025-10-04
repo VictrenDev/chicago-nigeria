@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import Navbar from "./navigation";
 import { TickIcon } from "./icons";
 import { Heart, Search, Users } from "lucide-react";
 import { motion } from "framer-motion";
@@ -37,7 +36,6 @@ export default function Index() {
 	return (
 		<>
 			<main className=" ">
-				<Navbar />
 				<header className="bg-linear-60 from-[#DCFFF0] to-[#FFF3F3]">
 					<section className="text-white md:text-black relative  md:bg-none bg-[url(/hero-image.png)] bg-center bg-cover bg-no-repeat py-12">
 						<div className="absolute inset-0 bg-black/78 md:hidden"></div>
