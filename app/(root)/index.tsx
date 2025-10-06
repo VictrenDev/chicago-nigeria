@@ -1,11 +1,11 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { TickIcon } from "./icons";
-import { Heart, Search, Users } from "lucide-react";
+import { FacebookIcon, InstagramIcon, LinkedInIcon, TickIcon, XIcon } from "./icons";
+import { Heart, HeartIcon, Search, Star, TrendingUp, Users} from "lucide-react";
 import { motion } from "framer-motion";
 
-// Animation variants
+// Animation variants from framer motion
 const fadeInUp = {
 	initial: { opacity: 0, y: 60 },
 	animate: { opacity: 1, y: 0 },
@@ -33,13 +33,19 @@ const staggerContainer = {
 };
 
 export default function Index() {
+	const landingPageForm = (e: React.FormEvent) => {
+		e.preventDefault();
+	};
 	return (
 		<>
-			<main className=" ">
+			<main>
+				{/* hero section */}
 				<header className="bg-linear-60 from-[#DCFFF0] to-[#FFF3F3]">
-					<section className="text-white md:text-black relative  md:bg-none bg-[url(/hero-image.png)] bg-center bg-cover bg-no-repeat py-12">
+					<section className="text-white md:text-black relative  md:bg-none bg-[url(/hero-image.webp)] bg-center bg-cover bg-no-repeat py-12">
+						{/* dark overlay for image in mobile view  */}
 						<div className="absolute inset-0 bg-black/78 md:hidden"></div>
 						<div className="container-custom grid grid-cols-1 md:grid-cols-2 items-center gap-8 ">
+							{/* text section  */}
 							<motion.div
 								className="relative mx-auto"
 								initial={{ opacity: 0, x: -100 }}
@@ -76,54 +82,37 @@ export default function Index() {
 									</Link>
 								</motion.div>
 								<motion.div
-									className="mt-14 flex gap-2 md:gap-4"
+									className="mt-14 flex items-center gap-2 md:gap-4"
 									initial={{ opacity: 0 }}
 									animate={{ opacity: 1 }}
 									transition={{ delay: 0.7, duration: 0.6 }}>
 									<p className="flex gap-1 items-center text-xs md:text-base">
-										<Image
-											className="w-4 h-4 md:w-6 md:h-6  object-cover"
-											src={"/icons/star-icon.png"}
-											height={16}
-											width={24}
-											alt="icon"
-										/>
-										4.5/5.0 rating
+										<Star className="w-6 h-6 fill-amber-300 text-amber-300" />
+										<span> 4.5/5.0 rating</span>
 									</p>
 									<p className="flex gap-1 items-center text-xs md:text-base">
-										<Image
-											className="w-4 h-4 md:w-6 md:h-6  object-cover"
-											src={"/icons/trend-icon.png"}
-											height={16}
-											width={16}
-											alt="icon"
-										/>
-										Growing fast
+										<TrendingUp className="w-6 h-6 text-[var(--primary-color)]" />
+										<span>Growing fast</span>
 									</p>
 									<p className="flex gap-1 items-center text-xs md:text-base">
-										<Image
-											className="w-4 h-4 md:w-6 md:h-6  object-cover"
-											src={"/icons/heart-icon.png"}
-											height={16}
-											width={24}
-											alt="icon"
-										/>
-										Community loved
+										<HeartIcon className="w-6 h-6 fill-red-500 text-red-500" />
+										<span>Community loved</span>
 									</p>
 								</motion.div>
 							</motion.div>
+							{/* image section  */}
 							<motion.div
 								className="mx-auto justify-self-end hidden md:block relative shadow-[0_4px_59.1px_0_rgba(0, 0, 0, 0.25)]"
 								initial={{ opacity: 0, x: 100 }}
 								animate={{ opacity: 1, x: 0 }}
 								transition={{ duration: 0.8, delay: 0.2 }}>
-								<Image src={"/hero-image.png"} alt="hero image" width={521} height={592} />
+								<Image src={"/hero-image.webp"} alt="hero image" width={521} height={592} />
 								<motion.div
 									className="absolute top-10 -left-20 bg-white py-4 px-6 rounded-xl flex items-center justify-center gap-2 text-sm shadow-[0_4px_59.1px_0_rgba(0, 0, 0, 0.25)]"
 									initial={{ opacity: 0, scale: 0 }}
 									animate={{ opacity: 1, scale: 1 }}
 									transition={{ delay: 1, duration: 0.5 }}>
-									<Image src={"/octicon_people-24.png"} alt="hero image" width={16} height={16} />
+									<Image src={"/octicon-people-24.webp"} alt="hero image" width={16} height={16} />
 									<p>Network</p>
 								</motion.div>
 								<motion.div
@@ -131,7 +120,7 @@ export default function Index() {
 									initial={{ opacity: 0, scale: 0 }}
 									animate={{ opacity: 1, scale: 1 }}
 									transition={{ delay: 1.2, duration: 0.5 }}>
-									<Image src={"/circum_globe.png"} alt="hero image" width={16} height={16} />
+									<Image src={"/circum-globe.webp"} alt="hero image" width={16} height={16} />
 									<p>Culture</p>
 								</motion.div>
 								<motion.div
@@ -140,7 +129,7 @@ export default function Index() {
 									animate={{ opacity: 1, scale: 1 }}
 									transition={{ delay: 1.4, duration: 0.5 }}>
 									<Image
-										src={"/material-symbols-light_event-outline-sharp.png"}
+										src={"/material-symbols-light-event-outline-sharp.webp"}
 										alt="hero image"
 										width={16}
 										height={16}
@@ -153,7 +142,7 @@ export default function Index() {
 									animate={{ opacity: 1, scale: 1 }}
 									transition={{ delay: 1.6, duration: 0.5 }}>
 									<Image
-										src={"/lsicon_marketplace-outline.png"}
+										src={"/lsicon-marketplace-outline.webp"}
 										alt="hero image"
 										width={16}
 										height={16}
@@ -174,7 +163,7 @@ export default function Index() {
 							className="flex flex-col gap-2 min-h-50 md:min-h-50 min-w-full md:min-w-70 bg-white justify-center items-center p-4 rounded-md"
 							variants={fadeInUp}>
 							<p>
-								<Image src={"/icons/people.png"} alt="icon" height={32} width={32} />
+								<Image src={"/icons/people.webp"} alt="icon" height={32} width={32} />
 							</p>
 							<p className={`text-4xl md:text-6xl font-extrabold text-[var(--primary-color)]`}>
 								500+
@@ -185,7 +174,7 @@ export default function Index() {
 							className="flex flex-col gap-2 min-h-50 md:min-h-50 min-w-full md:min-w-70 bg-white justify-center items-center p-4 rounded-md"
 							variants={fadeInUp}>
 							<p>
-								<Image src={"/icons/calender.png"} alt="icon" height={32} width={32} />
+								<Image src={"/icons/calender.webp"} alt="icon" height={32} width={32} />
 							</p>
 							<p className={"text-4xl md:text-6xl font-extrabold text-[var(--orange-color)]"}>
 								50+
@@ -196,7 +185,7 @@ export default function Index() {
 							className="flex flex-col gap-2 min-h-50 md:min-h-50 min-w-full md:min-w-70 bg-white justify-center items-center p-4 rounded-md"
 							variants={fadeInUp}>
 							<p>
-								<Image src={"/icons/marketplace.png"} alt="icon" height={32} width={32} />
+								<Image src={"/icons/marketplace.webp"} alt="icon" height={32} width={32} />
 							</p>
 							<p className={"text-4xl md:text-6xl font-extrabold text-[var(--blue-color)]"}>50+</p>
 							<p className="text-sm md:text-base">Local Businesses</p>
@@ -218,30 +207,31 @@ export default function Index() {
 							Everything you need to connect, grow, and thrive in the Chicago Nigerian community
 						</p>
 					</motion.div>
+					{/* offer detail boxes  */}
 					<motion.div
 						className="grid place-items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-16"
 						variants={staggerContainer}>
 						{[
 							{
-								icon: "/icons/people.png",
+								icon: "/icons/people.webp",
 								title: "Networking Feed",
 								description:
 									"Connect with fellow Nigerians professionally and socially through our networking platform.",
 							},
 							{
-								icon: "/icons/calender.png",
+								icon: "/icons/calender.webp",
 								title: "Events & Ticketing",
 								description:
 									"Discover, host, and attend Nigerian cultural events, business meetups, and community gatherings.",
 							},
 							{
-								icon: "/icons/marketplace.png",
+								icon: "/icons/marketplace.webp",
 								title: "Marketplace",
 								description:
 									"Buy and sell products and services within the Nigerian community. Support local Nigerian businesses.",
 							},
 							{
-								icon: "/icons/globe.png",
+								icon: "/icons/globe.webp",
 								title: "News & Culture Update",
 								description:
 									"Stay updated with the latest news from Nigeria and cultural happenings in the Chicago Nigerian community.",
@@ -299,11 +289,12 @@ export default function Index() {
 									whileInView={{ opacity: 1, x: 0 }}
 									transition={{ delay: index * 0.1 }}
 									viewport={{ once: true }}>
-									<TickIcon size={24} />
+									<TickIcon className="shrink-0" size={24} />
 									{item}
 								</motion.li>
 							))}
 						</ul>
+						{/* premium membership section  */}
 						<motion.div
 							className="bg-linear-60 from-[#DCFFF0] to-[#FFF3F3] bg-center bg-cover p-4 rounded-2xl mt-8 font-light"
 							initial={{ opacity: 0, y: 30 }}
@@ -335,7 +326,7 @@ export default function Index() {
 					</motion.div>
 					<motion.div className="justify-self-end hidden md:block" variants={slideInRight}>
 						<Image
-							src={"/why-join-chicago-nigerians-img.png"}
+							src={"/why-join-chicago-nigerians-img.webp"}
 							width={589}
 							height={717}
 							alt="why join chicago nigerians image"
@@ -367,7 +358,7 @@ export default function Index() {
 						</p>
 
 						<motion.form
-							action=""
+							onSubmit={landingPageForm}
 							className="mt-12"
 							initial={{ opacity: 0, scale: 0.9 }}
 							whileInView={{ opacity: 1, scale: 1 }}
@@ -388,7 +379,7 @@ export default function Index() {
 				</motion.section>
 				{/* business and culture  */}
 				<motion.section
-					className="bg-[url('/landing-latest-event.jpg')] bg-cover bg-center"
+					className="bg-[url('/landing-latest-event.webp')] bg-cover bg-center"
 					initial={{ opacity: 0 }}
 					whileInView={{ opacity: 1 }}
 					transition={{ duration: 0.8 }}
@@ -401,26 +392,26 @@ export default function Index() {
 							transition={{ duration: 0.7 }}
 							viewport={{ once: true }}>
 							<Image
-								src={"/landing-event-img.png"}
+								src={"/landing-event-img.webp"}
 								alt="landing event image"
 								height={560}
 								width={652}
 							/>
 							<div className="flex w-[70%] gap-4 mx-auto mt-4">
 								<Image
-									src={"/landing-event-1.png"}
+									src={"/landing-event-1.webp"}
 									alt="landing event image"
 									height={141}
 									width={128}
 								/>
 								<Image
-									src={"/landing-event-2.png"}
+									src={"/landing-event-2.webp"}
 									alt="landing event image"
 									height={130}
 									width={118}
 								/>
 								<Image
-									src={"/landing-event-3.png"}
+									src={"/landing-event-3.webp"}
 									alt="landing event image"
 									height={130}
 									width={118}
@@ -471,7 +462,8 @@ export default function Index() {
 										whileInView={{ opacity: 1, y: 0 }}
 										transition={{ delay: index * 0.2 }}
 										viewport={{ once: true }}>
-										<Image src={"/tick-icon.png"} alt="tick-icon" height={30} width={30} />
+										<TickIcon className="shrink-0" size={26} />
+
 										<div>
 											<h3 className="font-bold">{item.title}</h3>
 											<p className="text-sm font-light">{item.description}</p>
@@ -496,7 +488,7 @@ export default function Index() {
 				</motion.section>
 				{/* expand research, boost sales  */}
 				<motion.section
-					className="bg-[url(/layer3.png)] bg-cover bg-center"
+					className="bg-[url(/layer3.webp)] bg-cover bg-center"
 					initial={{ opacity: 0 }}
 					whileInView={{ opacity: 1 }}
 					transition={{ duration: 0.8 }}
@@ -509,7 +501,7 @@ export default function Index() {
 							transition={{ duration: 0.7 }}
 							viewport={{ once: true }}>
 							<Image
-								src={"/african-american-woman-checking-social-media-phone.png"}
+								src={"/african-american-woman-checking-social-media-phone.webp"}
 								alt="landing event image"
 								height={521}
 								width={490}
@@ -568,7 +560,7 @@ export default function Index() {
 				</motion.section>
 				{/* ready to join chicago family */}
 				<motion.section
-					className=" py-40 text-center relative bg-[url('/banner.png')] bg-cover bg-center text-white overflow-clip"
+					className=" py-40 text-center relative bg-[url('/banner.webp')] bg-cover bg-center text-white overflow-clip"
 					initial={{ opacity: 0 }}
 					whileInView={{ opacity: 1 }}
 					transition={{ duration: 0.8 }}
@@ -582,11 +574,11 @@ export default function Index() {
 						whileInView={{ opacity: 1, y: 0 }}
 						transition={{ duration: 0.7 }}
 						viewport={{ once: true }}>
-                            <div className="flex gap-2 items-center justify-center [&>*]:w-8 [&>*]:h-8 font-light">
-                                <Heart/>
-                                <Users/>
-                                <Heart/>
-                            </div>
+						<div className="flex gap-2 items-center justify-center [&>*]:w-8 [&>*]:h-8 font-light">
+							<Heart />
+							<Users />
+							<Heart />
+						</div>
 						<h2 className=" text-4xl md:text-6xl font-bold">
 							Ready to join your <br />{" "}
 							<span className="text-[#00FF95]">Chicago Nigerian Family</span>?
@@ -596,7 +588,7 @@ export default function Index() {
 							Nigerian community in Chicago. 
 						</p>
 						<motion.div
-							className="flex gap-2 justify-center mt-8"
+							className="flex gap-2 justify-center md:gap-8 mt-8"
 							initial={{ opacity: 0, y: 30 }}
 							whileInView={{ opacity: 1, y: 0 }}
 							transition={{ delay: 0.4, duration: 0.6 }}
@@ -607,7 +599,7 @@ export default function Index() {
 								Join our community
 							</Link>
 							<Link
-								className=" inline-block px-4 py-2 md:py-1 rounded-lg border-1 border-gray-800 text-black bg-white text-xs md:text-base"
+								className=" inline-block px-4 py-2 md:py-1 rounded-lg text-black bg-white text-xs md:text-base"
 								href={"/marketplace"}>
 								Explore Marketplace
 							</Link>
@@ -618,32 +610,50 @@ export default function Index() {
 							whileInView={{ opacity: 1 }}
 							transition={{ delay: 0.6, duration: 0.6 }}
 							viewport={{ once: true }}>
-							<li>Free to join.</li>
-							<li>500+ active members</li>
-							<li>Events every week </li>
+							<li className="flex items-center md:gap-1">
+								<TickIcon size={28} />
+								<span>Free to join.</span>
+							</li>
+							<li className="flex items-center md:gap-1">
+								<TickIcon size={28} />
+								<span>500+ active members</span>
+							</li>
+							<li className="flex items-center md:gap-1">
+								<TickIcon size={28} />
+								<span>Events every week.</span>
+							</li>
 						</motion.ul>
 					</motion.div>
 				</motion.section>
 			</main>
+			{/* footer  */}
 			<motion.footer
 				className="container-custom py-20"
 				initial={{ opacity: 0 }}
 				whileInView={{ opacity: 1 }}
 				transition={{ duration: 0.8 }}
 				viewport={{ once: true }}>
-				<section className="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
+				<section className="grid grid-cols-1 md:grid-cols-3 gap-12 text-sm">
 					<motion.div
 						className="space-y-8"
 						initial={{ opacity: 0, y: 30 }}
 						whileInView={{ opacity: 1, y: 0 }}
 						transition={{ delay: 0.1 }}
 						viewport={{ once: true }}>
-						<Image src={"/chicago-nigeria-logo-1.png"} alt="logo" height={67} width={163} />
+						<Image src={"/chicago-nigeria-logo-1.png"} className="w-24" alt="logo" height={67} width={163} />
 
 						<p className="">
 							Connecting Nigerians in Chicago through culture, community, and commerce. Building
 							bridges between tradition and opportunity.
 						</p>
+						<div className="flex gap-8 max-w-80 items-center">
+							<Link href={"/"}><FacebookIcon/></Link>
+							<Link href={"/"}><InstagramIcon/></Link>
+							<Link href={"/"}><LinkedInIcon/></Link>
+							<Link href={"/"}><XIcon/></Link>
+						</div>
+						
+						
 					</motion.div>
 					<motion.div
 						initial={{ opacity: 0, y: 30 }}
@@ -721,9 +731,9 @@ export default function Index() {
 					viewport={{ once: true }}>
 					<p>&copy; 2025 Chicago Nigeria, All Rights Reserved</p>
 					<div className="space-x-4">
-						<Link href={"/"}>Privacy Policy</Link>
-						<Link href={"/"}>Terms of Service</Link>
-						<Link href={"/"}>Cookie Policy</Link>
+						<Link href={"/privacy-policy"}>Privacy Policy</Link>
+						<Link href={"/terms-of-service"}>Terms of Service</Link>
+						<Link href={"/cookies"}>Cookie Policy</Link>
 					</div>
 				</motion.section>
 			</motion.footer>

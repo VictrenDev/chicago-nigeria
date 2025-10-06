@@ -3,7 +3,7 @@ import { notFound, useParams } from "next/navigation";
 import Head from "next/head";
 import { motion, Variants } from "framer-motion";
 
-const pagesUnderConstruction: string[] = ["about", "contact", "marketplace", "events", "news"];
+const pagesUnderConstruction: string[] = ["about", "contact", "marketplace", "events", "news", "ticket", "privacy-policy", "vendors", "terms-of-service", "cookies"];
 const floatingVariants: Variants = {
     float: {
         y: [0, -10, 0],
