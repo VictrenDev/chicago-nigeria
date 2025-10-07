@@ -370,7 +370,9 @@ export default function Index() {
 									className="w-full p-4 focus-visible:outline-none"
 									placeholder="Search for apartments, real estate, daycare, restaurants..."
 								/>
-								<button className="flex items-center gap-1 py-2 px-4 text-white bg-[var(--primary-color)] rounded-xl text-sm md:text-base">
+								<button
+									aria-label="search items"
+									className="flex items-center gap-1 py-2 px-4 text-white bg-[var(--primary-color)] rounded-xl text-sm md:text-base">
 									<Search className="w-4 h-4 md:w-6 md:h-6" /> <p>Submit</p>
 								</button>
 							</fieldset>

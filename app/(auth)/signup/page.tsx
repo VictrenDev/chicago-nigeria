@@ -1,11 +1,15 @@
 "use client";
+import useSWRMutation from "swr/mutation";
 import { ArrowLeft, ArrowRight, Camera, Lock, MapPin, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import bcrypt from "bcryptjs";
 
 type FormValues = {
+	id: string;
 	firstName: string;
 	lastName: string;
 	email: string;
@@ -21,14 +25,33 @@ type FormValues = {
 	confirmPassword: string;
 };
 
+async function postUser(url: string, { arg }: { arg: FormValues }) {
+	const res = await fetch(url, {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(arg),
+	});
+
+	if (!res.ok) throw new Error("Failed to save user");
+
+	return res.json();
+}
 export default function Form() {
 	const [step, setStep] = useState(1);
+	const [direction, setDirection] = useState<"left" | "right">("right");
+	const [isAnimating, setIsAnimating] = useState(false);
+	const {
+		trigger: triggerSubmitForm,
+		isMutating,
+		error,
+	} = useSWRMutation("https://68e5269b8e116898997e96bc.mockapi.io/users/v1/Users", postUser);
 
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
-		getValues, trigger,
+		getValues,
+		trigger,
 	} = useForm<FormValues>({
 		defaultValues: {
 			firstName: "",
@@ -50,41 +73,82 @@ export default function Form() {
 	if (step > 4) setStep(4);
 	if (step < 1) setStep(1);
 
-	const onSubmit = (data: FormValues) => {
-		console.log("Form submitted:", data);
+	const onSubmit = async (data: FormValues) => {
+		try {
+			// hash password before sending
+			const hashedPassword = await bcrypt.hash(data.password, 10); // 10 = salt rounds
+
+			const newUser = await triggerSubmitForm({
+				...data,
+				password: hashedPassword,
+			});
+
+			if (newUser) {
+				toast.success("Form Submitted successfully. Check email for confirmation link.");
+				console.log("Form submitted:", newUser);
+			}
+		} catch (error) {
+			console.log(error);
+			toast.error("Sorry! something went wrong");
+		}
 	};
 
 	const next = async () => {
-  let fieldsToValidate: (keyof FormValues)[] = [];
+		if (isAnimating) return;
 
-  if (step === 1) {
-    fieldsToValidate = ["firstName", "lastName", "email", "phone"];
-  } else if (step === 2) {
-    fieldsToValidate = ["currentCity", "stateOfOrigin"];
-  } else if (step === 3) {
-    fieldsToValidate = ["profession", "company"];
-  } else if (step === 4) {
-    fieldsToValidate = ["password", "confirmPassword"];
-  }
+		let fieldsToValidate: (keyof FormValues)[] = [];
 
-  const isStepValid = await trigger(fieldsToValidate);
+		if (step === 1) {
+			fieldsToValidate = ["firstName", "lastName", "email", "phone"];
+		} else if (step === 2) {
+			fieldsToValidate = ["currentCity", "stateOfOrigin"];
+		} else if (step === 3) {
+			fieldsToValidate = ["profession", "company"];
+		} else if (step === 4) {
+			fieldsToValidate = ["password", "confirmPassword"];
+		}
 
-  if (isStepValid) {
-    setStep((current) => current + 1);
-  } 
-  // else -> errors will automatically show under inputs
-};
-	const prev = () => setStep((current) => current - 1);
+		const isStepValid = await trigger(fieldsToValidate);
+
+		if (isStepValid) {
+			setIsAnimating(true);
+			setDirection("right");
+			setTimeout(() => {
+				setStep((current) => current + 1);
+				setIsAnimating(false);
+			}, 300);
+		}
+	};
+
+	const prev = () => {
+		if (isAnimating) return;
+
+		setIsAnimating(true);
+		setDirection("left");
+		setTimeout(() => {
+			setStep((current) => current - 1);
+			setIsAnimating(false);
+		}, 300);
+	};
+
+	// Animation classes based on direction
+	const getStepAnimationClass = () => {
+		if (direction === "right") {
+			return isAnimating ? "animate-slide-out-left" : "animate-slide-in-right";
+		} else {
+			return isAnimating ? "animate-slide-out-right" : "animate-slide-in-left";
+		}
+	};
 
 	return (
 		<section className="w-screen h-screen bg-white/10 flex items-center justify-center px-4 pt-12">
 			<form
 				onSubmit={handleSubmit(onSubmit)}
-				className="bg-white px-4 py-8 md:px-16 rounded-xl max-w-140 text-sm relative signup-form">
+				className="bg-white px-4 py-8 md:px-8 rounded-xl md:w-120 text-sm relative signup-form overflow-hidden">
 				<button
 					type="button"
 					onClick={prev}
-					className="absolute top-6 left-2 cursor-pointer flex items-center gap-2 p-2">
+					className="absolute top-6 left-2 cursor-pointer flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg transition-colors">
 					<ArrowLeft className="w-4 h-4" />
 					<span>Back</span>
 				</button>
@@ -114,12 +178,12 @@ export default function Form() {
 						return (
 							<div
 								key={n}
-								className={`w-10 h-10 rounded-full flex items-center justify-center relative z-10
+								className={`w-10 h-10 rounded-full flex items-center justify-center relative z-10 transition-all duration-300
           ${
 						isCompleted
-							? "bg-[var(--primary-color)] text-white border-[var(--primary-color)]"
+							? "bg-[var(--primary-color)] text-white border-[var(--primary-color)] shadow-lg scale-110"
 							: isCurrent
-							? "border-2 border-[var(--primary-color)] bg-white text-[var(--primary-color)] font-bold"
+							? "border-2 border-[var(--primary-color)] bg-white text-[var(--primary-color)] font-bold shadow-md scale-110"
 							: "border border-gray-300 bg-white text-gray-400"
 					}`}>
 								{n}
@@ -128,239 +192,285 @@ export default function Form() {
 					})}
 				</div>
 
-				{/* STEP 1 */}
-				{step === 1 && (
-					<>
-						<div className="flex flex-col items-center space-y-1">
-							<User className="w-10 h-10 text-[var(--primary-color)]" />
-							<h1 className="text-2xl font-medium">Personal Information</h1>
-							<p className="text-gray-400 text-center">Lets start with the basics</p>
-						</div>
-						<fieldset className="space-y-4 mt-8">
-							<div className="flex flex-wrap gap-2">
+				{/* STEP CONTENT CONTAINER */}
+				<div className="relative min-h-[400px] overflow-hidden px-2">
+					{/* STEP 1 */}
+					{step === 1 && (
+						<div className={`${getStepAnimationClass()} w-full`}>
+							<div className="flex flex-col items-center space-y-1">
+								<User className="w-10 h-10 text-[var(--primary-color)]" />
+								<h1 className="text-2xl font-medium">Personal Information</h1>
+								<p className="text-gray-400 text-center">Lets start with the basics</p>
+							</div>
+							<fieldset className="space-y-4 mt-8">
+								<div className="flex flex-col sm:flex-row sm:gap-2 gap-4">
+									<div>
+										<label htmlFor="firstName" className="block text-sm font-medium mb-1">
+											First Name
+										</label>
+										<input
+											type="text"
+											{...register("firstName", { required: "First name is required" })}
+											className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+											placeholder="Enter your first name"
+										/>
+										{errors.firstName && (
+											<p className="text-red-500 text-xs mt-1">{errors.firstName.message}</p>
+										)}
+									</div>
+									<div>
+										<label htmlFor="lastName" className="block text-sm font-medium mb-1">
+											Last Name
+										</label>
+										<input
+											type="text"
+											{...register("lastName", { required: "Last name is required" })}
+											className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+											placeholder="Enter your last name"
+										/>
+										{errors.lastName && (
+											<p className="text-red-500 text-xs mt-1">{errors.lastName.message}</p>
+										)}
+									</div>
+								</div>
+
 								<div>
-									<label htmlFor="firstName">First Name</label>
+									<label htmlFor="email" className="block text-sm font-medium mb-1">
+										Email Address
+									</label>
+									<input
+										type="email"
+										{...register("email", {
+											required: "Email is required",
+											pattern: { value: /\S+@\S+\.\S+/, message: "Invalid email" },
+										})}
+										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										placeholder="Enter your email address"
+									/>
+									{errors.email && (
+										<p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
+									)}
+								</div>
+
+								<div>
+									<label htmlFor="phone" className="block text-sm font-medium mb-1">
+										Phone Number
+									</label>
+									<div className="flex flex-col sm:flex-row gap-2">
+										<div className="sm:max-w-24">
+											<input
+												type="text"
+												{...register("countryCode")}
+												className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+												placeholder="+234"
+											/>
+										</div>
+										<div className="flex-1">
+											<input
+												type="text"
+												{...register("phone", { required: "Phone number is required" })}
+												className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+												placeholder="Enter your phone number"
+											/>
+										</div>
+									</div>
+									{errors.phone && (
+										<p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>
+									)}
+								</div>
+							</fieldset>
+							<CommonButton next={next} isAnimating={isAnimating} />
+							<p className="text-center mx-auto text-sm mt-4">
+								Not ready to sign up?{" "}
+								<Link
+									href={"/"}
+									className="text-[var(--primary-color)] hover:underline transition-colors">
+									Return to main page
+								</Link>
+							</p>
+						</div>
+					)}
+
+					{/* STEP 2 */}
+					{step === 2 && (
+						<div className={`${getStepAnimationClass()} w-full`}>
+							<div className="flex flex-col items-center space-y-1">
+								<MapPin className="w-10 h-10 text-[var(--primary-color)]" />
+								<h1 className="text-2xl font-medium">Location Details</h1>
+								<p className="text-gray-400 text-center">
+									Help us connect you with nearby community members
+								</p>
+							</div>
+							<fieldset className="space-y-4 mt-8">
+								<div>
+									<label className="block text-sm font-medium mb-1">Current City</label>
 									<input
 										type="text"
-										{...register("firstName", { required: "First name is required" })}
-										className="rounded p-2" placeholder="Enter your first name"
+										{...register("currentCity", { required: "City is required" })}
+										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										placeholder="Enter your current city"
 									/>
-									{errors.firstName && (
-										<p className="text-red-500 text-xs">{errors.firstName.message}</p>
+									{errors.currentCity && (
+										<p className="text-red-500 text-xs mt-1">{errors.currentCity.message}</p>
 									)}
 								</div>
 								<div>
-									<label htmlFor="lastName">Last Name</label>
+									<label className="block text-sm font-medium mb-1">Neighborhood (Optional)</label>
 									<input
 										type="text"
-										{...register("lastName", { required: "Last name is required" })}
-										className="rounded p-2" placeholder="Enter your last name"
+										{...register("neighborhood")}
+										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										placeholder="Enter your neighborhood"
 									/>
-									{errors.lastName && (
-										<p className="text-red-500 text-xs">{errors.lastName.message}</p>
+								</div>
+								<div>
+									<label className="block text-sm font-medium mb-1">Nigerian State of Origin</label>
+									<input
+										type="text"
+										{...register("stateOfOrigin", { required: "State is required" })}
+										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										placeholder="Enter your state of origin"
+									/>
+									{errors.stateOfOrigin && (
+										<p className="text-red-500 text-xs mt-1">{errors.stateOfOrigin.message}</p>
 									)}
 								</div>
-							</div>
+							</fieldset>
+							<CommonButton next={next} isAnimating={isAnimating} />
+						</div>
+					)}
 
-							<div>
-								<label htmlFor="email">Email Address</label>
-								<input
-									type="email"
-									{...register("email", {
-										required: "Email is required",
-										pattern: { value: /\S+@\S+\.\S+/, message: "Invalid email" },
-									})}
-									className="rounded p-2 w-full" placeholder="Enter your email address"
-								/>
-								{errors.email && <p className="text-red-500 text-xs">{errors.email.message}</p>}
+					{/* STEP 3 */}
+					{step === 3 && (
+						<div className={`${getStepAnimationClass()} w-full`}>
+							<div className="flex flex-col items-center space-y-1">
+								<Camera className="w-10 h-10 text-[var(--primary-color)]" />
+								<h1 className="text-2xl font-medium">Profile Details</h1>
+								<p className="text-gray-400 text-center">
+									Tell us about your professional background
+								</p>
 							</div>
-
-							<div>
-								<label htmlFor="phone">Phone Number</label>
-								<div className="flex flex-wrap gap-2">
-									<div className="max-w-18">
-										<input
-											type="text"
-											{...register("countryCode")}
-											className="rounded p-2 w-full"
-										/>
-									</div>
-									<div className="flex-1">
-										<input
-											type="text"
-											{...register("phone", { required: "Phone number is required" })}
-											className="rounded p-2 w-full" placeholder="Enter your phone number"
-										/>
-									</div>
+							<fieldset className="space-y-4 mt-8">
+								<div>
+									<label className="block text-sm font-medium mb-1">Professional Job Title</label>
+									<input
+										type="text"
+										{...register("profession", { required: "Profession is required" })}
+										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										placeholder="e.g. Software Engineer"
+									/>
+									{errors.profession && (
+										<p className="text-red-500 text-xs mt-1">{errors.profession.message}</p>
+									)}
 								</div>
-								{errors.phone && <p className="text-red-500 text-xs">{errors.phone.message}</p>}
-							</div>
-						</fieldset>
-						<CommonButton next={next} />
-						<p className="text-center mx-auto text-sm">
-							Not ready to sign up?{" "}
-							<Link href={"/"} className="text-[var(--primary-color)]">
-								Return to main page
-							</Link>
-						</p>
-					</>
-				)}
-
-				{/* STEP 2 */}
-				{step === 2 && (
-					<>
-						<div className="flex flex-col items-center space-y-1">
-							<MapPin className="w-10 h-10 text-[var(--primary-color)]" />
-							<h1 className="text-2xl font-medium">Location Details</h1>
-							<p className="text-gray-400 text-center">
-								Help us connect you with nearby community members
-							</p>
+								<div>
+									<label className="block text-sm font-medium mb-1">Company/Organization</label>
+									<input
+										type="text"
+										{...register("company", { required: "Company is required" })}
+										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										placeholder="Microsoft"
+									/>
+									{errors.company && (
+										<p className="text-red-500 text-xs mt-1">{errors.company.message}</p>
+									)}
+								</div>
+								<div>
+									<label className="block text-sm font-medium mb-1">Bio (Optional)</label>
+									<textarea
+										{...register("bio")}
+										className="min-h-24 w-full rounded-lg border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200 resize-none mt-1 p-3"
+										placeholder="Tell us a bit about yourself, your interests, and what you're looking for in the community..."
+									/>
+								</div>
+							</fieldset>
+							<CommonButton next={next} isAnimating={isAnimating} />
 						</div>
-						<fieldset className="space-y-4 mt-8">
-							<div>
-								<label>Current City</label>
-								<input
-									type="text"
-									{...register("currentCity", { required: "City is required" })}
-									className="rounded p-2 w-full" placeholder="Enter your current city"
-								/>
-								{errors.currentCity && (
-									<p className="text-red-500 text-xs">{errors.currentCity.message}</p>
-								)}
-							</div>
-							<div>
-								<label>Neighborhood (Optional)</label>
-								<input type="text" {...register("neighborhood")} className="rounded p-2 w-full" placeholder="enter your neighborhood" />
-							</div>
-							<div>
-								<label>Nigerian State of Origin</label>
-								<input
-									type="text"
-									{...register("stateOfOrigin", { required: "State is required" })}
-									className="rounded p-2 w-full" placeholder="Enter your state of origin"
-								/>
-								{errors.stateOfOrigin && (
-									<p className="text-red-500 text-xs">{errors.stateOfOrigin.message}</p>
-								)}
-							</div>
-						</fieldset>
-						<CommonButton next={next} />
-					</>
-				)}
+					)}
 
-				{/* STEP 3 */}
-				{step === 3 && (
-					<>
-						<div className="flex flex-col items-center space-y-1">
-							<Camera className="w-10 h-10 text-[var(--primary-color)]" />
-							<h1 className="text-2xl font-medium">Profile Details</h1>
-							<p className="text-gray-400 text-center">
-								Tell us about your professional background
-							</p>
+					{/* STEP 4 */}
+					{step === 4 && (
+						<div className={`${getStepAnimationClass()} w-full`}>
+							<div className="flex flex-col items-center space-y-1">
+								<Lock className="w-10 h-10 text-[var(--primary-color)]" />
+								<h1 className="text-2xl font-medium">Secure your account</h1>
+								<p className="text-gray-400 text-center">
+									Create a strong password to protect your profile
+								</p>
+							</div>
+							<fieldset className="space-y-4 mt-8">
+								<div>
+									<label className="block text-sm font-medium mb-1">Password</label>
+									<input
+										type="password"
+										{...register("password", {
+											required: "Password is required",
+											minLength: { value: 6, message: "At least 6 characters" },
+										})}
+										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										placeholder="Create a strong password"
+									/>
+									{errors.password && (
+										<p className="text-red-500 text-xs mt-1">{errors.password.message}</p>
+									)}
+								</div>
+								<div>
+									<label className="block text-sm font-medium mb-1">Confirm Password</label>
+									<input
+										type="password"
+										{...register("confirmPassword", {
+											validate: (value) =>
+												value === getValues("password") || "Passwords do not match",
+										})}
+										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										placeholder="Confirm your password"
+									/>
+									{errors.confirmPassword && (
+										<p className="text-red-500 text-xs mt-1">{errors.confirmPassword.message}</p>
+									)}
+								</div>
+								<div className="bg-gray-50 rounded-lg p-4 mt-4">
+									<h3 className="text-base font-medium mb-2">Password Requirements</h3>
+									<ul className="text-sm text-gray-600 space-y-1">
+										<li className="flex items-center gap-2">
+											<div className="w-1.5 h-1.5 bg-gray-400 rounded-full"></div>
+											At least 8 characters
+										</li>
+										<li className="flex items-center gap-2">
+											<div className="w-1.5 h-1.5 bg-gray-400 rounded-full"></div>
+											One uppercase character
+										</li>
+										<li className="flex items-center gap-2">
+											<div className="w-1.5 h-1.5 bg-gray-400 rounded-full"></div>
+											One number
+										</li>
+									</ul>
+								</div>
+							</fieldset>
+							<button
+								type="submit"
+								disabled={isAnimating}
+								className="bg-[var(--primary-color)] text-white py-3 rounded-lg flex justify-center items-center gap-2 w-full mt-8 mb-4 hover:bg-[var(--primary-color)]/90 disabled:opacity-50 transition-all duration-200">
+								<span>Submit</span>
+								<ArrowRight className="w-4 h-4" />
+							</button>
 						</div>
-						<fieldset className="space-y-4 mt-8">
-							<div>
-								<label>Professional Job Title</label>
-								<input
-									type="text"
-									{...register("profession", { required: "Profession is required" })}
-									className="rounded p-2 w-full" placeholder="e.g. Software Engineer"
-								/>
-							</div>
-							<div>
-								<label>Company/Organization</label>
-								<input
-									type="text"
-									{...register("company", { required: "Company is required" })}
-									className="rounded p-2 w-full" placeholder="Microsoft"
-								/>
-							</div>
-							<div>
-								<label>Bio (Optional)</label>
-								<textarea
-									{...register("bio")}
-									className="min-h-20 w-full bg-gray-200 resize-none rounded-lg mt-1 p-2" placeholder="Tell us a bit about yourself, your interests, and what you’re looking for in the community..."
-								/>
-							</div>
-							<div>
-								<h3>Paassword Requirements</h3>
-								<ul className="[&>*]:text-xs [&>*]:text-gray-400 ml-4">
-									<li>At least 8 characters</li>
-								</ul>
-							</div>
-						</fieldset>
-						<CommonButton next={next} />
-					</>
-				)}
-
-				{/* STEP 4 */}
-				{step === 4 && (
-					<>
-						<div className="flex flex-col items-center space-y-1">
-							<Lock className="w-10 h-10 text-[var(--primary-color)]" />
-							<h1 className="text-2xl font-medium">Secure your account</h1>
-							<p className="text-gray-400 text-center">
-								Create a strong password to protect your profile
-							</p>
-						</div>
-						<fieldset className="space-y-4 mt-8">
-							<div>
-								<label>Password</label>
-								<input
-									type="password"
-									{...register("password", {
-										required: "Password is required",
-										minLength: { value: 6, message: "At least 6 characters" },
-									})}
-									className="rounded p-2 w-full" placeholder="Create a strong password"
-								/>
-								{errors.password && (
-									<p className="text-red-500 text-xs">{errors.password.message}</p>
-								)}
-							</div>
-							<div>
-								<label>Confirm Password</label>
-								<input
-									type="password"
-									{...register("confirmPassword", {
-										validate: (value) =>
-											value === getValues("password") || "Passwords do not match",
-									})}
-									className="rounded p-2 w-full" placeholder="Confirm your password"
-								/>
-								{errors.confirmPassword && (
-									<p className="text-red-500 text-xs">{errors.confirmPassword.message}</p>
-								)}
-							</div>
-														<div>
-								<h3 className="text-base font-regular">Password Requirements</h3>
-								<ul className="[&>*]:text-xs [&>*]:text-gray-400 list-disc list-inside ml-4">
-									<li>At least 8 characters</li>
-									<li>One uppercase character</li>
-									<li>One number</li>
-								</ul>
-							</div>
-						</fieldset>
-						<button
-							type="submit"
-							className="bg-[var(--primary-color)] text-white py-3 rounded-lg flex justify-center items-center gap-2 w-full mt-8 mb-4">
-							<span>Submit</span>
-							<ArrowRight className="w-4 h-4" />
-						</button>
-					</>
-				)}
+					)}
+				</div>
 			</form>
 		</section>
 	);
 }
 
-export function CommonButton({ next }: { next: () => void }) {
+export function CommonButton({ next, isAnimating }: { next: () => void; isAnimating: boolean }) {
 	return (
 		<button
 			type="button"
 			onClick={next}
-			className="bg-[var(--primary-color)] text-white py-3 rounded-lg flex justify-center items-center gap-2 w-full mt-8 mb-4">
-			<span>Continue</span> <ArrowRight className="w-4 h-4" />
+			disabled={isAnimating}
+			className="bg-[var(--primary-color)] text-white py-3 rounded-lg flex justify-center items-center gap-2 w-full mt-8 mb-4 hover:bg-[var(--primary-color)]/90 disabled:opacity-50 transition-all duration-200">
+			<span>Continue</span>
+			<ArrowRight className="w-4 h-4" />
 		</button>
 	);
 }

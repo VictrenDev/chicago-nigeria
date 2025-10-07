@@ -6,11 +6,12 @@ import Badge from "./badge";
 import Marketplace from "../../pages/marketplace";
 // import Events from "./events";
 import { Bell, Calendar, Home, MessageCircle, Settings, ShoppingBag, Users } from "lucide-react";
+import MobileNavigation from "./mobilenav";
 
 export default function SideNavigation() {
     const [page, setPage] = useState("marketplace");
     
-    let activePage
+    
     const switchPage = () => {
         switch (page) {
             case "feed":
@@ -26,12 +27,12 @@ export default function SideNavigation() {
                 return <div className="flex justify-center items-center md:min-h-screen"><h1 className="text-5xl text-gray-800 font-bold">Page under construction</h1></div>;
         }
     };
-    console.log(activePage)
+
     return (
         <main className="container-custom grid grid-cols-1 lg:grid-cols-[1fr_4fr] gap-12 py-12 bg-gray-50">
             <section className="sticky top-0 h-screen pt-4 md:block hidden">
                 <div className="space-y-8 w-full">
-                    <aside className=" flex-col gap-2 bg-white p-4 rounded-lg sidebar-buttons">
+                    <aside className="space-y-0.5 bg-white p-4 rounded-lg sidebar-buttons">
                         <button
                             onClick={() => {
                                 setPage("feed");
@@ -114,6 +115,7 @@ export default function SideNavigation() {
                 </div>
             </section>
             <section className="bg-gray-50">{switchPage()}</section>
+             <MobileNavigation currentPage={page} onPageChange={setPage} />
         </main>
     );
 }

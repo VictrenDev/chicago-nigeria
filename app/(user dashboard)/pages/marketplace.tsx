@@ -91,161 +91,176 @@ const postDetails: postDetailsType[] = [
 ];
 export default function Marketplace() {
 	return (
-		<main className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-12">
+		<main className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-4 md:gap-12">
 			<section className="space-y-4 pt-4">
-				<div className=" flex gap-2 flex-wrap items-center justify-between bg-white px-8 py-4 md:rounded-lg space-y-4 user-page-top">
-					<div>
+				{/* Header Section - Mobile Optimized */}
+				<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white px-4 sm:px-8 py-4 rounded-lg">
+					<div className="flex-1">
 						<h2 className="text-lg font-bold">Marketplace</h2>
-						<p className="text-sm">
+						<p className="text-sm text-gray-600">
 							Discover amazing products and services from the Nigerian community
 						</p>
 					</div>
 					<Link
 						href={"/marketplace"}
-						className="flex items-center gap-0.5 justify-center p-2 rounded-lg text-sm text-center border border-gray-200 bg-[var(--primary-color)] text-white">
-						<Plus className="w-6 h-6" />
+						className="flex items-center gap-1 justify-center p-2 rounded-lg text-sm text-center border border-gray-200 bg-[var(--primary-color)] text-white w-full sm:w-auto">
+						<Plus className="w-4 h-4 sm:w-6 sm:h-6" />
 						<span className="whitespace-nowrap">Create Listing</span>
 					</Link>
 				</div>
-				<div className="py-2  md:rounded-xl max-w-screen overflow-x-auto scroll-auto">
-					<div className="flex justify-between">
-						<div className="p-6 rounded-lg bg-white flex items-center gap-8">
-							<div>
-								<p className="font-bold text-xl">156</p>
-								<p className="text-sm max-w-10">Active Listening</p>
+
+				{/* Stats Section - Mobile Horizontal Scroll */}
+				<div className="py-2 overflow-x-auto">
+					<div className="flex gap-3 min-w-max md:min-w-0 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4">
+						<div className="p-4 rounded-lg bg-white flex items-center gap-4 min-w-[140px]">
+							<div className="flex-1">
+								<p className="font-bold text-lg">156</p>
+								<p className="text-xs text-gray-600">Active Listings</p>
 							</div>
 							<div className="bg-[var(--primary-color)]/10 p-2 rounded-xl">
-								<Package className="text-[var(--primary-color)] w-6 h-6 " />
+								<Package className="text-[var(--primary-color)] w-5 h-5" />
 							</div>
 						</div>
-						<div className="p-6 rounded-lg bg-white flex items-center gap-8">
-							<div>
-								<p className="font-bold text-xl">12.4k</p>
-								<p className="text-sm max-w-10">Total Views</p>
+						<div className="p-4 rounded-lg bg-white flex items-center gap-4 min-w-[140px]">
+							<div className="flex-1">
+								<p className="font-bold text-lg">12.4k</p>
+								<p className="text-xs text-gray-600">Total Views</p>
 							</div>
 							<div className="bg-[var(--blue-color)]/10 p-2 rounded-xl">
-								<Eye className="text-[var(--blue-color)] w-6 h-6 " />
+								<Eye className="text-[var(--blue-color)] w-5 h-5" />
 							</div>
 						</div>
-						<div className="p-6 rounded-lg bg-white flex items-center gap-8">
-							<div>
-								<p className="font-bold text-xl">89</p>
-								<p className="text-sm max-w-10">Active Sellers</p>
+						<div className="p-4 rounded-lg bg-white flex items-center gap-4 min-w-[140px]">
+							<div className="flex-1">
+								<p className="font-bold text-lg">89</p>
+								<p className="text-xs text-gray-600">Active Sellers</p>
 							</div>
 							<div className="bg-[var(--purple-color)]/10 p-2 rounded-xl">
-								<Users className="text-[var(--purple-color)] w-6 h-6 " />
+								<Users className="text-[var(--purple-color)] w-5 h-5" />
 							</div>
 						</div>
-						<div className="p-6 rounded-lg bg-white flex items-center gap-8">
-							<div>
-								<p className="font-bold text-xl">2hrs</p>
-								<p className="text-sm max-w-10">Avg. Response</p>
+						<div className="p-4 rounded-lg bg-white flex items-center gap-4 min-w-[140px]">
+							<div className="flex-1">
+								<p className="font-bold text-lg">2hrs</p>
+								<p className="text-xs text-gray-600">Avg. Response</p>
 							</div>
 							<div className="bg-[var(--orange-color)]/10 p-2 rounded-xl">
-								<TrendingUp className="text-[var(--orange-color)] w-6 h-6 " />
+								<TrendingUp className="text-[var(--orange-color)] w-5 h-5" />
 							</div>
 						</div>
 					</div>
 				</div>
-				{/* categories */}
-				<div className="p-4 flex justify-between bg-white md:rounded-xl">
-					<button>
-						<ChevronLeft />
-					</button>
-					<div className="flex gap-2 overflow-x-auto max-w-45 md:max-w-full scroll-">
-						<div className="py-2 px-4 rounded-lg  bg-[var(--primary-color)] text-white flex items-center gap-1.5">
-							<p className="whitespace-nowrap">All Categories</p>
-							<p className="bg-[#0dd884] p-1 rounded-md text-sm">156</p>
+
+				{/* Categories Section - Mobile Optimized */}
+				<div className="p-3 bg-white rounded-xl">
+					<div className="flex items-center gap-2">
+						<button className="p-1 rounded-lg hover:bg-gray-100">
+							<ChevronLeft className="w-5 h-5" />
+						</button>
+						
+						<div className="flex gap-2 overflow-x-auto flex-1 scrollbar-hide">
+							<div className="py-2 px-3 rounded-lg bg-[var(--primary-color)] text-white flex items-center gap-1.5 shrink-0">
+								<p className="whitespace-nowrap text-sm">All Categories</p>
+								<p className="bg-[#0dd884] px-1.5 py-0.5 rounded text-xs">156</p>
+							</div>
+							<div className="py-2 px-3 rounded-lg border border-gray-300 flex items-center gap-1.5 shrink-0">
+								<p className="whitespace-nowrap text-sm">Fashion</p>
+								<p className="bg-gray-200 text-gray-700 px-1.5 py-0.5 rounded text-xs">23</p>
+							</div>
+							<div className="py-2 px-3 rounded-lg border border-gray-300 flex items-center gap-1.5 shrink-0">
+								<p className="whitespace-nowrap text-sm">Food</p>
+								<p className="bg-gray-200 text-gray-700 px-1.5 py-0.5 rounded text-xs">28</p>
+							</div>
+							<div className="py-2 px-3 rounded-lg border border-gray-300 flex items-center gap-1.5 shrink-0">
+								<p className="whitespace-nowrap text-sm">Electronics</p>
+								<p className="bg-gray-200 text-gray-700 px-1.5 py-0.5 rounded text-xs">15</p>
+							</div>
 						</div>
-						<div className="py-2 px-4 rounded-lg border border-gray-300 flex items-center gap-1.5">
-							<p className="whitespace-nowrap">Fashion</p>
-							<p className="bg-gray-200 text-gray-700 rounded-md p-1 text-sm">23</p>
-						</div>
-						<div className="py-2 px-4 rounded-lg border border-gray-300 flex items-center gap-1.5">
-							<p className="whitespace-nowrap">Food</p>
-							<p className="bg-gray-200 text-gray-700 rounded-md p-1 text-sm">28</p>
-						</div>
+
+						<button className="p-1 rounded-lg hover:bg-gray-100">
+							<ChevronRight className="w-5 h-5" />
+						</button>
 					</div>
-
-					<button>
-						<ChevronRight />
-					</button>
 				</div>
-				{/* filters  */}
-				{/* <div className="p-4 flex justify-between bg-white md:rounded-xl">
-                    <div className="flex gap-2">
-                        <div className="py-2 px-4 rounded-lg  bg-[var(--primary-color)] text-white flex items-center gap-1.5">
-                            <p className="whitespace-nowrap">All Categories</p>
-                            <p className="bg-[#0dd884] p-1 rounded-md text-sm">156</p>
-                        </div>
-                        <div className="py-2 px-4 rounded-lg border border-gray-300 flex items-center gap-1.5">
-                            <p className="whitespace-nowrap">Fashion</p>
-                            <p className="bg-gray-200 text-gray-700 rounded-md p-1 text-sm">156</p>
-                        </div>
-                        <div className="py-2 px-4 rounded-lg border border-gray-300 flex items-center gap-1.5">
-                            <p className="whitespace-nowrap">Food</p>
-                            <p className="bg-gray-200 text-gray-700 rounded-md p-1 text-sm">156</p>
-                        </div>
-                    </div>
-                </div> */}
-				<div className="space-y-4 grid grid-col-1 md:grid-cols-2 gap-8">
 
+				{/* Products Grid - Mobile Optimized */}
+				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
 					{postDetails.map((post) => (
 						<div
 							key={post.id}
-							className="space-y-4 rounded-2xl overflow-clip border bg-white border-gray-200">
-							<div className="h-58 bg-gray-200 relative">
+							className="rounded-xl overflow-hidden border bg-white border-gray-200 hover:shadow-md transition-shadow">
+							<div className="h-48 bg-gray-200 relative">
 								<Image
 									className="object-cover object-center w-full h-full"
 									src={post.image}
-									height={1000}
-									width={667}
-									alt="user"
+									height={400}
+									width={300}
+									alt={post.name}
+									priority={post.id <= 2}
 								/>
-								<LikePost />
+								<div className="absolute top-2 right-2">
+									<LikePost />
+								</div>
 							</div>
-							<div className="grid grid-cols-2 gap-3 p-4 pt-0">
-								<p className="text-xs justify-self-start py-1 px-2 border border-gray-200 rounded-md">
-									{post.tag}
-								</p>
-								<p className="justify-self-end text-[var(--primary-color)]">${post.price}</p>
-								<p className="col-span-2 max-w-55 text-sm font-medium">
+							<div className="p-3 space-y-2">
+								<div className="flex justify-between items-start gap-2">
+									<span className="text-xs py-1 px-2 border border-gray-200 rounded-md bg-gray-50">
+										{post.tag}
+									</span>
+									<p className="text-[var(--primary-color)] font-semibold text-sm">${post.price}</p>
+								</div>
+								
+								<h3 className="text-sm font-medium line-clamp-2 leading-tight">
 									{post.name}
-								</p>
-								<div className="flex">
-									<div className="w-10 h-10 rounded-full bg-gray-100 mr-2 shrink-0">
+								</h3>
+								
+								<div className="flex items-center gap-2 pt-1">
+									<div className="w-8 h-8 rounded-full bg-gray-100 flex-shrink-0 overflow-hidden">
 										<Image
-											className="object-cover"
+											className="object-cover w-full h-full"
 											src={post.userImage}
-											height={56}
-											width={56}
-											alt="user"
+											height={32}
+											width={32}
+											alt={post.userName}
 										/>
 									</div>
-									<p className="text-sm w-full ">{post.userName}</p>
-								</div>
-								<div className="justify-self-end items-center">
-									<div className="flex gap-0.5 justify-center">
-										<Star className="w-4 h-4 fill-amber-200 text-amber-200" />
-										<Star className="w-4 h-4 fill-amber-200 text-amber-200" />
-										<Star className="w-4 h-4 fill-amber-200 text-amber-200" />
-										<Star className="w-4 h-4 fill-amber-200 text-amber-200" />
-										<Star className="w-4 h-4 fill-gray-200 text-gray-200" />
+									<div className="flex-1 min-w-0">
+										<p className="text-xs font-medium truncate">{post.userName}</p>
+										<div className="flex items-center gap-1 text-xs text-gray-500">
+											<MapPin className="w-3 h-3" />
+											<span className="truncate">{post.location}</span>
+										</div>
 									</div>
-									<p className="text-xs">{post.verifiedRatingCount} verified ratings</p>
 								</div>
-								<div className="inline-flex gap-1 items-center text-xs text-gray-400 ">
-									{" "}
-									<MapPin className="w-4 h-4" /> <p>{post.location}</p>
-								</div>
-								<div className="text-gray-400 flex gap-2 text-xs [&>*]:flex [&>*]:gap-1 [&>*]:items-center justify-self-end">
-									<div>
-										<Eye className="w-4 h-4" />
-										<p>{post.viewCount}</p>
+								
+								<div className="flex items-center justify-between pt-1">
+									<div className="flex items-center gap-1">
+										<div className="flex gap-0.5">
+											{[...Array(5)].map((_, i) => (
+												<Star 
+													key={i}
+													className={`w-3 h-3 ${
+														i < post.starRating 
+															? "fill-amber-400 text-amber-400" 
+															: "fill-gray-300 text-gray-300"
+													}`} 
+												/>
+											))}
+										</div>
+										<span className="text-xs text-gray-500 ml-1">
+											({post.verifiedRatingCount})
+										</span>
 									</div>
-									<div>
-										<Heart className="w-4 h-4" />
-										<p>{post.likeCount}</p>
+									
+									<div className="flex items-center gap-3 text-gray-500">
+										<div className="flex items-center gap-1">
+											<Eye className="w-3 h-3" />
+											<span className="text-xs">{post.viewCount}</span>
+										</div>
+										<div className="flex items-center gap-1">
+											<Heart className="w-3 h-3" />
+											<span className="text-xs">{post.likeCount}</span>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -253,85 +268,86 @@ export default function Marketplace() {
 					))}
 				</div>
 			</section>
-			{/* marketplace right side bar  */}
-			<section className="space-y-8 sticky top-0 h-screen pt-4 hidden md:block ">
-				<div className=" bg-white p-4 rounded-lg space-y-4">
-					<h2>Quick Action</h2>
+			
+			{/* Right Sidebar - Hidden on Mobile */}
+			<section className="space-y-8 sticky top-0 h-screen pt-4 hidden md:block">
+				<div className="bg-white p-4 rounded-lg space-y-4">
+					<h2 className="font-semibold">Quick Action</h2>
 					<div className="space-y-2">
 						<Link
 							href={"/marketplace"}
-							className="flex items-center gap-2 justify-center p-2 rounded-lg text-sm text-center border border-gray-200 bg-[var(--primary-color)] text-white">
-							<Plus className="w-6 h-6" />
+							className="flex items-center gap-2 justify-center p-2 rounded-lg text-sm text-center border border-gray-200 bg-[var(--primary-color)] text-white hover:bg-[var(--primary-color)]/90 transition-colors">
+							<Plus className="w-5 h-5" />
 							<span>Create Listing</span>
 						</Link>
 						<Link
 							href={"/marketplace"}
-							className="flex items-center gap-2 justify-center p-2 rounded-lg text-sm text-center border border-gray-200">
-							<TrendingUp className="w-6 h-6 text-[var(--primary-color)]" />
+							className="flex items-center gap-2 justify-center p-2 rounded-lg text-sm text-center border border-gray-200 hover:bg-gray-50 transition-colors">
+							<TrendingUp className="w-5 h-5 text-[var(--primary-color)]" />
 							<span>View Analytics</span>
 						</Link>
 					</div>
 				</div>
 
-				<div className=" bg-white p-4 rounded-lg space-y-4">
-					<h2 className="flex gap-2 items-center">
-						{" "}
-						<span>Community stats</span>{" "}
-						<ChartNoAxesColumnIncreasing className="w-6 h-6 text-[var(--primary-color)]" />
+				<div className="bg-white p-4 rounded-lg space-y-4">
+					<h2 className="flex gap-2 items-center font-semibold">
+						<span>Community stats</span>
+						<ChartNoAxesColumnIncreasing className="w-5 h-5 text-[var(--primary-color)]" />
 					</h2>
-					<div className="space-y-3 community-stats-items">
-						<div>
-							<p>Active Members</p>
-							<p>2,847</p>
+					<div className="space-y-3">
+						<div className="flex justify-between items-center py-2 border-b border-gray-100">
+							<p className="text-sm">Active Members</p>
+							<p className="font-semibold">2,847</p>
 						</div>
-						<div>
-							<p>Posts today</p>
-							<p>127</p>
+						<div className="flex justify-between items-center py-2 border-b border-gray-100">
+							<p className="text-sm">Posts today</p>
+							<p className="font-semibold">127</p>
 						</div>
-						<div>
-							<p>Events This Week</p>
-							<p>8</p>
+						<div className="flex justify-between items-center py-2">
+							<p className="text-sm">Events This Week</p>
+							<p className="font-semibold">8</p>
 						</div>
 					</div>
 				</div>
 
-				<div className=" bg-white p-4 rounded-lg space-y-4">
-					<h2>Popular Categories</h2>
-					<div className="space-y-3 community-stats-items">
-						<div>
-							<p>Fashion</p>
-							<p>28</p>
+				<div className="bg-white p-4 rounded-lg space-y-4">
+					<h2 className="font-semibold">Popular Categories</h2>
+					<div className="space-y-3">
+						<div className="flex justify-between items-center py-2 border-b border-gray-100">
+							<p className="text-sm">Fashion</p>
+							<p className="font-semibold text-sm">28</p>
 						</div>
-						<div>
-							<p>Services</p>
-							<p>34</p>
+						<div className="flex justify-between items-center py-2 border-b border-gray-100">
+							<p className="text-sm">Services</p>
+							<p className="font-semibold text-sm">34</p>
 						</div>
-						<div>
-							<p>Food </p>
-							<p>23</p>
+						<div className="flex justify-between items-center py-2 border-b border-gray-100">
+							<p className="text-sm">Food</p>
+							<p className="font-semibold text-sm">23</p>
 						</div>
-						<div>
-							<p>Housing </p>
-							<p>8</p>
+						<div className="flex justify-between items-center py-2">
+							<p className="text-sm">Housing</p>
+							<p className="font-semibold text-sm">8</p>
 						</div>
 					</div>
-					<hr className="border border-gray-200 my-4" />
-
-					<div className="space-y-3 ">
-						<h2>Quick Links</h2>
-						<div className="ml-4 space-y-3 community-stats-items quick-actions">
-							<div>
-								<MapPin className="w-4 h-4" />
-								<p>Find Local Events</p>
-							</div>
-							<div>
-								<UsersRound className="w-4 h-4" />
-								<p>Join Groups</p>
-							</div>
-							<div>
-								<BriefcaseConveyorBelt className="w-4 h-4" />
-								<p>Browse Jobs</p>
-							</div>
+					
+					<hr className="border-gray-200 my-4" />
+					
+					<div className="space-y-3">
+						<h2 className="font-semibold">Quick Links</h2>
+						<div className="space-y-2">
+							<Link href="#" className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-50 transition-colors">
+								<MapPin className="w-4 h-4 text-gray-600" />
+								<p className="text-sm">Find Local Events</p>
+							</Link>
+							<Link href="#" className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-50 transition-colors">
+								<UsersRound className="w-4 h-4 text-gray-600" />
+								<p className="text-sm">Join Groups</p>
+							</Link>
+							<Link href="#" className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-50 transition-colors">
+								<BriefcaseConveyorBelt className="w-4 h-4 text-gray-600" />
+								<p className="text-sm">Browse Jobs</p>
+							</Link>
 						</div>
 					</div>
 				</div>
