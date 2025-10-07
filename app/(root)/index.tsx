@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FacebookIcon, InstagramIcon, LinkedInIcon, TickIcon, XIcon } from "./icons";
-import { Heart, HeartIcon, Search, Star, TrendingUp, Users} from "lucide-react";
+import { Heart, HeartIcon, Search, Star, TrendingUp, Users } from "lucide-react";
 import { motion } from "framer-motion";
 
 // Animation variants from framer motion
@@ -379,7 +379,7 @@ export default function Index() {
 				</motion.section>
 				{/* business and culture  */}
 				<motion.section
-					className="bg-[url('/landing-latest-event.webp')] bg-cover bg-center"
+					className="bg-[url('/landing-latest-event.webp')] bg-cover bg-center overflow-x-hidden"
 					initial={{ opacity: 0 }}
 					whileInView={{ opacity: 1 }}
 					transition={{ duration: 0.8 }}
@@ -488,7 +488,7 @@ export default function Index() {
 				</motion.section>
 				{/* expand research, boost sales  */}
 				<motion.section
-					className="bg-[url(/layer3.webp)] bg-cover bg-center"
+					className="bg-[url(/layer3.webp)] bg-cover bg-center overflow-x-hidden"
 					initial={{ opacity: 0 }}
 					whileInView={{ opacity: 1 }}
 					transition={{ duration: 0.8 }}
@@ -640,20 +640,32 @@ export default function Index() {
 						whileInView={{ opacity: 1, y: 0 }}
 						transition={{ delay: 0.1 }}
 						viewport={{ once: true }}>
-						<Image src={"/chicago-nigeria-logo-1.png"} className="w-24" alt="logo" height={67} width={163} />
+						<Image
+							src={"/chicago-nigeria-logo-1.png"}
+							className="w-24"
+							alt="logo"
+							height={67}
+							width={163}
+						/>
 
 						<p className="">
 							Connecting Nigerians in Chicago through culture, community, and commerce. Building
 							bridges between tradition and opportunity.
 						</p>
 						<div className="flex gap-8 max-w-80 items-center">
-							<Link href={"/"}><FacebookIcon/></Link>
-							<Link href={"/"}><InstagramIcon/></Link>
-							<Link href={"/"}><LinkedInIcon/></Link>
-							<Link href={"/"}><XIcon/></Link>
+							<Link href={"/"}>
+								<FacebookIcon />
+							</Link>
+							<Link href={"/"}>
+								<InstagramIcon />
+							</Link>
+							<Link href={"/"}>
+								<LinkedInIcon />
+							</Link>
+							<Link href={"/"}>
+								<XIcon />
+							</Link>
 						</div>
-						
-						
 					</motion.div>
 					<motion.div
 						initial={{ opacity: 0, y: 30 }}

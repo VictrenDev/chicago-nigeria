@@ -77,14 +77,14 @@ export default function Form() {
 	const prev = () => setStep((current) => current - 1);
 
 	return (
-		<section className="w-screen h-screen bg-white/10 flex items-center justify-center px-4">
+		<section className="w-screen h-screen bg-white/10 flex items-center justify-center px-4 pt-12">
 			<form
 				onSubmit={handleSubmit(onSubmit)}
 				className="bg-white px-4 py-8 md:px-16 rounded-xl max-w-140 text-sm relative signup-form">
 				<button
 					type="button"
 					onClick={prev}
-					className="absolute top-6 left-10 cursor-pointer flex items-center gap-2 p-2">
+					className="absolute top-6 left-2 cursor-pointer flex items-center gap-2 p-2">
 					<ArrowLeft className="w-4 h-4" />
 					<span>Back</span>
 				</button>

@@ -226,7 +226,7 @@ export default function Navbar() {
                 <div className="p-6">
                     <Link
                         className="w-full text-center bg-gradient-to-r from-[#037244] to-[#04C977] text-white px-4 py-2 rounded-lg block"
-                        href="/community"
+                        href="/signup"
                         onClick={() => setMobileOpen(false)}>
                         Join Us +
                     </Link>
