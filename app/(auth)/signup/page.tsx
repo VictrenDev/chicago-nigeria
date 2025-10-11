@@ -441,8 +441,8 @@ export default function Form() {
 												className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 												placeholder="e.g. Software Engineer"
 											/>
-											{errors.profession && (
-												<p className="text-red-500 text-xs mt-1">{errors.profession.message}</p>
+											{errors.business && (
+												<p className="text-red-500 text-xs mt-1">{errors.business.message}</p>
 											)}
 										</div>
 										<div>
@@ -453,8 +453,8 @@ export default function Form() {
 												className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 												placeholder="Microsoft"
 											/>
-											{errors.company && (
-												<p className="text-red-500 text-xs mt-1">{errors.company.message}</p>
+											{errors.brandName && (
+												<p className="text-red-500 text-xs mt-1">{errors.brandName.message}</p>
 											)}
 										</div>
 									</fieldset>

@@ -37,7 +37,7 @@ const postDetails: postDetailsType[] = [
 		tag: "fashion",
 		price: 85,
 		image: "/post-img-1.webp",
-		name: "Authentic Nigerian Ankara Dresses - Made to Order",
+		name: "Authentic Nigerian Ankara Dresses Made to Order",
 		userImage: "/reviewer-image-1.webp",
 		userName: "Adebayo Ogundimu",
 		location: "chicago",
@@ -51,7 +51,7 @@ const postDetails: postDetailsType[] = [
 		tag: "fashion",
 		price: 85,
 		image: "/post-img-2.webp",
-		name: "Authentic Nigerian Ankara Dresses - Made to Order",
+		name: "Authentic Nigerian Ankara Dresses Made to Order",
 		userImage: "/reviewer-image-1.webp",
 		userName: "Adebayo Ogundimu",
 		location: "chicago",
@@ -65,7 +65,7 @@ const postDetails: postDetailsType[] = [
 		tag: "fashion",
 		price: 85,
 		image: "/post-img-3.webp",
-		name: "Authentic Nigerian Ankara Dresses - Made to Order",
+		name: "Authentic Nigerian Ankara Dresses Made to Order",
 		userImage: "/reviewer-image-1.webp",
 		userName: "Adebayo Ogundimu",
 		location: "chicago",
@@ -79,7 +79,7 @@ const postDetails: postDetailsType[] = [
 		tag: "fashion",
 		price: 85,
 		image: "/post-img-4.webp",
-		name: "Authentic Nigerian Ankara Dresses - Made to Order",
+		name: "Authentic Nigerian Ankara Dresses Made to Order",
 		userImage: "/reviewer-image-1.webp",
 		userName: "Adebayo Ogundimu",
 		location: "chicago",
@@ -102,7 +102,7 @@ export default function Marketplace() {
 						</p>
 					</div>
 					<Link
-						href={"/marketplace"}
+						href={"/marketplace/create-listing"}
 						className="flex items-center gap-1 justify-center p-2 rounded-lg text-sm text-center border border-gray-200 bg-[var(--primary-color)] text-white w-full sm:w-auto">
 						<Plus className="w-4 h-4 sm:w-6 sm:h-6" />
 						<span className="whitespace-nowrap">Create Listing</span>
@@ -211,7 +211,7 @@ export default function Marketplace() {
 								</div>
 
 								<Link
-									href={`/marketplace/${post.name + "-" + post.id}`}
+									href={`/marketplace/${post.name.replace(/ /g, "-") + "-" + post.id}`}
 									// prefetch={true}
 									className="text-sm font-medium line-clamp-2 leading-tight">
 									{post.name}
@@ -276,7 +276,7 @@ export default function Marketplace() {
 					<h2 className="font-semibold">Quick Action</h2>
 					<div className="space-y-2">
 						<Link
-							href={"/marketplace"}
+							href={"/marketplace/create-listing"}
 							className="flex items-center gap-2 justify-center p-2 rounded-lg text-sm text-center border border-gray-200 bg-[var(--primary-color)] text-white hover:bg-[var(--primary-color)]/90 transition-colors">
 							<Plus className="w-5 h-5" />
 							<span>Create Listing</span>

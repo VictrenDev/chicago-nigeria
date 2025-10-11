@@ -30,35 +30,51 @@ export default function TopNavigation() {
 			<div className="container-custom mx-auto flex w-full justify-between items-center gap-8">
 				{/* Logo */}
 				<Link href={"/"}>
-					<Image className="w-20" src="/chicago-nigeria-logo-1.png" alt="logo" height={17} width={113} />
+					<Image
+						className="w-20"
+						src="/chicago-nigeria-logo-1.png"
+						alt="logo"
+						height={17}
+						width={113}
+					/>
 				</Link>
 
-			<form action="" className="w-full max-w-140 py-1 rounded-lg bg-gray-200 focus-within:ring-2 ring-blue-400 ring-offset-2 flex items-center gap-2">
-                <button className="cursor-pointer py-2 pl-4">
-
-                <Search className="w-6 h-6 stroke-gray-600"/>
-                </button>
-                <input type="text" className="py-1 px-2 w-full focus-visible:outline-none text-sm" placeholder="Search for people, post, events..."/>
-            </form>
+				<form
+					action=""
+					className="hidden w-full max-w-140 py-1 rounded-lg bg-gray-200 focus-within:ring-2 ring-blue-400 ring-offset-2 md:flex items-center gap-2">
+					<button className="cursor-pointer py-2 pl-4">
+						<Search className="w-6 h-6 stroke-gray-600" />
+					</button>
+					<input
+						type="text"
+						className="py-1 px-2 w-full focus-visible:outline-none text-sm"
+						placeholder="Search for people, post, events..."
+					/>
+				</form>
 
 				<div className="flex items-center gap-8">
-                    <div className="relative">
-
-                    <Bell className="w-5 h-5"/>
-                    <Badge className="absolute -top-3 -right-2 text-[10px]" value={20}/>
-                    </div>
-                    <button className="w-10 aspect-square rounded-full">
-<Image className="w-full object-cover object-center" src="/reviewer-image-2.webp" alt={"profile image"} width={61} height={62}/>
-                    </button>
-                </div>
+					<div className="relative">
+						<Bell className="w-5 h-5" />
+						<Badge className="absolute -top-3 -right-2 text-[10px]" value={20} />
+					</div>
+					<button className="w-10 aspect-square rounded-full">
+						<Image
+							className="w-full object-cover object-center"
+							src="/reviewer-image-2.webp"
+							alt={"profile image"}
+							width={61}
+							height={62}
+						/>
+					</button>
+				</div>
 
 				{/* Mobile menu button */}
-				<button
+				{/* <button
 					aria-label="open mobile navigation"
 					className="md:hidden"
 					onClick={() => setMobileOpen(true)}>
 					<Menu size={28} />
-				</button>
+				</button> */}
 			</div>
 
 			{/* Overlay */}
@@ -143,7 +159,10 @@ export default function TopNavigation() {
 						</Link>
 					</li>
 					<li>
-						<Link className="px-6 py-3 block" href="/upcoming-events" onClick={() => setMobileOpen(false)}>
+						<Link
+							className="px-6 py-3 block"
+							href="/upcoming-events"
+							onClick={() => setMobileOpen(false)}>
 							Event/Ticketing
 						</Link>
 					</li>

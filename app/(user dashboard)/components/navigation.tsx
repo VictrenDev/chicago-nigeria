@@ -19,7 +19,7 @@ export type NavItem = {
 	href: string;
 	label: string;
 	icon: LucideIcon; // all lucide icons share this type
-	badge?: number; 
+	badge?: number;
 };
 const navItems: NavItem[] = [
 	{ href: "/feeds", label: "Feeds", icon: Home },
@@ -43,7 +43,9 @@ export default function SideNavigation({ children }: { children: React.ReactNode
 								<Link
 									key={href}
 									href={href}
-									className={`${pathname === href ? "bg-[var(--primary-color)] text-white" :""}`}>
+									className={`${
+										pathname.startsWith(href) ? "bg-[var(--primary-color)] text-white" : ""
+									}`}>
 									<Icon className="w-4 h-4" />
 									<span>{label}</span>
 									{badge && <Badge value={badge} />}
@@ -51,7 +53,10 @@ export default function SideNavigation({ children }: { children: React.ReactNode
 							))}
 						</aside>
 						<div className=" bg-white p-4 rounded-lg space-y-4">
-							<h2 className="flex items-center gap-2"><TrendingUp className="text-[var(--primary-color)] w-6 h-6" />Trending Now</h2>
+							<h2 className="flex items-center gap-2">
+								<TrendingUp className="text-[var(--primary-color)] w-6 h-6" />
+								Trending Now
+							</h2>
 							<div className="space-y-3">
 								<div>
 									<h3 className="text-sm">Nigeria at 65 Celebration</h3>
@@ -74,7 +79,7 @@ export default function SideNavigation({ children }: { children: React.ReactNode
 					</div>
 				</aside>
 				<section className="bg-gray-50">{children}</section>
-				<MobileNavigation navigationLinks={navItems}/>
+				<MobileNavigation navigationLinks={navItems} />
 			</main>
 		</>
 	);
