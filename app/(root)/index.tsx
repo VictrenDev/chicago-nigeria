@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { FacebookIcon, InstagramIcon, LinkedInIcon, TickIcon, XIcon } from "./icons";
+import { FacebookIcon, InstagramIcon, LinkedInIcon, TickIcon, XIcon } from "../components/icons";
 import { Heart, HeartIcon, Search, Star, TrendingUp, Users } from "lucide-react";
 import { motion } from "framer-motion";
 

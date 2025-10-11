@@ -60,15 +60,15 @@
 
 .user-page-top {
 	> button {
-		@apply cursor-pointer text-sm inline-flex items-center font-light gap-2;
+		@apply cursor-pointer text-sm inline-flex items-center gap-2;
 	}
 	> button:not(:last-child) {
 		@apply py-2 px-4 border border-gray-400 rounded-md mb-0;
 	}
 }
 /* etc */
-.sidebar-buttons > button {
-	@apply hover:bg-[var(--primary-color)] hover:text-white transition-colors duration-100 text-[15px] rounded-md text-left px-4 py-2 cursor-pointer flex gap-2 items-center w-full;
+.sidebar-buttons > a {
+	@apply block hover:bg-[var(--primary-color)] hover:text-white transition-colors duration-100 text-[15px] rounded-md text-left px-4 py-2 cursor-pointer flex gap-2 items-center w-full;
 }
 
 .feed-post-actions > * {
@@ -101,7 +101,11 @@ body {
     margin-inline: auto;
 }
 
-
+@layer components{
+	.button-hover-effect > button{
+		@apply transition-colors duration-200 hover:bg-[var(--primary-color)] hover:text-white rounded-md;
+	}
+}
 @keyframes slide-in-right {
   from {
     opacity: 0;

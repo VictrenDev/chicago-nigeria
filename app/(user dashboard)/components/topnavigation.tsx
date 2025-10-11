@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X } from "lucide-react";
+import { Bell, Menu, Search, X } from "lucide-react";
+import Badge from "./badge";
 
-export default function Navbar() {
+export default function TopNavigation() {
 	const [mobileOpen, setMobileOpen] = useState(false);
 	// const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
 
@@ -25,106 +26,31 @@ export default function Navbar() {
 	}, [mobileOpen]);
 
 	return (
-		<nav className="shadow-[0_4px_46px_-14px_#00000040] py-1 relative z-50">
-			<div className="container-custom mx-auto flex w-full justify-between items-center">
+		<nav className="shadow-[0_4px_46px_-14px_#00000040] bg-white py-3 relative top-0">
+			<div className="container-custom mx-auto flex w-full justify-between items-center gap-8">
 				{/* Logo */}
 				<Link href={"/"}>
-					<Image src="/chicago-nigeria-logo-1.png" alt="logo" height={17} width={113} />
+					<Image className="w-20" src="/chicago-nigeria-logo-1.png" alt="logo" height={17} width={113} />
 				</Link>
 
-				{/* Desktop menu */}
-				<ul className="hidden md:flex ">
-					<li>
-						<Link className="px-4 py-8 inline-block" href={"/"}>
-							Home
-						</Link>
-					</li>
-					<li>
-						<Link className="px-4 py-8 inline-block" href={"/about"}>
-							About
-						</Link>
-					</li>
-					{/* <li className="group/about relative">
-                        <button className="px-4 py-8 inline-flex items-center gap-1" onClick={() => toggleDropdown("about")}>
-                            Marketplace <ChevronDown size={16} />
-                        </button>
-                        <ul className="absolute hidden flex-col flex-wrap left-0 gap-4 group-hover/about:flex bg-white shadow-md rounded-md p-6 max-h-100 w-140 hover-effect-for-dropdown-links">
-                            <li>
-                                <Link href="/team">Fashion & Accessories</Link>
-                            </li>
-                            <li>
-                                <Link href="/mission">Food & Catering</Link>
-                            </li>
-                            <li className="relative group/housing">
-                                <button className="px-4 py-2 w-full items-center gap-1" onClick={() => toggleDropdown("housing")}>
-                                    Housing and Accommodation <ChevronDown size={16} />
-                                </button>
-                                <ul className="absolute hidden top-0 left-[100%] gap-4 group-hover/housing:block bg-white shadow-md rounded-md p-2 max-h-100 w-full hover-effect-for-dropdown-links">
-                                    <li>
-                                        <Link href="/team">Short-term rentals (airbnb-style)</Link>
-                                    </li>
-                                    <li>
-                                        <Link href="/mission">Roommate finder (Students, Newcomers)</Link>
-                                    </li>
-                                    <li>
-                                        <Link href="/mission">Property Listings (Rent/Sale)</Link>
-                                    </li>
-                                    <li>
-                                        <Link href="/mission">Real estate agents (Nigerian-owned or Nigeria-friendly)</Link>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <Link href="/mission">Services Education & learning</Link>
-                            </li>
-                            <li>
-                                <Link href="/mission">Entertainment & Events</Link>
-                            </li>
-                            <li>
-                                <Link href="/mission">Travel & Shipping</Link>
-                            </li>
-                            <li>
-                                <Link href="/mission">Baby & Kids</Link>
-                            </li>
-                            <li>
-                                <Link href="/mission">Jobs & Gigs</Link>
-                            </li>
-                            <li>
-                                <Link href="/mission">Buy & Sell (Classifieds)</Link>
-                            </li>
-                            <li>
-                                <Link href="/mission">others</Link>
-                            </li>
-                        </ul>
-                    </li> */}
-					<li>
-						<Link className="px-4 py-8 inline-block" href={"/marketplace"}>
-							Marketplace
-						</Link>
-					</li>
-					<li>
-						<Link className="px-4 py-8 inline-block" href={"/upcoming-events"}>
-							Event/Ticketing
-						</Link>
-					</li>
-					<li>
-						<Link className="px-4 py-8 inline-block" href={"/news"}>
-							News/Trending
-						</Link>
-					</li>
-					<li>
-						<Link className="px-4 py-8 inline-block" href={"/contact"}>
-							Contact Us
-						</Link>
-					</li>
-				</ul>
+			<form action="" className="w-full max-w-140 py-1 rounded-lg bg-gray-200 focus-within:ring-2 ring-blue-400 ring-offset-2 flex items-center gap-2">
+                <button className="cursor-pointer py-2 pl-4">
 
-				{/* CTA button */}
-				<Link
-					className="hidden md:inline-block bg-gradient-to-r from-[#037244] to-[#04C977] text-white px-4 py-1 rounded-lg"
-					href="/signup">
-					Join Us +
-				</Link>
+                <Search className="w-6 h-6 stroke-gray-600"/>
+                </button>
+                <input type="text" className="py-1 px-2 w-full focus-visible:outline-none text-sm" placeholder="Search for people, post, events..."/>
+            </form>
+
+				<div className="flex items-center gap-8">
+                    <div className="relative">
+
+                    <Bell className="w-5 h-5"/>
+                    <Badge className="absolute -top-3 -right-2 text-[10px]" value={20}/>
+                    </div>
+                    <button className="w-10 aspect-square rounded-full">
+<Image className="w-full object-cover object-center" src="/reviewer-image-2.webp" alt={"profile image"} width={61} height={62}/>
+                    </button>
+                </div>
 
 				{/* Mobile menu button */}
 				<button

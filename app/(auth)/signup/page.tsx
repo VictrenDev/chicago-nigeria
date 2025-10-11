@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import bcrypt from "bcryptjs";
+import { CheckIcon } from "@/app/components/icons";
 
 type FormValues = {
 	id: string;
@@ -19,6 +20,8 @@ type FormValues = {
 	neighborhood?: string;
 	stateOfOrigin: string;
 	profession: string;
+	business?: string;
+	brandName?: string;
 	company: string;
 	bio?: string;
 	password: string;
@@ -37,14 +40,14 @@ async function postUser(url: string, { arg }: { arg: FormValues }) {
 	return res.json();
 }
 export default function Form() {
-	const [step, setStep] = useState(1);
+	const [step, setStep] = useState(4);
 	const [direction, setDirection] = useState<"left" | "right">("right");
+	const [registrationType, setRegistrationType] = useState<"regular" | "vendor">("regular");
 	const [isAnimating, setIsAnimating] = useState(false);
-	const {
-		trigger: triggerSubmitForm,
-		isMutating,
-		error,
-	} = useSWRMutation("https://68e5269b8e116898997e96bc.mockapi.io/users/v1/Users", postUser);
+	const { trigger: triggerSubmitForm } = useSWRMutation(
+		"https://68e5269b8e116898997e96bc.mockapi.io/users/v1/Users",
+		postUser
+	);
 
 	const {
 		register,
@@ -64,13 +67,15 @@ export default function Form() {
 			stateOfOrigin: "",
 			profession: "",
 			company: "",
+			business: "",
+			brandName: "",
 			bio: "",
 			password: "",
 			confirmPassword: "",
 		},
 	});
 
-	if (step > 4) setStep(4);
+	if (step > 7) setStep(7);
 	if (step < 1) setStep(1);
 
 	const onSubmit = async (data: FormValues) => {
@@ -104,7 +109,9 @@ export default function Form() {
 			fieldsToValidate = ["currentCity", "stateOfOrigin"];
 		} else if (step === 3) {
 			fieldsToValidate = ["profession", "company"];
-		} else if (step === 4) {
+		} else if (step === 4 && registrationType === "vendor") {
+			fieldsToValidate = ["business", "brandName"];
+		} else if (step === 5) {
 			fieldsToValidate = ["password", "confirmPassword"];
 		}
 
@@ -169,16 +176,16 @@ export default function Form() {
 					{/* Filled line */}
 					<div
 						className="absolute top-[50%] left-0 h-[2px] bg-[var(--primary-color)] transition-all duration-500"
-						style={{ width: `${((step - 1) / (4 - 1)) * 100}%` }}></div>
+						style={{ width: `${((step - 1) / (7 - 1)) * 100}%` }}></div>
 
-					{[1, 2, 3, 4].map((n) => {
+					{[1, 2, 3, 4, 5, 6, 7].map((n) => {
 						const isCompleted = step > n;
 						const isCurrent = step === n;
 
 						return (
 							<div
 								key={n}
-								className={`w-10 h-10 rounded-full flex items-center justify-center relative z-10 transition-all duration-300
+								className={`w-7 h-7 md:w-9 md:h-9 rounded-full flex items-center justify-center relative z-10 transition-all duration-300 text-xs md:text-sm
           ${
 						isCompleted
 							? "bg-[var(--primary-color)] text-white border-[var(--primary-color)] shadow-lg scale-110"
@@ -399,6 +406,123 @@ export default function Form() {
 								</p>
 							</div>
 							<fieldset className="space-y-4 mt-8">
+								<div
+									onClick={() => setRegistrationType("regular")}
+									className="flex gap-6 border border-[var(--primary-color)] py-4 px-8 rounded-lg relative">
+									<div className="bg-[var(--primary-color)] flex items-center justify-center w-10 h-10 shrink-0 rounded-md"></div>
+									{registrationType === "regular" && (
+										<CheckIcon className="absolute right-4 top-2" />
+									)}
+
+									<div>
+										<h2 className="font-semibold">Regular Member</h2>
+										<p className="text-gray-500">Connect with people and explore opportunities</p>
+									</div>
+								</div>
+								<div
+									onClick={() => setRegistrationType("vendor")}
+									className="flex gap-6 border border-[var(--primary-color)] py-4 px-8 rounded-lg relative">
+									<div className="bg-[var(--primary-color)] flex items-center justify-center w-10 h-10 shrink-0 rounded-md"></div>
+									{registrationType === "vendor" && (
+										<CheckIcon className="absolute right-4 top-2" />
+									)}
+									<div>
+										<h2 className="font-semibold">Vendor/Business Owners</h2>
+										<p className="text-gray-500">Sell products or services in the marketplace</p>
+									</div>
+								</div>
+								{registrationType === "vendor" && (
+									<fieldset className="space-y-4 mt-8">
+										<div>
+											<label className="block text-sm font-medium mb-1">Business/Brand Name</label>
+											<input
+												type="text"
+												{...register("business", { required: "Business is required" })}
+												className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+												placeholder="e.g. Software Engineer"
+											/>
+											{errors.profession && (
+												<p className="text-red-500 text-xs mt-1">{errors.profession.message}</p>
+											)}
+										</div>
+										<div>
+											<label className="block text-sm font-medium mb-1">Business Category</label>
+											<input
+												type="text"
+												{...register("brandName", { required: "Brand name is required" })}
+												className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+												placeholder="Microsoft"
+											/>
+											{errors.company && (
+												<p className="text-red-500 text-xs mt-1">{errors.company.message}</p>
+											)}
+										</div>
+									</fieldset>
+								)}
+
+								{/* <div>
+									<label className="block text-sm font-medium mb-1">Password</label>
+									<input
+										type="password"
+										{...register("password", {
+											required: "Password is required",
+											minLength: { value: 6, message: "At least 6 characters" },
+										})}
+										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										placeholder="Create a strong password"
+									/>
+									{errors.password && (
+										<p className="text-red-500 text-xs mt-1">{errors.password.message}</p>
+									)}
+								</div>
+								<div>
+									<label className="block text-sm font-medium mb-1">Confirm Password</label>
+									<input
+										type="password"
+										{...register("confirmPassword", {
+											validate: (value) =>
+												value === getValues("password") || "Passwords do not match",
+										})}
+										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										placeholder="Confirm your password"
+									/>
+									{errors.confirmPassword && (
+										<p className="text-red-500 text-xs mt-1">{errors.confirmPassword.message}</p>
+									)}
+								</div>
+								<div className="bg-gray-50 rounded-lg p-4 mt-4">
+									<h3 className="text-base font-medium mb-2">Password Requirements</h3>
+									<ul className="text-sm text-gray-600 space-y-1">
+										<li className="flex items-center gap-2">
+											<div className="w-1.5 h-1.5 bg-gray-400 rounded-full"></div>
+											At least 8 characters
+										</li>
+										<li className="flex items-center gap-2">
+											<div className="w-1.5 h-1.5 bg-gray-400 rounded-full"></div>
+											One uppercase character
+										</li>
+										<li className="flex items-center gap-2">
+											<div className="w-1.5 h-1.5 bg-gray-400 rounded-full"></div>
+											One number
+										</li>
+									</ul>
+								</div> */}
+							</fieldset>
+							<CommonButton next={next} isAnimating={isAnimating} />
+						</div>
+					)}
+
+					{/* STEP 5 */}
+					{step === 5 && (
+						<div className={`${getStepAnimationClass()} w-full`}>
+							<div className="flex flex-col items-center space-y-1">
+								<Lock className="w-10 h-10 text-[var(--primary-color)]" />
+								<h1 className="text-2xl font-medium">Secure your account</h1>
+								<p className="text-gray-400 text-center">
+									Create a strong password to protect your profile
+								</p>
+							</div>
+							<fieldset className="space-y-4 mt-8">
 								<div>
 									<label className="block text-sm font-medium mb-1">Password</label>
 									<input
@@ -454,6 +578,54 @@ export default function Form() {
 								<span>Submit</span>
 								<ArrowRight className="w-4 h-4" />
 							</button>
+						</div>
+					)}
+
+					{/* STEP 6 */}
+					{step === 6 && (
+						<div className={`${getStepAnimationClass()} w-full`}>
+							<div className="flex flex-col items-center space-y-1">
+								<CheckIcon className="w-10 h-10 text-[var(--primary-color)]" />
+								<h1 className="text-2xl font-medium">Verify your email</h1>
+								<p className="text-gray-400 text-center">
+									we&apos;ve sent a verification email to email@mail.com
+								</p>
+							</div>
+							<fieldset className="space-y-4 mt-8">
+								<div>
+									<label className="block text-sm font-medium mb-1">Professional Job Title</label>
+									<input
+										type="text"
+										{...register("profession", { required: "Profession is required" })}
+										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										placeholder="e.g. Software Engineer"
+									/>
+									{errors.profession && (
+										<p className="text-red-500 text-xs mt-1">{errors.profession.message}</p>
+									)}
+								</div>
+								<div>
+									<label className="block text-sm font-medium mb-1">Company/Organization</label>
+									<input
+										type="text"
+										{...register("company", { required: "Company is required" })}
+										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										placeholder="Microsoft"
+									/>
+									{errors.company && (
+										<p className="text-red-500 text-xs mt-1">{errors.company.message}</p>
+									)}
+								</div>
+								<div>
+									<label className="block text-sm font-medium mb-1">Bio (Optional)</label>
+									<textarea
+										{...register("bio")}
+										className="min-h-24 w-full rounded-lg border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200 resize-none mt-1 p-3"
+										placeholder="Tell us a bit about yourself, your interests, and what you're looking for in the community..."
+									/>
+								</div>
+							</fieldset>
+							<CommonButton next={next} isAnimating={isAnimating} />
 						</div>
 					)}
 				</div>
