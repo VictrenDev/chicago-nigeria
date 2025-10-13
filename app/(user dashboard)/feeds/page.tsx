@@ -1,6 +1,5 @@
 import {
 	ArrowRight,
-	BookmarkIcon,
 	BriefcaseConveyorBelt,
 	Calendar,
 	Camera,
@@ -8,7 +7,6 @@ import {
 	Clock,
 	EllipsisVertical,
 	Filter,
-	Heart,
 	MapPin,
 	MessageCircle,
 	SendIcon,

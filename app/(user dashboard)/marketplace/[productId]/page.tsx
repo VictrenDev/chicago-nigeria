@@ -8,7 +8,6 @@ import {
 	MapPin,
 	MessageCircle,
 	Phone,
-	Share2,
 	Star,
 } from "lucide-react";
 import Image from "next/image";
