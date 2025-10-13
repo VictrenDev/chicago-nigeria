@@ -1,146 +1,181 @@
 "use client";
-import useSWRMutation from "swr/mutation";
-import { ArrowLeft, ArrowRight, Camera, Lock, MapPin, User } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import bcrypt from "bcryptjs";
-import { CheckIcon } from "@/app/components/icons";
+import useSWRMutation from "swr/mutation";
+import { Eye, EyeOff } from "lucide-react";
+import { GoogleIcon, SigninFacebookIcon } from "@/app/components/icons";
 
 type FormValues = {
-	email: string;
-	phone: string;
-
-	password: string;
+  email: string;
+  password: string;
 };
 
 async function postUser(url: string, { arg }: { arg: FormValues }) {
-	const res = await fetch(url, {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify(arg),
-	});
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(arg),
+  });
 
-	if (!res.ok) throw new Error("Failed to save user");
-
-	return res.json();
+  if (!res.ok) throw new Error("Failed to sign in");
+  return res.json();
 }
+
 export default function SignIn() {
-	const { trigger: triggerSubmitForm } = useSWRMutation(
-		"https://68e5269b8e116898997e96bc.mockapi.io/users/v1/Users",
-		postUser
-	);
+  const { trigger } = useSWRMutation(
+    "https://68e5269b8e116898997e96bc.mockapi.io/users/v1/Users",
+    postUser
+  );
 
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm<FormValues>({
-		defaultValues: {
-			email: "",
-			phone: "",
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>();
 
-			password: "",
-		},
-	});
+  const [showPassword, setShowPassword] = useState(false);
 
-	const onSubmit = async (data: FormValues) => {
-		try {
-			// hash password before sending
-			const hashedPassword = await bcrypt.hash(data.password, 10); // 10 = salt rounds
+  const onSubmit = async (data: FormValues) => {
+    try {
+      const hashedPassword = await bcrypt.hash(data.password, 10);
+      const newUser = await trigger({ ...data, password: hashedPassword });
+      toast.success("Signed in successfully!");
+      console.log(newUser);
+    } catch (error) {
+      toast.error("Invalid credentials or server error");
+    }
+  };
 
-			const newUser = await triggerSubmitForm({
-				...data,
-				password: hashedPassword,
-			});
+  return (
+    <section className="flex justify-center items-center min-h-screen bg-gray-50 px-4">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="bg-white shadow-md rounded-2xl p-6 w-full max-w-lg text-sm"
+      >
+        {/* Logo */}
+        <div className="flex justify-center mb-4">
+          <Image
+            src="/chicago-nigeria-logo-1.png"
+            alt="logo"
+            width={140}
+            height={40}
+            className="h-10 object-contain"
+          />
+        </div>
 
-			if (newUser) {
-				toast.success("Form Submitted successfully. Check email for confirmation link.");
-				console.log("Form submitted:", newUser);
-			}
-		} catch (error) {
-			console.log(error);
-			toast.error("Sorry! something went wrong");
-		}
-	};
+        {/* Heading */}
+        <h1 className="text-lg font-semibold text-center mb-1">
+          Sign in to your account
+        </h1>
+        <p className="text-center text-gray-500 text-sm mb-6">
+          Connect with thousands of Nigerians in Chicago. Share your story,
+          discover opportunities, and build meaningful relationships.
+        </p>
 
-	return (
-		<section className="w-screen h-screen bg-white/10 flex items-center justify-center px-4 pt-12">
-			<form
-				onSubmit={handleSubmit(onSubmit)}
-				className="bg-white px-4 py-8 md:px-8 rounded-xl md:w-120 text-sm relative signup-form overflow-hidden">
-				<Image
-					src={"/chicago-nigeria-logo-1.png"}
-					alt="logo"
-					height={67}
-					width={163}
-					className="w-20 mx-auto"
-				/>
+        {/* Email */}
+        <label className="block text-sm font-medium mb-1">Email Address</label>
+        <input
+          type="email"
+          {...register("email", {
+            required: "Email is required",
+            pattern: { value: /\S+@\S+\.\S+/, message: "Invalid email" },
+          })}
+          placeholder="Enter your email"
+          className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 outline-none mb-2"
+        />
+        {errors.email && (
+          <p className="text-red-500 text-xs mb-2">{errors.email.message}</p>
+        )}
 
-				{/* STEP CONTENT CONTAINER */}
-				<div className="relative min-h-[400px] overflow-hidden px-2">
-					<div className={` w-full`}>
-						<div className="flex flex-col items-center space-y-1 mt-12">
-							<h1 className=" text-xl font-medium">Sign in to your account</h1>
-							<p className="text-gray-400 text-center">
-								Connect with thousands of Nigerians in Chicago. Share your story, discover
-								opportunities, and build meaningful relationships.
-							</p>
-						</div>
-						<fieldset className="space-y-4 mt-8">
-							<div>
-								<label htmlFor="email" className="block text-sm font-medium mb-1">
-									Email Address
-								</label>
-								<input
-									type="email"
-									{...register("email", {
-										required: "Email is required",
-										pattern: { value: /\S+@\S+\.\S+/, message: "Invalid email" },
-									})}
-									className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
-									placeholder="Enter your email address"
-								/>
-								{errors.email && (
-									<p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
-								)}
-							</div>
-							<div className="flex flex-col sm:flex-row sm:gap-2 gap-4">
-								<div>
-									<label htmlFor="password" className="block text-sm font-medium mb-1">
-										Password
-									</label>
-									<input
-										type="password"
-										{...register("password", { required: "Last name is required" })}
-										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
-										placeholder="Enter your last name"
-									/>
-									{errors.password && (
-										<p className="text-red-500 text-xs mt-1">{errors.password.message}</p>
-									)}
-								</div>
-							</div>
-						</fieldset>
-						<button
-							type="submit"
-							className="bg-[var(--primary-color)] text-white py-3 rounded-lg flex justify-center items-center gap-2 w-full mt-8 mb-4 hover:bg-[var(--primary-color)]/90 disabled:opacity-50 transition-all duration-200">
-							<span>Continue</span>
-							<ArrowRight className="w-4 h-4" />
-						</button>
-						<p className="text-center mx-auto text-sm mt-4">
-							Not ready to sign up?{" "}
-							<Link
-								href={"/"}
-								className="text-[var(--primary-color)] hover:underline transition-colors">
-								Return to main page
-							</Link>
-						</p>
-					</div>
-				</div>
-			</form>
-		</section>
-	);
+        {/* Password */}
+        <label className="block text-sm font-medium mb-1">Password</label>
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            {...register("password", { required: "Password is required" })}
+            placeholder="Enter your password"
+            className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 outline-none pr-10"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-3 text-gray-500"
+          >
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
+        {errors.password && (
+          <p className="text-red-500 text-xs mt-1">
+            {errors.password.message}
+          </p>
+        )}
+
+        {/* Remember + Forgot */}
+        <div className="flex items-center justify-between text-sm mt-3 mb-5">
+          <label className="flex items-center gap-2">
+            <input type="checkbox" className="accent-green-600" />
+            Remember Me
+          </label>
+          <Link
+            href="#"
+            className="text-green-600 hover:underline text-sm font-medium"
+          >
+            Forgot Password?
+          </Link>
+        </div>
+
+        {/* Sign in button */}
+        <button
+          type="submit"
+          className="bg-green-600 hover:bg-green-700 text-white w-full py-3 rounded-lg font-medium transition-all"
+        >
+          Sign in
+        </button>
+
+        {/* Divider */}
+        <div className="flex items-center gap-2 my-4">
+          <div className="flex-1 h-px bg-gray-200" />
+          <span className="text-gray-400 text-xs">Or</span>
+          <div className="flex-1 h-px bg-gray-200" />
+        </div>
+
+        {/* Social login */}
+        <button
+          type="button"
+          className="w-full border border-gray-300 rounded-lg py-2 flex items-center justify-center gap-2 hover:bg-gray-50 mb-2"
+        >
+          <GoogleIcon/>
+          Sign in with Google
+        </button>
+        <button
+          type="button"
+          className="w-full border border-gray-300 rounded-lg py-2 flex items-center justify-center gap-2 hover:bg-gray-50"
+        >
+          <SigninFacebookIcon/>
+          Sign in with Facebook
+        </button>
+
+        {/* Footer */}
+        <p className="text-center text-sm mt-5">
+          Don’t have an account?{" "}
+          <Link href="/signup" className="text-green-600 font-medium hover:underline">
+            Sign up
+          </Link>
+        </p>
+
+        <div className="flex justify-center mt-3">
+          <Link
+            href="/"
+            className="flex items-center gap-1 text-gray-500 hover:underline text-sm"
+          >
+            ← Back to home
+          </Link>
+        </div>
+      </form>
+    </section>
+  );
 }

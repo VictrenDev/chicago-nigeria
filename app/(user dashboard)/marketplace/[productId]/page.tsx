@@ -8,13 +8,17 @@ import {
 	MapPin,
 	MessageCircle,
 	Phone,
+	Share2,
 	Star,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import LikePost from "../../components/likePostContent";
+import ShareButton from "../../components/shareButton";
 
 export default async function Product({ params }: { params: { productId: string } }) {
 	const { productId } = await params;
+
 	return (
 		<main className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-4 md:gap-12">
 			<section className="space-y-4 pt-4">
@@ -38,6 +42,10 @@ export default async function Product({ params }: { params: { productId: string 
 							fill
 							priority
 						/>
+						<div className="absolute right-5 top-4 flex gap-2 items-center">
+							<ShareButton title={productId} />
+							<LikePost className="w-10 h-10" />
+						</div>
 					</div>
 
 					{/* Other Images */}
@@ -203,22 +211,7 @@ export default async function Product({ params }: { params: { productId: string 
 						].map(({ itemName, price, image, owner }, index) => (
 							<div
 								key={index}
-								className="
-          
-          sm:min-w-0 
-          sm:w-auto
-          bg-white 
-          p-4 
-          rounded-xl 
-          shadow-sm 
-          hover:shadow-md 
-          transition-all 
-          duration-300 
-          cursor-pointer 
-          snap-center
-          flex-shrink-0
-		  mb-8
-        ">
+								className=" sm:min-w-0 sm:w-auto bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition-all duration-300  cursor-pointer  snap-center flex-shrink-0 mb-8">
 								<div className="w-30 md:w-full aspect-square rounded-xl overflow-hidden bg-gray-100 mb-4">
 									<Image
 										src={image}
@@ -229,7 +222,9 @@ export default async function Product({ params }: { params: { productId: string 
 									/>
 								</div>
 
-								<p className="text-sm font-medium text-gray-800 truncate max-w-30 md:max-w-none">{itemName}</p>
+								<p className="text-sm font-medium text-gray-800 truncate max-w-30 md:max-w-none">
+									{itemName}
+								</p>
 								<p className="text-[var(--primary-color)] font-semibold">${price}</p>
 								<p className="text-xs text-gray-500">{owner}</p>
 							</div>
@@ -242,7 +237,10 @@ export default async function Product({ params }: { params: { productId: string 
 			<section className="mt-4 space-y-8 sticky top-0 h-fit pt-4 hidden md:block">
 				<section className="bg-white p-4 rounded-xl">
 					<section className="grid place-items-center ">
-						<div className="flex items-center justify-center w-20 aspect-square rounded-full bg-[var(--primary-color)] text-white"> <p className="font-semibold text-xl">KF</p></div>
+						<div className="flex items-center justify-center w-20 aspect-square rounded-full bg-[var(--primary-color)] text-white">
+						
+							<p className="font-semibold text-xl">KF</p>
+						</div>
 						<p>Kemi Fashions</p>
 						<div>
 							<div className="flex gap-1">
@@ -306,7 +304,7 @@ export default async function Product({ params }: { params: { productId: string 
 						<Link
 							className="flex items items-center justify-center gap-1 rounded-lg p-3 border border-gray-200"
 							href={"/"}>
-							<Phone className="w-5 h-5" /> Whatsapp
+							<Phone className="w-4 h-4 shrink-0" /> Whatsapp
 						</Link>
 						<Link
 							className="col-span-2 flex items center justify-center gap-1 rounded-lg p-2"

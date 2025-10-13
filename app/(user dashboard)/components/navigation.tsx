@@ -25,7 +25,7 @@ const navItems: NavItem[] = [
 	{ href: "/feeds", label: "Feeds", icon: Home },
 	{ href: "/events", label: "Events", icon: Calendar },
 	{ href: "/marketplace", label: "Marketplace", icon: ShoppingBag },
-	{ href: "/messages", label: "Messages", icon: MessageCircle, badge: 2 },
+	{ href: "/messages", label: "Messages", icon: MessageCircle, badge: 200 },
 	{ href: "/groups", label: "Groups", icon: Users },
 	{ href: "/notifications", label: "Notifications", icon: Bell, badge: 12 },
 	{ href: "/settings", label: "Settings", icon: Settings },
@@ -36,16 +36,15 @@ export default function SideNavigation({ children }: { children: React.ReactNode
 	return (
 		<>
 			<main className="container-custom grid grid-cols-1 lg:grid-cols-[1fr_4fr] gap-12 py-12 bg-gray-50">
-				<aside className="sticky top-0 h-screen pt-4 md:block hidden">
+				<aside className="sticky top-0 h-screen pt-4 lg:block hidden">
 					<div className="space-y-8 w-full">
 						<aside className="space-y-0.5 bg-white p-4 rounded-lg sidebar-buttons">
 							{navItems.map(({ href, label, icon: Icon, badge }) => (
 								<Link
 									key={href}
 									href={href}
-									className={`${
-										pathname.startsWith(href) ? "bg-[var(--primary-color)] text-white" : ""
-									}`}>
+									className={`${pathname.startsWith(href) ? "bg-[var(--primary-color)] text-white" : ""
+										}`}>
 									<Icon className="w-4 h-4" />
 									<span>{label}</span>
 									{badge && <Badge value={badge} />}

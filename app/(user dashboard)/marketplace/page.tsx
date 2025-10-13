@@ -92,7 +92,7 @@ const postDetails: postDetailsType[] = [
 export default function Marketplace() {
 	return (
 		<main className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-4 md:gap-12">
-			<section className="space-y-4 pt-4">
+			<section className="space-y-4 md:pt-4">
 				{/* Header Section - Mobile Optimized */}
 				<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white px-4 sm:px-8 py-4 rounded-lg">
 					<div className="flex-1">
@@ -110,8 +110,8 @@ export default function Marketplace() {
 				</div>
 
 				{/* Stats Section - Mobile Horizontal Scroll */}
-				<div className="py-2 overflow-x-auto">
-					<div className="flex gap-3 min-w-max md:min-w-0 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4">
+				<div className="py-2">
+					<div className="gap-3 md:min-w-0 grid grid-cols-2 lg:grid-cols-4 md:gap-4">
 						<div className="p-4 rounded-lg bg-white flex items-center gap-4 min-w-[140px]">
 							<div className="flex-1">
 								<p className="font-bold text-lg">156</p>

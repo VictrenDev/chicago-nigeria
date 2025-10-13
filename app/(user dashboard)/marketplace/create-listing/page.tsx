@@ -16,6 +16,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { CustomPhotoInput } from "./upload";
 import Link from "next/link";
+import CustomSelectButton from "../../components/customSelect";
 type Product = {
 	title: string;
 	category: string;
@@ -27,6 +28,7 @@ type Product = {
 	video: string;
 	tags: string;
 };
+
 async function postUser(url: string, { arg }: { arg: Product }) {
 	const res = await fetch(url, {
 		method: "POST",
@@ -39,9 +41,9 @@ async function postUser(url: string, { arg }: { arg: Product }) {
 	return res.json();
 }
 export default function Form() {
-	const [step, setStep] = useState(1);
+	const [step, setStep] = useState<number>(1);
 	const [direction, setDirection] = useState<"left" | "right">("right");
-	const [isAnimating, setIsAnimating] = useState(false);
+	const [isAnimating, setIsAnimating] = useState<boolean>(false);
 	const { trigger: triggerSubmitForm } = useSWRMutation(
 		"https://68e5269b8e116898997e96bc.mockapi.io/users/v1/Users",
 		postUser
@@ -60,6 +62,8 @@ export default function Form() {
 			tags: "",
 		},
 	});
+	
+  
 	const {
 		register,
 		handleSubmit,
@@ -157,7 +161,7 @@ export default function Form() {
             w-[110px] sm:w-[130px] md:w-auto
             ${
 							isCompleted
-								? "border border-[var(--primary-color)] bg-white text-[var(--primary-color)]"
+								? "border border-[var(--primary-color)] bg-[var(--primary-color)]/5 text-[var(--primary-color)]"
 								: isCurrent
 								? "border-2 border-[var(--primary-color)] bg-white shadow-md text-[var(--primary-color)]"
 								: "border border-gray-300 bg-white text-gray-400"
@@ -188,13 +192,13 @@ export default function Form() {
 
 				<form
 					onSubmit={handleSubmit(onSubmit)}
-					className=" md:px-8 bg-white rounded-xl w-full text-sm relative signup-form overflow-hidden">
+					className=" md:px-8 bg-white rounded-xl w-full py-4 text-sm relative signup-form">
 					{/* STEP CONTENT CONTAINER */}
-					<div className="relative min-h-[400px] overflow-hidden px-2 ">
-						{/* STEP 1 */}
+					<div className="relative min-h-[400px] px-2 ">
+						{/* STEP 1 Basic Info*/}
 						{step === 1 && (
 							<div className={`${getStepAnimationClass()} w-full `}>
-								<fieldset className="space-y-4 mt-8 mb-4 ">
+								<fieldset className="space-y-4 mt-8 pb-4 ">
 									<div>
 										<label
 											htmlFor="email"
@@ -239,7 +243,7 @@ export default function Form() {
 										)}
 									</div>
 									<div className="flex flex-col sm:flex-row sm:gap-8 gap-4">
-										<div className="shrink-0">
+										<div className="shrink-0 flex-1">
 											<label
 												htmlFor="firstName"
 												className="block text-sm md:text-base font-semibold mb-1">
@@ -248,24 +252,25 @@ export default function Form() {
 											<input
 												type="text"
 												{...register("price", { required: "price is required" })}
-												className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+												className="w-full flex-1 rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 												placeholder="$0.00"
 											/>
 											{errors.price && (
 												<p className="text-red-500 text-xs mt-1">{errors.price.message}</p>
 											)}
 										</div>
-										<div className="shrink-0 ">
+										<div className="shrink-0 flex-1">
 											<label
 												htmlFor="lastName"
 												className="block text-sm md:text-base font-semibold mb-1">
 												Price Type
 											</label>
-											<input
-												type="text"
+											<CustomSelectButton
 												{...register("priceType")}
-												className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
-												placeholder="Fixed Price"
+												className="w-full text-left rounded-lg p-3 border bg-gray-200 border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+												name="priceType"
+												label="Fixed Price"
+												options={["one", "two", "three"]}
 											/>
 											{errors.priceType && (
 												<p className="text-red-500 text-xs mt-1">{errors.priceType.message}</p>
@@ -280,11 +285,12 @@ export default function Form() {
 											Category
 										</label>
 										<p className="text-gray-400 text-xs my-1">What condition is your product in?</p>
-										<input
-											type="text"
+										<CustomSelectButton
 											{...register("condition")}
-											className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
-											placeholder="Select Condition"
+											className="w-full text-left rounded-lg p-3 border bg-gray-200 border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+											name="condition"
+											label="Select Condition"
+											options={["Perfect Condition", "Used", "Bad", "Fresh"]}
 										/>
 										{errors.condition && (
 											<p className="text-red-500 text-xs mt-1">{errors.condition.message}</p>
@@ -294,7 +300,7 @@ export default function Form() {
 							</div>
 						)}
 
-						{/* STEP 2 */}
+						{/* STEP 2 Product Media*/}
 						{step === 2 && (
 							<div className={`${getStepAnimationClass()} w-full`}>
 								<div className="flex flex-col items-center space-y-1"></div>
@@ -380,7 +386,7 @@ export default function Form() {
 							</div>
 						)}
 
-						{/* STEP 3 */}
+						{/* STEP 3 Review and Submit*/}
 						{step === 3 && (
 							<div className="space-y-4">
 								{/* Review & Submit Section */}
@@ -548,26 +554,26 @@ export function CommonButton({
 	isAnimating: boolean;
 }) {
 	return (
-		<div className="flex justify-end gap-2 mt-8 mb-4 text-xs md:text-sm">
+		<div className="flex justify-end gap-2 pt-8 mb-4 text-xs md:text-sm">
 			<button
 				type="button"
 				onClick={prev}
 				disabled={isAnimating}
-				className="w-fit mr-auto py-3 px-4 border hover:text-white rounded-lg flex justify-center items-center gap-2 hover:bg-[var(--primary-color)]/90 disabled:opacity-50 transition-all duration-200">
+				className="w-fit mr-auto py-3 px-4 border hover:text-white rounded-lg flex justify-center items-center gap-2 hover:bg-[var(--primary-color)]/90 cursor-pointer disabled:opacity-50 transition-all duration-200">
 				<ArrowLeft className="w-4 h-4" />
 				<span>Previous</span>
 			</button>
 
 			<button
 				type="button"
-				className="w-fit py-3 px-4 border hover:text-white rounded-lg flex justify-center items-center gap-2 hover:bg-[var(--primary-color)]/90 disabled:opacity-50 transition-all duration-200">
-				Save as Draft
+				className="w-fit py-3 px-4 border hover:text-white rounded-lg flex justify-center items-center gap-2 hover:bg-[var(--primary-color)]/90 cursor-pointer disabled:opacity-50 transition-all duration-200">
+				Save Draft
 			</button>
 			<button
 				type={step === 3 ? "submit" : "button"}
 				onClick={next}
 				disabled={isAnimating}
-				className="w-fit py-3 px-4 text-white rounded-lg flex justify-center items-center gap-2 bg-[var(--primary-color)]/90 disabled:opacity-50 transition-all duration-200">
+				className="w-fit py-3 px-4 text-white rounded-lg flex justify-center items-center gap-2 bg-[var(--primary-color)] hover:bg-[var(--primary-color)]/90 cursor-pointer disabled:opacity-50 transition-all duration-200">
 				<span>{step === 3 ? "Submit Review" : "Next"}</span>
 				<ArrowRight className="w-4 h-4" />
 			</button>

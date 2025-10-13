@@ -91,7 +91,7 @@ export default function Feed() {
 	return (
 		<section className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-12">
 			<section className="space-y-8 pt-4">
-				<div className="flex gap-2 items-center bg-white p-8 md:rounded-lg space-y-4 user-page-top button-hover-effect">
+				<div className="flex overflow-auto gap-2 items-center bg-white p-8 md:rounded-lg space-y-4 user-page-top button-hover-effect">
 					<button className="text-white bg-[var(--primary-color)]">All Posts</button>
 					<button>Following</button>
 					<button>My Networks</button>
@@ -125,7 +125,7 @@ export default function Feed() {
 						</form>
 					</div>
 
-					<div className=" mt-12 border-t border-t-gray-200 flex gap-2 items-center bg-white py-4 space-y-4 user-page-top button-hover-effect">
+					<div className="overflow-x-auto mt-12 border-t border-t-gray-200 flex gap-2 items-center bg-white py-4 space-y-4 user-page-top button-hover-effect">
 						<button>
 							<Camera className="w-5 h-5" />
 							<span>Photo</span>
@@ -163,7 +163,7 @@ export default function Feed() {
 						) => {
 							if (postType === "sponsored-post") {
 								return (
-									<div key={index} className="md:p-8 py-2 md:rounded-lg bg-white">
+									<div key={index} className="md:p-8 py-6 px-4 md:rounded-lg bg-white">
 										<div className="flex">
 											<div className="w-14 h-14 rounded-full bg-gray-100 mr-4 ">
 												{" "}
@@ -214,7 +214,7 @@ export default function Feed() {
 								);
 							} else {
 								return (
-									<div key={index} className="md:p-8 py-2 md:rounded-lg bg-white">
+									<div key={index} className="md:p-8 py-6 px-4 md:rounded-lg bg-white">
 										<div className="flex">
 											<div className="w-14 h-14 rounded-full bg-gray-100 mr-4 ">
 												{" "}

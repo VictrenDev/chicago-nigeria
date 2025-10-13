@@ -1,13 +1,32 @@
 "use client";
 import useSWRMutation from "swr/mutation";
-import { ArrowLeft, ArrowRight, Camera, Lock, MapPin, User } from "lucide-react";
+import {
+	ArrowLeft,
+	ArrowRight,
+	BookOpen,
+	Briefcase,
+	Camera,
+	Check,
+	Globe2,
+	Heart,
+	Landmark,
+	Lock,
+	MapPin,
+	Music,
+	PartyPopper,
+	Store,
+	User,
+	Users,
+	UsersRound,
+	Utensils,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import bcrypt from "bcryptjs";
-import { CheckIcon } from "@/app/components/icons";
+import { CheckIcon, UserTick } from "@/app/components/icons";
 
 type FormValues = {
 	id: string;
@@ -27,7 +46,16 @@ type FormValues = {
 	password: string;
 	confirmPassword: string;
 };
-
+const interestsList = [
+	{ id: 1, label: "Professional Networking", icon: <Briefcase size={18} /> },
+	{ id: 2, label: "Business & Entrepreneurship", icon: <Users size={18} /> },
+	{ id: 3, label: "Nigerian culture & Heritage", icon: <Landmark size={18} /> },
+	{ id: 4, label: "Education & Learning", icon: <BookOpen size={18} /> },
+	{ id: 5, label: "Social Events & Parties", icon: <PartyPopper size={18} /> },
+	{ id: 6, label: "Music & Entertainment", icon: <Music size={18} /> },
+	{ id: 7, label: "Travel & Tourism", icon: <Globe2 size={18} /> },
+	{ id: 8, label: "Food and Dining", icon: <Utensils size={18} /> },
+];
 async function postUser(url: string, { arg }: { arg: FormValues }) {
 	const res = await fetch(url, {
 		method: "POST",
@@ -39,8 +67,9 @@ async function postUser(url: string, { arg }: { arg: FormValues }) {
 
 	return res.json();
 }
+
 export default function Form() {
-	const [step, setStep] = useState(4);
+	const [step, setStep] = useState(6);
 	const [direction, setDirection] = useState<"left" | "right">("right");
 	const [registrationType, setRegistrationType] = useState<"regular" | "vendor">("regular");
 	const [isAnimating, setIsAnimating] = useState(false);
@@ -48,7 +77,10 @@ export default function Form() {
 		"https://68e5269b8e116898997e96bc.mockapi.io/users/v1/Users",
 		postUser
 	);
-
+	const [selected, setSelected] = useState<number[]>([]);
+	const toggleSelect = (id: number) => {
+		setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+	};
 	const {
 		register,
 		handleSubmit,
@@ -399,17 +431,27 @@ export default function Form() {
 					{step === 4 && (
 						<div className={`${getStepAnimationClass()} w-full`}>
 							<div className="flex flex-col items-center space-y-1">
-								<Lock className="w-10 h-10 text-[var(--primary-color)]" />
-								<h1 className="text-2xl font-medium">Secure your account</h1>
+								<UserTick />
+								<h1 className="text-2xl font-medium">Registration Type</h1>
 								<p className="text-gray-400 text-center">
-									Create a strong password to protect your profile
+									How do you wan&apos;t to use chicago nigeria?
 								</p>
 							</div>
 							<fieldset className="space-y-4 mt-8">
 								<div
 									onClick={() => setRegistrationType("regular")}
 									className="flex gap-6 border border-[var(--primary-color)] py-4 px-8 rounded-lg relative">
-									<div className="bg-[var(--primary-color)] flex items-center justify-center w-10 h-10 shrink-0 rounded-md"></div>
+									<div
+										className={`${
+											registrationType === "regular" ? "bg-[var(--primary-color)]" : "bg-gray-300"
+										} flex items-center justify-center w-10 h-10 shrink-0 rounded-md`}>
+										<UsersRound
+											size={20}
+											className={`${
+												registrationType === "regular" ? "stroke-white" : "stroke-gray-00"
+											}`}
+										/>
+									</div>
 									{registrationType === "regular" && (
 										<CheckIcon className="absolute right-4 top-2" />
 									)}
@@ -422,7 +464,17 @@ export default function Form() {
 								<div
 									onClick={() => setRegistrationType("vendor")}
 									className="flex gap-6 border border-[var(--primary-color)] py-4 px-8 rounded-lg relative">
-									<div className="bg-[var(--primary-color)] flex items-center justify-center w-10 h-10 shrink-0 rounded-md"></div>
+									<div
+										className={`${
+											registrationType === "vendor" ? "bg-[var(--primary-color)]" : "bg-gray-300"
+										} flex items-center justify-center w-10 h-10 shrink-0 rounded-md`}>
+										<Store
+											size={20}
+											className={`${
+												registrationType === "vendor" ? "stroke-white" : "stroke-gray-00"
+											}`}
+										/>
+									</div>
 									{registrationType === "vendor" && (
 										<CheckIcon className="absolute right-4 top-2" />
 									)}
@@ -593,39 +645,75 @@ export default function Form() {
 							</div>
 							<fieldset className="space-y-4 mt-8">
 								<div>
-									<label className="block text-sm font-medium mb-1">Professional Job Title</label>
+									<label className="block text-sm font-semibold mb-1">Verification Code</label>
 									<input
 										type="text"
-										{...register("profession", { required: "Profession is required" })}
-										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
-										placeholder="e.g. Software Engineer"
-									/>
-									{errors.profession && (
-										<p className="text-red-500 text-xs mt-1">{errors.profession.message}</p>
-									)}
-								</div>
-								<div>
-									<label className="block text-sm font-medium mb-1">Company/Organization</label>
-									<input
-										type="text"
-										{...register("company", { required: "Company is required" })}
-										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
-										placeholder="Microsoft"
-									/>
-									{errors.company && (
-										<p className="text-red-500 text-xs mt-1">{errors.company.message}</p>
-									)}
-								</div>
-								<div>
-									<label className="block text-sm font-medium mb-1">Bio (Optional)</label>
-									<textarea
-										{...register("bio")}
-										className="min-h-24 w-full rounded-lg border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200 resize-none mt-1 p-3"
-										placeholder="Tell us a bit about yourself, your interests, and what you're looking for in the community..."
+										className="w-full text-center rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										placeholder="Enter 6 digit code"
 									/>
 								</div>
+								<button type="button" className="text-gray-500 text-sm mt-1 text-center w-full">
+									Didn&apos;t receive the code?
+								</button>
+								<button
+									type="button"
+									className="text-[var(--primary-color)] font-semibold text-sm text-center w-full">
+									Resend Code
+								</button>
 							</fieldset>
 							<CommonButton next={next} isAnimating={isAnimating} />
+						</div>
+					)}
+
+					{step === 7 && (
+						<div className="bg-white py-8 w-full text-center">
+							{/* Header */}
+							<div className="flex justify-center mb-3">
+								<div className="w-10 h-10 rounded-full border-2 border-green-600 flex items-center justify-center">
+									<Heart className="stroke-[var(--primary-color)]" />
+								</div>
+							</div>
+
+							<h1 className="text-lg font-semibold mb-1">What Interests you?</h1>
+							<p className="text-gray-500 text-sm mb-8">
+								Select interests to personalize your experience
+							</p>
+
+							{/* Interests grid */}
+							<div className="grid md:grid-cols-2 gap-3 text-left">
+								{interestsList.map((interest) => {
+									const isActive = selected.includes(interest.id);
+									return (
+										<button
+											key={interest.id}
+											type="button"
+											onClick={() => toggleSelect(interest.id)}
+											className={`flex items-center gap-2 p-3 rounded-xl border text-sm transition-all ${
+												isActive
+													? "border-green-600 bg-green-50 ring-1 ring-green-500"
+													: "border-gray-200 hover:bg-gray-50"
+											}`}>
+											<div className="text-green-600">{interest.icon}</div>
+											<span className="flex-1 text-left text-gray-700">{interest.label}</span>
+											{isActive && <Check size={16} className="text-green-600 shrink-0" />}
+										</button>
+									);
+								})}
+							</div>
+
+							{/* Footer text */}
+							<p className="text-gray-500 text-xs mt-6">
+								Selected {selected.length} interest{selected.length !== 1 && "s"}. You can change
+								these later.
+							</p>
+							<button
+								type="button"
+								onClick={next}
+								disabled={isAnimating}
+								className="bg-[var(--primary-color)] text-white py-3 rounded-lg flex justify-center items-center gap-2 w-full mt-8 mb-4 hover:bg-[var(--primary-color)]/90 disabled:opacity-50 transition-all duration-200">
+								<span>Complete Registration</span>
+								<ArrowRight className="w-4 h-4" />
+							</button>
 						</div>
 					)}
 				</div>
