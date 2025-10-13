@@ -69,7 +69,7 @@ async function postUser(url: string, { arg }: { arg: FormValues }) {
 }
 
 export default function Form() {
-	const [step, setStep] = useState(6);
+	const [step, setStep] = useState(1);
 	const [direction, setDirection] = useState<"left" | "right">("right");
 	const [registrationType, setRegistrationType] = useState<"regular" | "vendor">("regular");
 	const [isAnimating, setIsAnimating] = useState(false);
