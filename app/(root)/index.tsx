@@ -1,8 +1,18 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { FacebookIcon, InstagramIcon, LinkedInIcon, TickIcon, XIcon } from "../components/icons";
-import { Heart, HeartIcon, Search, Star, TrendingUp, Users } from "lucide-react";
+import {
+	FacebookIcon,
+	InstagramIcon,
+	LinkedInIcon,
+	TickIcon,
+	XIcon,
+	ApplePodcastIcon,
+	SpotifyIcon,
+	YoutubeIcon,
+	RadioWaveIcon,
+} from "../components/icons";
+import { Calendar, Camera, Heart, HeartIcon, icons, Search, Star, TrendingUp, Users } from "lucide-react";
 import { motion } from "framer-motion";
 
 // Animation variants from framer motion
@@ -36,6 +46,16 @@ export default function Index() {
 	const landingPageForm = (e: React.FormEvent) => {
 		e.preventDefault();
 	};
+	const galleryImages = [
+		"/gallery/gallery-img-1.webp",
+		"/gallery/gallery-img-2.webp",
+		"/gallery/gallery-img-3.webp",
+		"/gallery/gallery-img-4.webp",
+		"/gallery/gallery-img-5.webp",
+		"/gallery/gallery-img-6.webp",
+		"/gallery/gallery-img-7.webp",
+		"/gallery/gallery-img-8.webp",
+	];
 	return (
 		<>
 			<main>
@@ -379,115 +399,83 @@ export default function Index() {
 						</motion.form>
 					</motion.div>
 				</motion.section>
-				{/* business and culture  */}
-				<motion.section
-					className="bg-[url('/landing-latest-event.webp')] bg-cover bg-center overflow-x-hidden"
-					initial={{ opacity: 0 }}
-					whileInView={{ opacity: 1 }}
-					transition={{ duration: 0.8 }}
-					viewport={{ once: true }}>
-					<div className="container-custom grid grid-cols-1 md:grid-cols-2 gap-20 py-20">
-						<motion.div
-							className="hidden md:block"
-							initial={{ opacity: 0, x: -50 }}
-							whileInView={{ opacity: 1, x: 0 }}
-							transition={{ duration: 0.7 }}
-							viewport={{ once: true }}>
-							<Image
-								src={"/landing-event-img.webp"}
-								alt="landing event image"
-								height={560}
-								width={652}
-							/>
-							<div className="flex w-[70%] gap-4 mx-auto mt-4">
-								<Image
-									src={"/landing-event-1.webp"}
-									alt="landing event image"
-									height={141}
-									width={128}
-								/>
-								<Image
-									src={"/landing-event-2.webp"}
-									alt="landing event image"
-									height={130}
-									width={118}
-								/>
-								<Image
-									src={"/landing-event-3.webp"}
-									alt="landing event image"
-									height={130}
-									width={118}
-								/>
-							</div>
+				{/* Podcast  */}
+				<section className="min-h-screen flex flex-col items-center justify-center text-center bg-gradient-to-b from-white to-green-50 px-4 py-16 overflow-hidden relative">
+					<motion.div
+						variants={staggerContainer}
+						initial="initial"
+						whileInView="animate"
+						viewport={{ once: true }}
+						className="max-w-3xl">
+							<Image className="absolute -left-100 -top-5 w-200 hidden md:block" src={"/podcast-mic1.webp"} alt="podcast image" width={4096} height={2731}/>
+						<motion.div variants={fadeInUp} className="mb-3">
+							<span className="px-3 py-1 text-sm font-medium text-green-700 bg-green-100 inline-flex gap-2 items-center rounded-full">
+								<Calendar className="w-4 h-4" />
+								Coming Soon
+							</span>
 						</motion.div>
+
+						<motion.h1 variants={fadeInUp} className="text-4xl md:text-5xl font-bold mb-3">
+							Chicago Nigerians <span className="text-green-700">Podcast</span>
+						</motion.h1>
+
+						<motion.p variants={fadeInUp} className="text-gray-600 mb-6">
+							Join Us For Stories, Culture, And Community On Our All-New Chicago Nigerians Podcast —
+							Available On All Major Platforms.
+						</motion.p>
+
+						<motion.p variants={fadeInUp} className="text-green-700 font-semibold mb-10">
+							Launching Sunday, November 30th, 2025
+						</motion.p>
+
+						<motion.h3 variants={fadeInUp} className="font-semibold mb-4">
+							Available on all major platforms
+						</motion.h3>
+
 						<motion.div
-							className="justify-self-end"
-							initial={{ opacity: 0, x: 50 }}
-							whileInView={{ opacity: 1, x: 0 }}
-							transition={{ duration: 0.7 }}
-							viewport={{ once: true }}>
-							<h2 className="font-semibold text-4xl md:text-5xl">
-								<span className="text-[var(--primary-color)] ">Nigeria @ 65</span>
-								<br /> Business & Culture Exhibition.
-							</h2>
-							<p className="text-[var(--primary-color)] py-3 font-bold text-[20px]">
-								Celebrate Independence Day in style!
-							</p>
-							<p className=" lg:max-w-140 text-sm md:text-base">
-								join us for a lively showcase of local businesses and cultural experiences where you
-								can discover new favorites, support local entrepreneurs, and enjoy a fun-filled day
-								with music, food, and vibrant connections.
-							</p>
-
-							<ul className="list-none mt-12 flex flex-col gap-4">
-								{[
-									{
-										title: "Discover and Celebrate",
-										description:
-											"Meet vendors, make new connections and enjoy the best of our community - all in one place.",
-									},
-									{
-										title: "Explore Diverse Businesses",
-										description:
-											"Shop fashion & beauty, try services, and connect with pros in finance, real estate, legal and more.",
-									},
-									{
-										title: "Early Bird Perks",
-										description:
-											"First 100 registered guests get a special swag bag. Register now and enjoy the rewards!",
-									},
-								].map((item, index) => (
-									<motion.li
-										key={index}
-										className="flex gap-2 items-start px-2 py-4 border-1 bg-white rounded-lg"
-										initial={{ opacity: 0, y: 20 }}
-										whileInView={{ opacity: 1, y: 0 }}
-										transition={{ delay: index * 0.2 }}
-										viewport={{ once: true }}>
-										<TickIcon className="shrink-0" size={26} />
-
-										<div>
-											<h3 className="font-bold">{item.title}</h3>
-											<p className="text-sm font-light">{item.description}</p>
-										</div>
-									</motion.li>
-								))}
-							</ul>
-
-							<motion.div
-								initial={{ opacity: 0 }}
-								whileInView={{ opacity: 1 }}
-								transition={{ delay: 0.8 }}
-								viewport={{ once: true }}>
-								<Link
-									className="bg-linear-to-r from-[#037244] to-[#04C977] text-white inline-block px-4 py-1 rounded-lg mt-12"
-									href={"/free-ticket"}>
-									Get your free ticket
-								</Link>
-							</motion.div>
+							variants={staggerContainer}
+							className="flex flex-wrap justify-center gap-4 mb-12">
+							{[
+								{
+									platform: "Apple Podcasts",
+									icon: ApplePodcastIcon,
+								},
+								{
+									platform: "Spotify",
+									icon: SpotifyIcon,
+								},
+								{
+									platform: "Youtube",
+									icon: YoutubeIcon,
+								},
+							].map(({ platform, icon: Icon }, i) => (
+								<motion.button
+									key={platform}
+									variants={i % 2 === 0 ? slideInLeft : slideInRight}
+									whileHover={{ scale: 1.05 }}
+									className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 inline-flex gap-1 items-center transition">
+									<Icon />
+									{platform}
+								</motion.button>
+							))}
 						</motion.div>
-					</div>
-				</motion.section>
+
+						{/* <motion.div
+							variants={fadeInUp}
+							className="bg-green-50 p-6 rounded-2xl max-w-lg mx-auto shadow-sm">
+							<h3 className="font-bold text-lg mb-2">Be the First to Listen!</h3>
+							<p className="text-gray-600 mb-6 text-sm">
+								Subscribe now and get notified when our first episode drops on November 30th. Don’t
+								miss out on authentic Nigerian stories from the heart of Chicago!
+							</p>
+							<motion.button
+								whileHover={{ scale: 1.05 }}
+								className="px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition inline-flex gap-2 items-center">
+								<RadioWaveIcon/> Subscribe
+							</motion.button>
+						</motion.div> */}
+					</motion.div>
+				</section>
 				{/* expand research, boost sales  */}
 				<motion.section
 					className="bg-[url(/layer3.webp)] bg-cover bg-center overflow-x-hidden"
@@ -560,6 +548,57 @@ export default function Index() {
 						</motion.div>
 					</div>
 				</motion.section>
+				{/* Our gallery */}
+				<section className="py-20 px-6 bg-white text-center overflow-hidden">
+					<motion.div
+						className="max-w-5xl mx-auto"
+						variants={staggerContainer}
+						initial="initial"
+						whileInView="animate"
+						viewport={{ once: true }}>
+						<motion.div variants={fadeInUp} className="mb-3">
+							<span className="px-3 py-1 text-sm font-medium text-green-700 bg-green-100 rounded-full inline-flex items-center gap-2">
+								<Camera className="w-5 h-5"/> Our Gallery
+							</span>
+						</motion.div>
+
+						<motion.h2 variants={fadeInUp} className="text-3xl md:text-4xl font-bold mb-3">
+							Highlights From <span className="text-green-700">Naija @65</span> Celebration
+						</motion.h2>
+
+						<motion.p variants={fadeInUp} className="text-gray-600 mb-10">
+							Relive the unforgettable moments from our recent independence celebration in Chicago.
+						</motion.p>
+
+						<motion.div
+							variants={staggerContainer}
+							className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-8">
+							{galleryImages.map((src, i) => (
+								<motion.div
+									key={i}
+									variants={i % 2 === 0 ? slideInLeft : slideInRight}
+									whileHover={{ scale: 1.05 }}
+									className="rounded-4xl overflow-hidden shadow-md">
+									<Image
+										src={src}
+										alt={`Event ${i + 1}`}
+										width={300}
+										height={300}
+										className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
+									/>
+								</motion.div>
+							))}
+						</motion.div>
+
+						<motion.a
+							href="#"
+							variants={fadeInUp}
+							whileHover={{ scale: 1.05 }}
+							className="inline-flex items-center text-green-700 hover:text-green-800 font-medium gap-2">
+							<Camera className="w-5 h-5"/> View Full Gallery
+						</motion.a>
+					</motion.div>
+				</section>
 				{/* ready to join chicago family */}
 				<motion.section
 					className=" py-40 text-center relative bg-[url('/banner.webp')] bg-cover bg-center text-white overflow-clip"

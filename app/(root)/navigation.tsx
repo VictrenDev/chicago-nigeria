@@ -26,10 +26,10 @@ export default function Navbar() {
 
 	return (
 		<nav className="shadow-[0_4px_46px_-14px_#00000040] py-1 relative z-50">
-			<div className="container-custom mx-auto flex w-full justify-between items-center">
+			<div className="container-custom mx-auto flex w-full justify-between py-1 items-center">
 				{/* Logo */}
 				<Link href={"/"}>
-					<Image src="/chicago-nigeria-logo-1.png" alt="logo" height={17} width={113} />
+					<Image className="w-20" src="/chicago-nigeria-logo-1.png" alt="logo" height={17} width={113} />
 				</Link>
 
 				{/* Desktop menu */}
