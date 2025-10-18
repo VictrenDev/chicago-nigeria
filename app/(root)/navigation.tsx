@@ -103,12 +103,12 @@ export default function Navbar() {
 						</Link>
 					</li>
 					<li>
-						<Link className="px-4 py-8 inline-block" href={"/upcoming-events"}>
+						<Link className="px-4 py-8 inline-block" href={"/events"}>
 							Event/Ticketing
 						</Link>
 					</li>
 					<li>
-						<Link className="px-4 py-8 inline-block" href={"/news"}>
+						<Link className="px-4 py-8 inline-block" href={"/feed"}>
 							News/Trending
 						</Link>
 					</li>

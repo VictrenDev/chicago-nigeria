@@ -1,202 +1,76 @@
-import {
-	BookmarkIcon,
-	Clock,
-	EllipsisVertical,
-	Heart,
-	MessageCircle,
-	Share2Icon,
-} from "lucide-react";
-import Image from "next/image";
+import { Suspense } from "react";
+import Link from "next/link";
+import { Plus } from "lucide-react";
+import EventCard from "./event-components/eventCard";
+import EventStatus from "./event-components/eventStatusSection";
 
-export default function Events() {
+
+// ✅ Sample event data
+
+export default async function Events() {
 	return (
-		<main className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-12">
-			<section className="space-y-8 pt-4">
-				<div className=" flex gap-2 items-center bg-white p-8 md:rounded-lg space-y-4 user-page-top">
-					<button>All Posts</button>
-					<button>Following</button>
-					<button>My Networks</button>
-					<button className="ml-auto px-4 py-2">Filters</button>
+		<>
+			{/* ✅ Header Section */}
+			<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white px-4 sm:px-8 py-4 rounded-lg">
+				<div className="flex-1">
+					<h2 className="text-lg font-bold">Upcoming Events</h2>
+					<p className="text-sm text-gray-600">Connect with the Nigerian community in Chicago.</p>
 				</div>
-				<div className="md:p-8 py-2 bg-white md:rounded-xl">
-					<div className="flex">
-						<div className="w-14 h-14 rounded-full bg-gray-100 mr-4 "></div>
-						<form action="" className="bg-red flex-1">
-							<label htmlFor="post" className="hidden">
-								Post
-							</label>
-							<textarea
-								className="min-h-17 w-full resize-none bg-gray-100 p-2 rounded-xl text-sm "
-								draggable="false"
-								name="post"
-								id="post"
-								placeholder="What's on your mind? Share with the community"></textarea>
-						</form>
-					</div>
 
-					<div className=" mt-12 border-t border-t-gray-200 flex gap-2 items-center bg-white py-4 space-y-4 user-page-top">
-						<button>Photo</button>
-						<button>Video</button>
-						<button>Event</button>
-						<button className="ml-auto px-4 py-2">post</button>
-					</div>
-				</div>
-				<div className="space-y-4">
-					<div className="md:p-8 py-2 md:rounded-lg bg-white">
-						<div className="flex">
-							<div className="w-14 h-14 rounded-full bg-gray-100 mr-4 "></div>
-							<div>
-								<p>Adebayo Ogundimu</p>
-								<p className="text-sm space-x-1 text-gray-400 font-light">
-									<span>Tech Entrepreneur</span> <span>Chicago</span>
-								</p>
-								<p className="text-xs mt-1 text-gray-400 font-light flex items-center gap-2">
-									<span className="inline-flex items-center gap-0.5">
-										<Clock className="w-4 h-4" /> 2h
-									</span>{" "}
-									<span className="py-1 px-2 rounded-md border border-gray-400 text-black">
-										Business
-									</span>
-								</p>
-							</div>
-							<div className="ml-auto p-4 cursor-pointer">
-								<EllipsisVertical className="w-4 h-4 " />
-							</div>
-						</div>
-						<article className="mt-8 text-sm">
-							Excited to announce that our fintech startup just secured Series A funding! 🚀 Looking
-							to hire Nigerian talent in Chicago. DM me if you&apos;re interested in joining our
-							team. #NigerianTech #ChicagoStartups
-						</article>
+				<Link
+					href="/events/create-event"
+					className="flex items-center gap-1 justify-center p-2 rounded-lg text-sm text-center border border-gray-200 bg-[var(--primary-color)] text-white w-full sm:w-auto hover:bg-[var(--primary-color)]/90 transition">
+					<Plus className="w-4 h-4 sm:w-6 sm:h-6" />
+					<span className="whitespace-nowrap">Create Event</span>
+				</Link>
+			</div>
 
-						<div className=" mt-8 border-t border-t-gray-200 flex gap-4 items-center bg-white py-4 space-y-4  text-gray-400 feed-post-actions font-light text-sm">
-							<div>
-								<button>
-									<Heart className="w-4 h-4" />
-								</button>{" "}
-								<span>8</span>
-							</div>
-							<div>
-								<button>
-									<MessageCircle className="w-4 h-4" />
-								</button>{" "}
-								<span>27</span>
-							</div>
-							<div>
-								<button>
-									<Share2Icon className="w-4 h-4" />
-								</button>{" "}
-								<span>8</span>
-							</div>
-							<button className="ml-auto">
-								<BookmarkIcon className="w-6 h-6" />
-							</button>
+			{/* ✅ Main Layout */}
+			<main className="grid grid-cols-1 lg:grid-cols-[5fr_4fr] gap-12">
+				{/* 🔹 Suspense Boundary for Event Cards */}
+				<Suspense fallback={<EventCardsSkeleton />}>
+					<section className="space-y-8 pt-4">
+						<div className="space-y-4">
+							<EventCard/>
 						</div>
-					</div>
-					<div className="md:p-8 py-2 mdLrounded-lg bg-white">
-						<div className="flex">
-							<div className="w-14 h-14 rounded-full bg-gray-100 mr-4 "></div>
-							<div>
-								<p>Adebayo Ogundimu</p>
-								<p className="text-sm space-x-1 text-gray-400 font-light">
-									<span>Tech Entrepreneur</span> <span>Chicago</span>
-								</p>
-								<p className="text-xs mt-1 text-gray-400 font-light flex items-center gap-2">
-									<span className="inline-flex items-center gap-0.5">
-										<Clock className="w-4 h-4" /> 2h
-									</span>{" "}
-									<span className="py-1 px-2 rounded-md border border-gray-400 text-black">
-										Business
-									</span>
-								</p>
-							</div>
-							<div className="ml-auto p-4 cursor-pointer">
-								<EllipsisVertical className="w-4 h-4 " />
-							</div>
-						</div>
-						<article className="mt-8 text-sm">
-							<p>
-								Excited to announce that our fintech startup just secured Series A funding! 🚀
-								Looking to hire Nigerian talent in Chicago. DM me if you&apos;re interested in
-								joining our team. #NigerianTech #ChicagoStartups
-							</p>
-							<div className="md:min-h-80 w-full bg-gray-200 mt-4 rounded-xl overflow-clip">
-								<Image
-									src="/post-image.webp"
-									alt="post-image"
-									height={589}
-									width={285}
-									className="w-full object-cover object-center"
-								/>
-							</div>
-						</article>
+					</section>
+				</Suspense>
 
-						<div className=" mt-8 border-t border-t-gray-200 flex gap-4 items-center bg-white py-4 space-y-4  text-gray-400 feed-post-actions font-light text-sm">
-							<div>
-								<button>
-									<Heart className="w-4 h-4" />
-								</button>{" "}
-								<span>8</span>
-							</div>
-							<div>
-								<button>
-									<MessageCircle className="w-4 h-4" />
-								</button>{" "}
-								<span>27</span>
-							</div>
-							<div>
-								<button>
-									<Share2Icon className="w-4 h-4" />
-								</button>{" "}
-								<span>8</span>
-							</div>
-							<button className="ml-auto">
-								<BookmarkIcon className="w-6 h-6" />
-							</button>
-						</div>
-					</div>
+				{/* 🔹 Suspense Boundary for Event Status */}
+				<Suspense fallback={<EventStatusSkeleton />}>
+					<section className="space-y-8 sticky top-0 h-screen pt-4 hidden md:block">
+						<EventStatus />
+					</section>
+				</Suspense>
+			</main>
+		</>
+	);
+}
+
+// 🔸 Skeleton for Event Cards (left side)
+function EventCardsSkeleton() {
+	return (
+		<section className="space-y-4 pt-4 animate-pulse">
+			{[...Array(3)].map((_, i) => (
+				<div key={i} className="p-4 border border-gray-200 rounded-lg bg-gray-100 space-y-3">
+					<div className="h-40 w-full bg-gray-300 rounded-md" />
+					<div className="h-4 bg-gray-300 w-3/4 rounded-md" />
+					<div className="h-3 bg-gray-300 w-full rounded-md" />
+					<div className="h-3 bg-gray-300 w-2/3 rounded-md" />
 				</div>
-			</section>
-			<section className="space-y-8 sticky top-0 h-screen pt-4 hidden md:block">
-				<div className=" bg-white p-4 rounded-lg space-y-4">
-					<h2>Community stats</h2>
-					<div className="space-y-3 community-stats-items">
-						<div>
-							<p>Active Members</p>
-							<p>2,847</p>
-						</div>
-						<div>
-							<p>Posts today</p>
-							<p>127</p>
-						</div>
-						<div>
-							<p>Events This Week</p>
-							<p>8</p>
-						</div>
-					</div>
-				</div>
-				<div className=" bg-white p-4 rounded-lg space-y-4">
-					<h2>Trending Now</h2>
-					<div className="space-y-3">
-						<div>
-							<h3 className="text-sm">Nigeria at 65 Celebration</h3>
-							<p className="text-xs text-gray-400">234 discussing</p>
-						</div>
-						<div>
-							<h3 className="text-sm">Chicago Tech Jobs</h3>
-							<p className="text-xs text-gray-400">234 discussing</p>
-						</div>
-						<div>
-							<h3 className="text-sm">Nigerian Business Network</h3>
-							<p className="text-xs text-gray-400">234 discussing</p>
-						</div>
-						<div>
-							<h3 className="text-sm">Cultural Heritage Month</h3>
-							<p className="text-xs text-gray-400">234 discussing</p>
-						</div>
-					</div>
-				</div>
-			</section>
-		</main>
+			))}
+		</section>
+	);
+}
+
+// 🔸 Skeleton for Event Status (right sidebar)
+function EventStatusSkeleton() {
+	return (
+		<div className="space-y-4 animate-pulse p-4 border border-gray-200 rounded-lg bg-gray-100">
+			<div className="h-5 w-1/3 bg-gray-300 rounded-md" />
+			<div className="h-4 w-2/3 bg-gray-300 rounded-md" />
+			<div className="h-4 w-1/2 bg-gray-300 rounded-md" />
+			<div className="h-4 w-3/4 bg-gray-300 rounded-md" />
+		</div>
 	);
 }

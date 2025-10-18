@@ -10,7 +10,7 @@ import {
 	ApplePodcastIcon,
 	SpotifyIcon,
 	YoutubeIcon,
-	RadioWaveIcon,
+
 } from "../components/icons";
 import { Calendar, Camera, Heart, HeartIcon, icons, Search, Star, TrendingUp, Users } from "lucide-react";
 import { motion } from "framer-motion";
@@ -590,13 +590,13 @@ export default function Index() {
 							))}
 						</motion.div>
 
-						<motion.a
+						{/* <motion.a
 							href="#"
 							variants={fadeInUp}
 							whileHover={{ scale: 1.05 }}
 							className="inline-flex items-center text-green-700 hover:text-green-800 font-medium gap-2">
 							<Camera className="w-5 h-5"/> View Full Gallery
-						</motion.a>
+						</motion.a> */}
 					</motion.div>
 				</section>
 				{/* ready to join chicago family */}
