@@ -100,13 +100,13 @@ export default function Marketplace() {
               <Plus className="w-5 h-5" />
               <span>Create Listing</span>
             </Link>
-            <Link
-              href={"/marketplace"}
+            {/*<Link
+              href={"/marketplace/analytics"}
               className="flex items-center gap-2 justify-center p-2 rounded-lg text-sm text-center border border-gray-200 hover:bg-gray-50 transition-colors"
             >
               <TrendingUp className="w-5 h-5 text-[var(--primary-color)]" />
               <span>View Analytics</span>
-            </Link>
+            </Link>*/}
           </div>
         </div>
 

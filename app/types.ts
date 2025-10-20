@@ -4,7 +4,14 @@ export type Event = {
 	eventStatus?: EventStatus;
 	numberOfAttendees: number;
 	daysOfWeek: string;
+	date: string;
 };
+export type HostedEvent = Omit<Event, "date">;
+export type PastEvent = Omit<Event, "eventStatus" | "daysOfWeek">;
+export type AttendingEvent = Omit<
+	Event,
+	"eventStatus" | "daysOfWeek" | "numberOfAttending"
+>;
 export type EventCardData = {
 	imageSrc: string;
 	title: string;

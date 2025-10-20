@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import LikePost from "../../../components/likePost";
 import { postDetailsType } from "@/app/types";
-import { setTimeout } from "node:timers/promises";
+
 
 
 const postDetails: postDetailsType[] = [
@@ -65,7 +65,7 @@ const postDetails: postDetailsType[] = [
 	},
 ];
 export default async function MarketplaceProducts() {
-  await setTimeout(2000)
+
 	return (
 		<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
 			{postDetails.map((post) => (
