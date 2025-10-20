@@ -2,8 +2,30 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import EventCard from "./event-components/eventCard";
-import EventStatus from "./event-components/eventStatusSection";
+import { Event } from "@/app/types";
+import EventStatusTabs from "./event-components/eventStatusTabs";
+import { setTimeout } from "timers/promises";
 
+const events: Event[] = [
+	{
+		eventName: "Morning Yoga",
+		eventStatus: "active",
+		numberOfAttendees: 25,
+		daysOfWeek: "Friday",
+	},
+	{
+		eventName: "Cooking Masterclass",
+		eventStatus: "ongoing",
+		numberOfAttendees: 40,
+		daysOfWeek: "Thursday",
+	},
+	{
+		eventName: "Weekend Tech Meetup",
+		eventStatus: "completed",
+		numberOfAttendees: 120,
+		daysOfWeek: "Sunday",
+	},
+];
 
 // ✅ Sample event data
 
@@ -31,7 +53,7 @@ export default async function Events() {
 				<Suspense fallback={<EventCardsSkeleton />}>
 					<section className="space-y-8 pt-4">
 						<div className="space-y-4">
-							<EventCard/>
+							<EventCard />
 						</div>
 					</section>
 				</Suspense>
@@ -44,6 +66,15 @@ export default async function Events() {
 				</Suspense>
 			</main>
 		</>
+	);
+}
+
+async function EventStatus() {
+	return (
+		<section className="bg-white p-4 rounded-lg">
+			<h2 className="mb-4">My Events</h2>
+			<EventStatusTabs events={events} />
+		</section>
 	);
 }
 
