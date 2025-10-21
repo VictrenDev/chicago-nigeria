@@ -4,8 +4,6 @@ import Link from "next/link";
 import LikePost from "../../../components/likePost";
 import { postDetailsType } from "@/app/types";
 
-
-
 const postDetails: postDetailsType[] = [
 	{
 		id: 1,
@@ -65,13 +63,13 @@ const postDetails: postDetailsType[] = [
 	},
 ];
 export default async function MarketplaceProducts() {
-
 	return (
 		<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
 			{postDetails.map((post) => (
 				<div
 					key={post.id}
-					className="rounded-xl overflow-hidden border bg-white border-gray-200 hover:shadow-md transition-shadow">
+					className="rounded-xl overflow-hidden border bg-white border-gray-200 hover:shadow-md transition-shadow"
+				>
 					<div className="h-48 bg-gray-200 relative">
 						<Image
 							className="object-cover object-center w-full h-full"
@@ -90,13 +88,16 @@ export default async function MarketplaceProducts() {
 							<span className="text-xs py-1 px-2 border border-gray-200 rounded-md bg-gray-50">
 								{post.tag}
 							</span>
-							<p className="text-[var(--primary-color)] font-semibold text-sm">${post.price}</p>
+							<p className="text-[var(--primary-color)] font-semibold text-sm">
+								${post.price}
+							</p>
 						</div>
 
 						<Link
 							href={`/marketplace/${post.name.replace(/ /g, "-") + "-" + post.id}`}
 							// prefetch={true}
-							className="text-sm font-medium line-clamp-2 leading-tight">
+							className="text-sm font-medium line-clamp-2 leading-tight"
+						>
 							{post.name}
 						</Link>
 
@@ -111,10 +112,14 @@ export default async function MarketplaceProducts() {
 								/>
 							</div>
 							<div className="flex-1 min-w-0">
-								<p className="text-xs font-medium truncate">{post.userName}</p>
+								<p className="text-xs font-medium truncate">
+									{post.userName}
+								</p>
 								<div className="flex items-center gap-1 text-xs text-gray-500">
 									<MapPin className="w-3 h-3" />
-									<span className="truncate">{post.location}</span>
+									<span className="truncate">
+										{post.location}
+									</span>
 								</div>
 							</div>
 						</div>
@@ -133,17 +138,23 @@ export default async function MarketplaceProducts() {
 										/>
 									))}
 								</div>
-								<span className="text-xs text-gray-500 ml-1">({post.verifiedRatingCount})</span>
+								<span className="text-xs text-gray-500 ml-1">
+									({post.verifiedRatingCount})
+								</span>
 							</div>
 
 							<div className="flex items-center gap-3 text-gray-500">
 								<div className="flex items-center gap-1">
 									<Eye className="w-3 h-3" />
-									<span className="text-xs">{post.viewCount}</span>
+									<span className="text-xs">
+										{post.viewCount}
+									</span>
 								</div>
 								<div className="flex items-center gap-1">
 									<Heart className="w-3 h-3" />
-									<span className="text-xs">{post.likeCount}</span>
+									<span className="text-xs">
+										{post.likeCount}
+									</span>
 								</div>
 							</div>
 						</div>

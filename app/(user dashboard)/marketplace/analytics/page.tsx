@@ -5,48 +5,23 @@ import {
 	MapPin,
 	UsersRound,
 } from "lucide-react";
-import ChartAnalytics from "./chart-analytics";
+import ChartAnalyticsData from "../components/server/chart-analytics-data";
+import { Suspense } from "react";
 
 export default function DashboardPage() {
 	return (
 		<main className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-4 md:gap-12">
 			<div className="min-h-screen bg-gray-50 p-4 sm:p-6 space-y-6">
-				{/* Top Stats */}
-				<div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-4">
-					<StatCard title="Total Listings" value="12" sub="2 Active Listings" />
-					<StatCard
-						title="Total Views"
-						value="3,247"
-						sub="+15.3% Last 30 Days"
-						highlight
-					/>
-					<StatCard title="Inquiries" value="89" sub="+2.2% Message Received" />
-					<StatCard
-						title="Conversion Rate"
-						value="2.7%"
-						sub="-0.3% Views to Inquiries"
-					/>
-				</div>
+			
 
 				{/* Chart and Category Breakdown */}
-				<ChartAnalytics />
+				<Suspense fallback={<div>loading...</div>}>
+					<ChartAnalyticsData />
+				</Suspense>
 
-				{/* Boost Section */}
-				<div className="bg-green-50 border border-green-100 rounded-2xl p-5 text-center space-y-3">
-					<h3 className="text-lg font-semibold text-gray-700">
-						Boost Your Performance
-					</h3>
-					<p className="text-gray-500 text-sm">
-						Get more visibility and inquiries with premium features
-					</p>
-					<div className="flex justify-center gap-4 flex-wrap">
-						<button className="bg-green-500 hover:bg-green-600 text-white rounded-xl px-5 py-2">
-							Boost Listing
-						</button>
-						<button className="rounded-xl px-5 py-2">Create New Listing</button>
-					</div>
-				</div>
+				
 			</div>
+			
 			{/* Right Sidebar - Hidden on Mobile */}
 			<section className="space-y-8 sticky top-0 h-screen pt-4 hidden md:block">
 				<div className="bg-white p-4 rounded-lg space-y-4">
@@ -125,69 +100,49 @@ export default function DashboardPage() {
 	);
 }
 
-function StatCard({
-	title,
-	value,
-	sub,
-	highlight,
-}: {
-	title: string;
-	value: string;
-	sub: string;
-	highlight?: boolean;
-}) {
-	return (
-		<div
-			className={`bg-white rounded-2xl shadow p-4 flex flex-col ${highlight ? "border-l-4 border-indigo-500" : ""}`}
-		>
-			<h4 className="text-gray-500 text-sm">{title}</h4>
-			<p className="text-2xl font-semibold text-gray-800">{value}</p>
-			<span className="text-xs text-gray-400">{sub}</span>
-		</div>
-	);
-}
 
-function PerformanceCard({
-	title,
-	value,
-	sub,
-	highlight,
-}: {
-	title: string;
-	value: string;
-	sub: string;
-	highlight?: boolean;
-}) {
-	return (
-		<div
-			className={`p-4 rounded-xl border ${highlight ? "bg-indigo-50 border-indigo-200" : "bg-gray-50 border-gray-100"}`}
-		>
-			<h4 className="text-sm text-gray-500">{title}</h4>
-			<p className="text-xl font-semibold text-gray-800">{value}</p>
-			<span className="text-xs text-gray-400">{sub}</span>
-		</div>
-	);
-}
 
-function TipCard({
-	color,
-	text,
-	sub,
-}: {
-	color: "green" | "blue" | "yellow";
-	text: string;
-	sub: string;
-}) {
-	const colors = {
-		green: "bg-green-50 border-green-100",
-		blue: "bg-blue-50 border-blue-100",
-		yellow: "bg-yellow-50 border-yellow-100",
-	};
+// function PerformanceCard({
+// 	title,
+// 	value,
+// 	sub,
+// 	highlight,
+// }: {
+// 	title: string;
+// 	value: string;
+// 	sub: string;
+// 	highlight?: boolean;
+// }) {
+// 	return (
+// 		<div
+// 			className={`p-4 rounded-xl border ${highlight ? "bg-indigo-50 border-indigo-200" : "bg-gray-50 border-gray-100"}`}
+// 		>
+// 			<h4 className="text-sm text-gray-500">{title}</h4>
+// 			<p className="text-xl font-semibold text-gray-800">{value}</p>
+// 			<span className="text-xs text-gray-400">{sub}</span>
+// 		</div>
+// 	);
+// }
 
-	return (
-		<div className={`p-4 rounded-xl border ${colors[color]} text-sm`}>
-			<p className="font-semibold text-gray-700">{text}</p>
-			<p className="text-gray-500 text-xs">{sub}</p>
-		</div>
-	);
-}
+// function TipCard({
+// 	color,
+// 	text,
+// 	sub,
+// }: {
+// 	color: "green" | "blue" | "yellow";
+// 	text: string;
+// 	sub: string;
+// }) {
+// 	const colors = {
+// 		green: "bg-green-50 border-green-100",
+// 		blue: "bg-blue-50 border-blue-100",
+// 		yellow: "bg-yellow-50 border-yellow-100",
+// 	};
+
+// 	return (
+// 		<div className={`p-4 rounded-xl border ${colors[color]} text-sm`}>
+// 			<p className="font-semibold text-gray-700">{text}</p>
+// 			<p className="text-gray-500 text-xs">{sub}</p>
+// 		</div>
+// 	);
+// }
