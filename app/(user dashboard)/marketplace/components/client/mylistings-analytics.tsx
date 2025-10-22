@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Zap } from "lucide-react";
 import Badge from "@/app/(user dashboard)/components/badge";
+import ActionButtons from "./action-buttons";
 
 interface Listing {
 	title: string;
@@ -46,7 +47,6 @@ const listings: Listing[] = [
 
 export default function ListingsTable() {
 	const [page, setPage] = useState(1);
-
 	const getBadgeColor = (status: Listing["performance"]) => {
 		switch (status) {
 			case "High":
@@ -59,7 +59,7 @@ export default function ListingsTable() {
 	};
 
 	return (
-		<div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6 w-full overflow-x-auto">
+		<div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6 w-full  overflow-x-auto md:overflow-x-visible relative">
 			<h2 className="text-lg font-semibold mb-4">All Listings</h2>
 
 			<table className="min-w-full text-sm text-left border-collapse">
@@ -110,10 +110,8 @@ export default function ListingsTable() {
 									{list.performance}
 								</span>
 							</td>
-							<td className="py-3 px-2 sm:px-4">
-								<button>
-									<Zap className="w-4 h-4 text-gray-600" />
-								</button>
+							<td className="py-3 px-2 sm:px-4 relative">
+							<ActionButtons/>
 							</td>
 						</tr>
 					))}

@@ -7,21 +7,16 @@ import {
 } from "lucide-react";
 import ChartAnalyticsData from "../components/server/chart-analytics-data";
 import { Suspense } from "react";
-
 export default function DashboardPage() {
 	return (
 		<main className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-4 md:gap-12">
 			<div className="min-h-screen bg-gray-50 p-4 sm:p-6 space-y-6">
-			
-
 				{/* Chart and Category Breakdown */}
 				<Suspense fallback={<div>loading...</div>}>
 					<ChartAnalyticsData />
 				</Suspense>
-
-				
 			</div>
-			
+
 			{/* Right Sidebar - Hidden on Mobile */}
 			<section className="space-y-8 sticky top-0 h-screen pt-4 hidden md:block">
 				<div className="bg-white p-4 rounded-lg space-y-4">
@@ -99,8 +94,6 @@ export default function DashboardPage() {
 		</main>
 	);
 }
-
-
 
 // function PerformanceCard({
 // 	title,
