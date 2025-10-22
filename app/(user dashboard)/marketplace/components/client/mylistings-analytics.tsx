@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import { Zap } from "lucide-react";
-import Badge from "@/app/(user dashboard)/components/badge";
+
+
 import ActionButtons from "./action-buttons";
 
 interface Listing {
@@ -87,12 +87,9 @@ export default function ListingsTable() {
 									<div className="flex items-center gap-2 text-xs text-gray-500">
 										<span>{list.date}</span>
 										{list.featured && (
-											<Badge
-												variant="secondary"
-												className="bg-green-100 text-green-700 font-medium"
-											>
+											<button className="bg-green-100 text-green-700 font-medium">
 												Featured
-											</Badge>
+											</button>
 										)}
 									</div>
 								</div>
@@ -111,7 +108,7 @@ export default function ListingsTable() {
 								</span>
 							</td>
 							<td className="py-3 px-2 sm:px-4 relative">
-							<ActionButtons/>
+								<ActionButtons />
 							</td>
 						</tr>
 					))}
