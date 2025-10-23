@@ -10,6 +10,9 @@ import {
 	ApplePodcastIcon,
 	SpotifyIcon,
 	YoutubeIcon,
+	LandingCalenderIcon,
+	LandingMarketplaceIcon,
+	LandingUsersIcon,
 } from "../components/icons";
 import {
 	Calendar,
@@ -223,12 +226,7 @@ export default function Index() {
 							variants={fadeInUp}
 						>
 							<p>
-								<Image
-									src={"/icons/people.webp"}
-									alt="icon"
-									height={32}
-									width={32}
-								/>
+								<LandingUsersIcon />
 							</p>
 							<p
 								className={`text-4xl md:text-6xl font-extrabold text-[var(--primary-color)]`}
@@ -244,12 +242,7 @@ export default function Index() {
 							variants={fadeInUp}
 						>
 							<p>
-								<Image
-									src={"/icons/calender.webp"}
-									alt="icon"
-									height={32}
-									width={32}
-								/>
+								<LandingCalenderIcon />
 							</p>
 							<p
 								className={
@@ -267,12 +260,7 @@ export default function Index() {
 							variants={fadeInUp}
 						>
 							<p>
-								<Image
-									src={"/icons/marketplace.webp"}
-									alt="icon"
-									height={32}
-									width={32}
-								/>
+								<LandingMarketplaceIcon />
 							</p>
 							<p
 								className={
@@ -567,12 +555,12 @@ export default function Index() {
 							Launching Sunday, November 30th, 2025
 						</motion.p>
 
-						<motion.h3
+						<motion.h4
 							variants={fadeInUp}
 							className="font-semibold mb-4"
 						>
 							Available on all major platforms
-						</motion.h3>
+						</motion.h4>
 
 						<motion.div
 							variants={staggerContainer}
@@ -883,16 +871,32 @@ export default function Index() {
 							tradition and opportunity.
 						</p>
 						<div className="flex gap-8 max-w-80 items-center">
-							<Link href={"/"}>
+							<Link
+								href={
+									"https://www.facebook.com/people/Chicago9ja/61579806144918/?mibextid=rS40aB7S9Ucbxw6v"
+								}
+							>
 								<FacebookIcon />
 							</Link>
-							<Link href={"/"}>
+							<Link
+								href={
+									"https://www.instagram.com/chicago9ja/?igsh=MWsxempzZ3d0YWR3bA%3D%3D"
+								}
+							>
 								<InstagramIcon />
 							</Link>
-							<Link href={"/"}>
+							<Link
+								href={
+									"https://www.linkedin.com/company/chicago-nigerians/"
+								}
+							>
 								<LinkedInIcon />
 							</Link>
-							<Link href={"/"}>
+							<Link
+								href={
+									"https://x.com/chicagoNGNS?t=7BkmctvF3G2FJc1_sDyOGA&s=09"
+								}
+							>
 								<XIcon />
 							</Link>
 						</div>
