@@ -58,7 +58,7 @@ export default function Navbar() {
 
 				{/* CTA Button (Desktop) */}
 				<Link
-					href="/signup"
+					href="/signin"
 					className="hidden md:inline-block bg-gradient-to-r from-[#037244] to-[#04C977] text-white px-5 py-2 rounded-lg font-medium shadow-md hover:shadow-lg transition-all"
 				>
 					Join Us +
@@ -119,7 +119,7 @@ export default function Navbar() {
 
 				<div className="p-6 border-t">
 					<Link
-						href="/signup"
+						href="/signin"
 						onClick={handleClose}
 						className="w-full text-center bg-gradient-to-r from-[#037244] to-[#04C977] text-white px-4 py-2 rounded-lg block font-medium shadow-md hover:shadow-lg transition-all"
 					>

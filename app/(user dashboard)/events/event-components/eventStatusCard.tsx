@@ -1,3 +1,4 @@
+"use client"
 import { Calendar, UsersRound } from "lucide-react";
 import type { AttendingEvent, HostedEvent, PastEvent } from "@/app/types";
 

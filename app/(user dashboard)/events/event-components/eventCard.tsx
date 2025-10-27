@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Calendar, Clock, MapPin } from "lucide-react";
 import { EventCardData } from "@/app/types";
+import { setTimeout } from "node:timers/promises";
 
 const eventCards: EventCardData[] = [
 	{
@@ -45,6 +46,11 @@ const eventCards: EventCardData[] = [
 ];
 
 export default async function EventCard() {
+	// await setTimeout(2000)
+	// Fetch event card data here 
+	// use dal to check for authentication
+	// manage bad network requests or slow network
+	// handle pagination
 	return (
 		<>
 			{eventCards.map(

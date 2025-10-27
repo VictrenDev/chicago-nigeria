@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Plus } from "lucide-react";
 import EventCard from "./event-components/eventCard";
 import EventStatusTabs from "./event-components/eventStatusTabs";
-import { AttendingEvent, Event, HostedEvent, PastEvent } from "@/app/types";
+import { AttendingEvent, HostedEvent, PastEvent } from "@/app/types";
 export default async function Events() {
 	return (
 		<>
@@ -48,6 +48,9 @@ export default async function Events() {
 }
 
 async function EventStatus() {
+	// Fetch all events and pass the data as props
+	// Consider slow network and bad requests
+	// Check for user authentication
 	const hostedEvents: HostedEvent[] = [
 		{
 			eventName: "Morning Yoga",

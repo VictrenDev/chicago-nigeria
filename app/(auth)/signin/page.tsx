@@ -117,12 +117,12 @@ export default function SignIn() {
         {/* Remember + Forgot */}
         <div className="flex items-center justify-between text-sm mt-3 mb-5">
           <label className="flex items-center gap-2">
-            <input type="checkbox" className="accent-green-600" />
+            <input type="checkbox" className="accent-[var(--primary-color)]" />
             Remember Me
           </label>
           <Link
             href="#"
-            className="text-green-600 hover:underline text-sm font-medium"
+            className="text-[var(--primary-color)] hover:underline text-sm font-medium"
           >
             Forgot Password?
           </Link>
@@ -131,38 +131,14 @@ export default function SignIn() {
         {/* Sign in button */}
         <button
           type="submit"
-          className="bg-green-600 hover:bg-green-700 text-white w-full py-3 rounded-lg font-medium transition-all"
+          className="bg-[var(--primary-color)] hover:bg-[var(--primary-color)]/90 cursor-pointer text-white w-full py-3 rounded-lg font-medium transition-all"
         >
           Sign in
         </button>
-
-        {/* Divider */}
-        <div className="flex items-center gap-2 my-4">
-          <div className="flex-1 h-px bg-gray-200" />
-          <span className="text-gray-400 text-xs">Or</span>
-          <div className="flex-1 h-px bg-gray-200" />
-        </div>
-
-        {/* Social login */}
-        <button
-          type="button"
-          className="w-full border border-gray-300 rounded-lg py-2 flex items-center justify-center gap-2 hover:bg-gray-50 mb-2"
-        >
-          <GoogleIcon/>
-          Sign in with Google
-        </button>
-        <button
-          type="button"
-          className="w-full border border-gray-300 rounded-lg py-2 flex items-center justify-center gap-2 hover:bg-gray-50"
-        >
-          <SigninFacebookIcon/>
-          Sign in with Facebook
-        </button>
-
         {/* Footer */}
         <p className="text-center text-sm mt-5">
           Don’t have an account?{" "}
-          <Link href="/signup" className="text-green-600 font-medium hover:underline">
+          <Link href="/signup" className="text-[var(--primary-color)] font-medium hover:underline">
             Sign up
           </Link>
         </p>
@@ -179,3 +155,28 @@ export default function SignIn() {
     </section>
   );
 }
+
+
+// {/* Divider */}
+// <div className="flex items-center gap-2 my-4">
+//   <div className="flex-1 h-px bg-gray-200" />
+//   <span className="text-gray-400 text-xs">Or</span>
+//   <div className="flex-1 h-px bg-gray-200" />
+// </div>
+
+// {/* Social login */}
+// <button
+//   type="button"
+//   className="w-full border border-gray-300 rounded-lg py-2 flex items-center justify-center gap-2 hover:bg-gray-50 mb-2"
+// >
+//   <GoogleIcon/>
+//   Sign in with Google
+// </button>
+// <button
+//   type="button"
+//   className="w-full border border-gray-300 rounded-lg py-2 flex items-center justify-center gap-2 hover:bg-gray-50"
+// >
+//   <SigninFacebookIcon/>
+//   Sign in with Facebook
+// </button>
+
