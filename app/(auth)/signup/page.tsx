@@ -27,6 +27,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import bcrypt from "bcryptjs";
 import { CheckIcon, UserTick } from "@/app/components/icons";
+import axios from "axios";
 
 type FormValues = {
 	id: string;
@@ -35,7 +36,7 @@ type FormValues = {
 	email: string;
 	DOB: string;
 	phone: string;
-	countryCode: string;
+	countryCode?: string;
 	currentCity: string;
 	neighborhood?: string;
 	stateOfOrigin: string;
@@ -66,15 +67,36 @@ const interestsList = [
 	{ id: 8, label: "Food and Dining", icon: <Utensils size={18} /> },
 ];
 async function postUser(url: string, { arg }: { arg: FormValues }) {
-	const res = await fetch(url, {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify(arg),
-	});
-
-	if (!res.ok) throw new Error("Failed to save user");
-
-	return res.json();
+	try {
+		const res = await axios.post<T>(url, arg, {
+			headers: { "Content-Type": "application/json" },
+			timeout: 10000, // 10 seconds
+		});
+		return res.data;
+	} catch (err: unknown) {
+		if (axios.isAxiosError(err)) {
+			if (err.code === "ECONNABORTED") {
+				throw new Error(
+					"Request timed out. Please check your internet connection.",
+				);
+			} else if (err.response) {
+				throw new Error(
+					`Server error (${err.response.status}): ${
+						(err.response.data as any)?.message ||
+						"Failed to save user"
+					}`,
+				);
+			} else if (err.request) {
+				throw new Error("Network error: No response from server.");
+			} else {
+				throw new Error("Unexpected Axios error occurred.");
+			}
+		} else if (err instanceof Error) {
+			throw err; // rethrow normal JS errors
+		} else {
+			throw new Error("Unknown error occurred.");
+		}
+	}
 }
 
 export default function Form() {
@@ -97,7 +119,7 @@ export default function Form() {
 	const {
 		register,
 		handleSubmit,
-		formState: { errors },
+		formState: { errors, isSubmitting },
 		getValues,
 		trigger,
 	} = useForm<FormValues>({
@@ -105,7 +127,7 @@ export default function Form() {
 			firstName: "",
 			lastName: "",
 			email: "",
-			DOB:"",
+			DOB: "",
 			phone: "",
 			countryCode: "+1",
 			currentCity: "",
@@ -126,12 +148,16 @@ export default function Form() {
 
 	const onSubmit = async (data: FormValues) => {
 		try {
+			// remove country code
+			const { countryCode, ...postData } = data;
+			// merge country code and phone
+			const fullPhoneNumber = `${data.countryCode}${data.phone}`;
 			// hash password before sending
 			const hashedPassword = await bcrypt.hash(data.password, 10); // 10 = salt rounds
 
-			const newUser: FormValues[] = await triggerSubmitForm({
-				...data,
-				// phone: `${newUser.countryCode + phone}`,
+			const newUser = await triggerSubmitForm({
+				...postData,
+				phone: fullPhoneNumber,
 				password: hashedPassword,
 			});
 
@@ -144,6 +170,8 @@ export default function Form() {
 		} catch (error) {
 			console.log(error);
 			toast.error("Sorry! something went wrong");
+		} finally {
+			setIsAnimating(false);
 		}
 	};
 
@@ -354,7 +382,6 @@ export default function Form() {
 										type="date"
 										{...register("DOB")}
 										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200 text-gray-600"
-									
 									/>
 									{errors.email && (
 										<p className="text-red-500 text-xs mt-1">
@@ -818,11 +845,21 @@ export default function Form() {
 							</fieldset>
 							<button
 								type="submit"
-								disabled={isAnimating}
-								className="bg-[var(--primary-color)] text-white py-3 rounded-lg flex justify-center items-center gap-2 w-full mt-8 mb-4 hover:bg-[var(--primary-color)]/90 disabled:opacity-50 transition-all duration-200"
+								disabled={isSubmitting}
+								className={`${isSubmitting ? "bg-[var(--primary-color)]/80":"bg-[var(--primary-color)]"} text-white py-3 rounded-lg flex justify-center items-center gap-2 w-full mt-8 mb-4 hover:bg-[var(--primary-color)]/90 disabled:opacity-50 transition-all duration-200`}
 							>
-								<span>Submit</span>
-								<ArrowRight className="w-4 h-4" />
+								{isSubmitting ? (
+									<>
+										<span>Submitting...</span>
+										<ArrowRight className="w-4 h-4" />
+									</>
+								) : (
+									<>
+										{" "}
+										<span>Submit</span>
+										<ArrowRight className="w-4 h-4" />
+									</>
+								)}
 							</button>
 						</div>
 					)}
