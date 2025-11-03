@@ -25,29 +25,10 @@ import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import bcrypt from "bcryptjs";
 import { CheckIcon, UserTick } from "@/app/components/icons";
-import axios from "axios";
+import { createUser } from "@/app/libs/dals/users";
+import { FormValues } from "@/app/types/user";
 
-type FormValues = {
-	id: string;
-	firstName: string;
-	lastName: string;
-	email: string;
-	DOB: string;
-	phone: string;
-	countryCode?: string;
-	currentCity: string;
-	neighborhood?: string;
-	stateOfOrigin: string;
-	profession: string;
-	business?: string;
-	brandName?: string;
-	company: string;
-	bio?: string;
-	password: string;
-	confirmPassword: string;
-};
 const interestsList = [
 	{ id: 1, label: "Professional Networking", icon: <Briefcase size={18} /> },
 	{ id: 2, label: "Business & Entrepreneurship", icon: <Users size={18} /> },
@@ -66,38 +47,6 @@ const interestsList = [
 	{ id: 7, label: "Travel & Tourism", icon: <Globe2 size={18} /> },
 	{ id: 8, label: "Food and Dining", icon: <Utensils size={18} /> },
 ];
-async function postUser(url: string, { arg }: { arg: FormValues }) {
-	try {
-		const res = await axios.post<T>(url, arg, {
-			headers: { "Content-Type": "application/json" },
-			timeout: 10000, // 10 seconds
-		});
-		return res.data;
-	} catch (err: unknown) {
-		if (axios.isAxiosError(err)) {
-			if (err.code === "ECONNABORTED") {
-				throw new Error(
-					"Request timed out. Please check your internet connection.",
-				);
-			} else if (err.response) {
-				throw new Error(
-					`Server error (${err.response.status}): ${
-						(err.response.data as any)?.message ||
-						"Failed to save user"
-					}`,
-				);
-			} else if (err.request) {
-				throw new Error("Network error: No response from server.");
-			} else {
-				throw new Error("Unexpected Axios error occurred.");
-			}
-		} else if (err instanceof Error) {
-			throw err; // rethrow normal JS errors
-		} else {
-			throw new Error("Unknown error occurred.");
-		}
-	}
-}
 
 export default function Form() {
 	const [step, setStep] = useState(1);
@@ -108,7 +57,7 @@ export default function Form() {
 	const [isAnimating, setIsAnimating] = useState(false);
 	const { trigger: triggerSubmitForm } = useSWRMutation(
 		"https://68e5269b8e116898997e96bc.mockapi.io/users/v1/Users",
-		postUser,
+		createUser,
 	);
 	const [selected, setSelected] = useState<number[]>([]);
 	const toggleSelect = (id: number) => {
@@ -143,9 +92,6 @@ export default function Form() {
 		},
 	});
 
-	if (step > 7) setStep(7);
-	if (step < 1) setStep(1);
-
 	const onSubmit = async (data: FormValues) => {
 		try {
 			// remove country code
@@ -153,19 +99,17 @@ export default function Form() {
 			// merge country code and phone
 			const fullPhoneNumber = `${data.countryCode}${data.phone}`;
 			// hash password before sending
-			const hashedPassword = await bcrypt.hash(data.password, 10); // 10 = salt rounds
 
 			const newUser = await triggerSubmitForm({
 				...postData,
 				phone: fullPhoneNumber,
-				password: hashedPassword,
 			});
 
 			if (newUser) {
 				toast.success(
 					"Form Submitted successfully. Check email for confirmation link.",
 				);
-				console.log("Form submitted:", newUser);
+				console.log("Form submitted successfully");
 			}
 		} catch (error) {
 			console.log(error);
@@ -177,7 +121,7 @@ export default function Form() {
 
 	const next = async () => {
 		if (isAnimating) return;
-
+		if (isAnimating || step >= 7) return;
 		let fieldsToValidate: (keyof FormValues)[] = [];
 
 		if (step === 1) {
@@ -206,7 +150,7 @@ export default function Form() {
 
 	const prev = () => {
 		if (isAnimating) return;
-
+		if (isAnimating || step <= 1) return;
 		setIsAnimating(true);
 		setDirection("left");
 		setTimeout(() => {
@@ -846,7 +790,7 @@ export default function Form() {
 							<button
 								type="submit"
 								disabled={isSubmitting}
-								className={`${isSubmitting ? "bg-[var(--primary-color)]/80":"bg-[var(--primary-color)]"} text-white py-3 rounded-lg flex justify-center items-center gap-2 w-full mt-8 mb-4 hover:bg-[var(--primary-color)]/90 disabled:opacity-50 transition-all duration-200`}
+								className={`${isSubmitting ? "bg-[var(--primary-color)]/80" : "bg-[var(--primary-color)]"} text-white py-3 rounded-lg flex justify-center items-center gap-2 w-full mt-8 mb-4 hover:bg-[var(--primary-color)]/90 disabled:opacity-50 transition-all duration-200`}
 							>
 								{isSubmitting ? (
 									<>
