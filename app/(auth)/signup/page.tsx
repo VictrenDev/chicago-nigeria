@@ -27,7 +27,8 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { CheckIcon, UserTick } from "@/app/components/icons";
 import { createUser } from "@/app/libs/dals/users";
-import { FormValues } from "@/app/types/user";
+import { FormValues } from "@/app/libs/dals/types/user";
+import { API_BASE_URL } from "@/app/libs/dals/utils";
 
 const interestsList = [
 	{ id: 1, label: "Professional Networking", icon: <Briefcase size={18} /> },
@@ -56,7 +57,7 @@ export default function Form() {
 	>("regular");
 	const [isAnimating, setIsAnimating] = useState(false);
 	const { trigger: triggerSubmitForm } = useSWRMutation(
-		"https://68e5269b8e116898997e96bc.mockapi.io/users/v1/Users",
+		`${API_BASE_URL}/auth/signup`,
 		createUser,
 	);
 	const [selected, setSelected] = useState<number[]>([]);
