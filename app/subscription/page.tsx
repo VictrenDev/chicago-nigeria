@@ -1,14 +1,31 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
-import { useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import {
+	type SubscriptionSchema,
+	subscriptionSchema,
+} from "../libs/dals/types/zodSchemas";
+import BusinessInformation from "./BusinessInformation";
+import ContactInformation from "./ContactInformation";
 
 export default function SocialSubscriptionPage() {
-	const [hasAccounts, setHasAccounts] = useState<"yes" | "no" | "">("");
-
+	const method = useForm<SubscriptionSchema>({
+		resolver: zodResolver(subscriptionSchema),
+		defaultValues: {
+			businessName: "",
+		},
+	});
+	const {
+		formState: { isSubmitting },
+	} = method;
+	const onSubmit = (e:React.FormEvent) => {
+		e.preventDefault()
+	};
 	return (
 		<main className="min-h-screen bg-gray-50 flex flex-col items-center py-10">
-			<div className="w-full max-w-2xl bg-white shadow-md rounded-2xl p-8">
+			<div className="w-full md:max-w-2xl bg-white shadow-md rounded-2xl p-8">
 				<a
 					href="/"
 					className="text-sm text-gray-500 hover:text-gray-700 mb-4 inline-block"
@@ -34,138 +51,17 @@ export default function SocialSubscriptionPage() {
 						</span>
 					</p>
 				</div>
-
-				{/* Business Information */}
-				<section className="mb-8">
-					<h2 className="text-lg font-semibold mb-3">
-						Business Information
-					</h2>
-					<div className="space-y-4">
-						<div>
-							<label className="block text-sm font-medium text-gray-700">
-								Business Name*
-							</label>
-							<input
-								type="text"
-								placeholder="Enter your business name"
-								className="w-full border rounded-lg p-2 mt-1 focus:ring-2 focus:ring-blue-500"
-							/>
-						</div>
-
-						<div>
-							<label className="block text-sm font-medium text-gray-700">
-								Business Type/Category*
-							</label>
-							<select className="w-full border rounded-lg p-2 mt-1 focus:ring-2 focus:ring-blue-500">
-								<option>Select a category</option>
-								<option>Retail</option>
-								<option>Restaurant</option>
-								<option>Tech</option>
-								<option>Other</option>
-							</select>
-						</div>
-
-						<div>
-							<label className="block text-sm font-medium text-gray-700 mb-1">
-								Do you have existing social media accounts?*
-							</label>
-							<div className="flex gap-6">
-								<label className="flex items-center gap-2">
-									<input
-										type="radio"
-										name="hasAccounts"
-										value="yes"
-										checked={hasAccounts === "yes"}
-										onChange={() => setHasAccounts("yes")}
-									/>
-									<span>
-										Yes, I have existing social media
-										accounts
-									</span>
-								</label>
-								<label className="flex items-center gap-2">
-									<input
-										type="radio"
-										name="hasAccounts"
-										value="no"
-										checked={hasAccounts === "no"}
-										onChange={() => setHasAccounts("no")}
-									/>
-									<span>
-										No, please create and manage accounts
-										for me
-									</span>
-								</label>
-							</div>
-						</div>
-
-						{hasAccounts === "yes" && (
-							<div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
-								<input
-									type="text"
-									placeholder="Instagram handle"
-									className="border rounded-lg p-2"
-								/>
-								<input
-									type="text"
-									placeholder="Facebook page"
-									className="border rounded-lg p-2"
-								/>
-								<input
-									type="text"
-									placeholder="TikTok handle"
-									className="border rounded-lg p-2"
-								/>
-								<input
-									type="text"
-									placeholder="LinkedIn profile"
-									className="border rounded-lg p-2"
-								/>
-							</div>
-						)}
-					</div>
-				</section>
-
-				{/* Contact Information */}
-				<section className="mb-8">
-					<h2 className="text-lg font-semibold mb-3">
-						Contact Information
-					</h2>
-					<div className="space-y-4">
-						<div>
-							<label className="block text-sm font-medium text-gray-700">
-								Business Email*
-							</label>
-							<input
-								type="email"
-								placeholder="example@email.com"
-								className="w-full border rounded-lg p-2 mt-1 focus:ring-2 focus:ring-blue-500"
-							/>
-						</div>
-
-						<div>
-							<label className="block text-sm font-medium text-gray-700">
-								Business Phone Number*
-							</label>
-							<input
-								type="tel"
-								placeholder="+1 (555) 000-0000"
-								className="w-full border rounded-lg p-2 mt-1 focus:ring-2 focus:ring-blue-500"
-							/>
-						</div>
-
-						<div>
-							<label className="block text-sm font-medium text-gray-700">
-								Brief Description of Business*
-							</label>
-							<textarea
-								placeholder="Tell us about your business, products, and audience..."
-								rows={3}
-								className="w-full border rounded-lg p-2 mt-1 focus:ring-2 focus:ring-blue-500 resize-none"
-							></textarea>
-						</div>
-					</div>
-				</section>
+				<FormProvider {...method}>
+					<form
+						id="subscriptionForm"
+						onSubmit={method.handleSubmit(onSubmit)}
+					>
+						{/* Business Information */}
+						<BusinessInformation />
+						{/* Contact Information */}
+						<ContactInformation />
+					</form>
+				</FormProvider>
 
 				{/* Subscription Summary */}
 				<div className="bg-green-600 text-white rounded-xl p-5 mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center">
@@ -191,7 +87,12 @@ export default function SocialSubscriptionPage() {
 					</ul>
 				</div>
 
-				<button className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition">
+				<button
+					type="submit"
+					form="subscriptionForm"
+					disabled={isSubmitting}
+					className={`"w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition"`}
+				>
 					Subscribe Now
 				</button>
 
