@@ -50,7 +50,7 @@ const interestsList = [
 ];
 
 export default function Form() {
-	const [step, setStep] = useState(1);
+	const [step, setStep] = useState(6);
 	const [direction, setDirection] = useState<"left" | "right">("right");
 	const [registrationType, setRegistrationType] = useState<
 		"regular" | "vendor"
@@ -115,6 +115,7 @@ export default function Form() {
 		} catch (error) {
 			console.log(error);
 			toast.error("Sorry! something went wrong");
+			throw new Error("Something wen't wrong with creating a user");
 		} finally {
 			setIsAnimating(false);
 		}
@@ -822,7 +823,7 @@ export default function Form() {
 									email@mail.com
 								</p>
 							</div>
-							<fieldset className="space-y-4 mt-8">
+							{/*<fieldset className="space-y-4 mt-8">
 								<div>
 									<label className="block text-sm font-semibold mb-1">
 										Verification Code
@@ -845,7 +846,7 @@ export default function Form() {
 								>
 									Resend Code
 								</button>
-							</fieldset>
+							</fieldset>*/}
 							<CommonButton
 								next={next}
 								isAnimating={isAnimating}

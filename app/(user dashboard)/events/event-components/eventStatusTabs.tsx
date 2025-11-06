@@ -43,7 +43,7 @@ export default function EventStatusTabs({
 						onClick={() => setActive(item)}
 						className={active === item ? "bg-gray-200" : ""}
 					>
-						{item.slice(1).toLowerCase()}
+						{item.charAt(0).toUpperCase() + item.slice(1).toLowerCase()}
 					</button>
 				))}
 			</nav>
