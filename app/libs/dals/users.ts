@@ -1,5 +1,6 @@
-import { FormValues } from "@/app/types/user";
+
 import axios from "axios";
+import { FormValues } from "./types/user";
 
 export async function createUser(url: string, { arg }: { arg: FormValues }) {
 	try {
@@ -15,12 +16,10 @@ export async function createUser(url: string, { arg }: { arg: FormValues }) {
 					"Request timed out. Please check your internet connection.",
 				);
 			} else if (err.response) {
-				throw new Error(
-					`Server error (${err.response.status}): ${
-						(err.response.data as any)?.message ||
-						"Failed to save user"
-					}`,
-				);
+			 const message =
+          (err.response.data as any)?.message || "Failed to save user";
+        throw new Error(message);
+				
 			} else if (err.request) {
 				throw new Error("Network error: No response from server.");
 			} else {

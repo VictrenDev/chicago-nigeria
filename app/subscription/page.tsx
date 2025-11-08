@@ -20,9 +20,7 @@ export default function SocialSubscriptionPage() {
 	const {
 		formState: { isSubmitting },
 	} = method;
-	const onSubmit = (e:React.FormEvent) => {
-		e.preventDefault()
-	};
+	const onSubmit = () => {};
 	return (
 		<main className="min-h-screen bg-gray-50 flex flex-col items-center py-10">
 			<div className="w-full md:max-w-2xl bg-white shadow-md rounded-2xl p-8">
@@ -91,7 +89,7 @@ export default function SocialSubscriptionPage() {
 					type="submit"
 					form="subscriptionForm"
 					disabled={isSubmitting}
-					className={`"w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition"`}
+					className={`w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition hover:cursor-pointer`}
 				>
 					Subscribe Now
 				</button>

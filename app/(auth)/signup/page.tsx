@@ -50,7 +50,7 @@ const interestsList = [
 ];
 
 export default function Form() {
-	const [step, setStep] = useState(6);
+	const [step, setStep] = useState(1);
 	const [direction, setDirection] = useState<"left" | "right">("right");
 	const [registrationType, setRegistrationType] = useState<
 		"regular" | "vendor"
@@ -74,29 +74,50 @@ export default function Form() {
 		trigger,
 	} = useForm<FormValues>({
 		defaultValues: {
-			firstName: "",
-			lastName: "",
-			email: "",
-			DOB: "",
-			phone: "",
-			countryCode: "+1",
-			currentCity: "",
-			neighborhood: "",
-			stateOfOrigin: "",
-			profession: "",
-			company: "",
-			business: "",
-			brandName: "",
-			bio: "",
-			password: "",
-			confirmPassword: "",
+			firstName: "Alice",
+			lastName: "Smith",
+			email: "alice.smith@example.com",
+			DOB: "1988-11-22",
+			phone: "4449876543",
+			countryCode: "+44",
+			currentCity: "London",
+			neighborhood: "Camden",
+			stateOfOrigin: "Kent",
+			profession: "Product Manager",
+			company: "Innovatech Ltd.",
+			business: "Mobile App Development",
+			gender: "female",
+			brandName: "Smith Solutions",
+			bio: "Experienced in product strategy and agile development, passionate about UX and team leadership.",
+			password: "SecurePass456!",
+			confirmPassword: "SecurePass456!",
+			isTermAndConditionAccepted: false,
+
+			// firstName: "",
+			// lastName: "",
+			// email: "",
+			// DOB: "",
+			// phone: "",
+			// gender: "male",
+			// countryCode: "+1",
+			// currentCity: "",
+			// neighborhood: "",
+			// stateOfOrigin: "",
+			// profession: "",
+			// company: "",
+			// business: "",
+			// brandName: "",
+			// bio: "",
+			// password: "",
+			// confirmPassword: "",
+			// 	isTermAndConditionAccepted: false,
 		},
 	});
 
 	const onSubmit = async (data: FormValues) => {
 		try {
 			// remove country code
-			const { countryCode, ...postData } = data;
+			const { countryCode, brandName, business, ...postData } = data;
 			// merge country code and phone
 			const fullPhoneNumber = `${data.countryCode}${data.phone}`;
 			// hash password before sending
@@ -110,12 +131,17 @@ export default function Form() {
 				toast.success(
 					"Form Submitted successfully. Check email for confirmation link.",
 				);
-				console.log("Form submitted successfully");
+				setStep((step) => step + 1);
+				
 			}
+			console.log(newUser);
 		} catch (error) {
-			console.log(error);
-			toast.error("Sorry! something went wrong");
-			throw new Error("Something wen't wrong with creating a user");
+			if (error instanceof Error) {
+				console.log(error.message);
+				toast.error(error.message);
+			} else {
+				throw new Error("Something wen't wrong with creating a user");
+			}
 		} finally {
 			setIsAnimating(false);
 		}
@@ -291,6 +317,25 @@ export default function Form() {
 										)}
 									</div>
 								</div>
+								<label>
+									Gender:
+									<br />
+									<select
+										className="mb-3 w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200  bg-gray-200"
+										{...register("gender", {
+											required: true,
+										})}
+										defaultValue={"male"}
+									>
+										<option value={`male`}>Male</option>
+										<option value={`female`}>Female</option>
+									</select>
+									{errors.gender && (
+										<p className="text-red-500 text-xs mt-1">
+											{errors.gender.message}
+										</p>
+									)}
+								</label>
 
 								<div>
 									<label
@@ -788,6 +833,26 @@ export default function Form() {
 										</li>
 									</ul>
 								</div>
+								<label className="inline-flex items-center space-x-2">
+									<input
+										type="checkbox"
+										{...register(
+											"isTermAndConditionAccepted",
+											{ required: true },
+										)}
+										className="w-4 h-4 text-blue-600 border-gray-300 rounded flex-1"
+									/>
+									<span className="text-sm text-gray-700 flex-8">
+										By checking the box, you have agreed to
+										our{" "}
+										<Link
+											href="/terms-and-conditons"
+											className="text-blue-600 underline"
+										>
+											Terms and Conditions
+										</Link>
+									</span>
+								</label>
 							</fieldset>
 							<button
 								type="submit"
