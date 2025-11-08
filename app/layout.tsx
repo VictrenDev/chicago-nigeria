@@ -1,6 +1,7 @@
 import { Toaster } from "sonner";
-import "../globals.css";
+import "./globals.css";
 import { Metadata } from "next";
+import AuthProvider from "./components/provider/authProvider";
 export const metadata: Metadata = {
   title: "Chicago Nigeria",
   description:
@@ -17,9 +18,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <body>
-      {children}
-      <Toaster position="top-center" richColors />
-    </body>
+    <html lang="en">
+      <body>
+        <AuthProvider>{children}</AuthProvider>
+        <Toaster position="top-center" richColors />
+      </body>
+    </html>
   );
 }

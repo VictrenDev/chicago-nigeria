@@ -8,6 +8,9 @@ import bcrypt from "bcryptjs";
 import useSWRMutation from "swr/mutation";
 import { Eye, EyeOff } from "lucide-react";
 import { GoogleIcon, SigninFacebookIcon } from "@/app/components/icons";
+import { callApi } from "@/app/libs/helper/callApi";
+import { ApiResponse, AppError, IUser } from "@/app/types";
+import { useSession } from "@/app/store/useSession";
 
 type FormValues = {
   email: string;
@@ -26,10 +29,11 @@ async function postUser(url: string, { arg }: { arg: FormValues }) {
 }
 
 export default function SignIn() {
-  const { trigger } = useSWRMutation(
-    "https://68e5269b8e116898997e96bc.mockapi.io/users/v1/Users",
-    postUser
-  );
+  const { updateUser } = useSession((state) => state.actions);
+  // const { trigger } = useSWRMutation(
+  //   "https://68e5269b8e116898997e96bc.mockapi.io/users/v1/Users",
+  //   postUser
+  // );
 
   const {
     register,
@@ -39,14 +43,28 @@ export default function SignIn() {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const onSubmit = async (data: FormValues) => {
+  const onSubmit = async (formData: FormValues) => {
     try {
-      const hashedPassword = await bcrypt.hash(data.password, 10);
-      const newUser = await trigger({ ...data, password: hashedPassword });
-      toast.success("Signed in successfully!");
-      console.log(newUser);
+      // const hashedPassword = await bcrypt.hash(data.password, 10);
+      // const newUser = await trigger({ ...data, password: hashedPassword });
+      // toast.success("Signed in successfully!");
+      // console.log(newUser);
+
+      const { data, error } = await callApi<ApiResponse<IUser>>(
+        "/api/v1/auth/signin",
+        "POST",
+        formData
+      );
+      if (error) throw error;
+
+      if (!data?.data) {
+        console.log("cold not signin!");
+      }
+
+      updateUser(data?.data as IUser);
     } catch (error) {
-      toast.error("Invalid credentials or server error");
+      const castErr = error as AppError;
+      toast.error(castErr.message ?? "Invalid credentials or server error");
     }
   };
 
@@ -109,9 +127,7 @@ export default function SignIn() {
           </button>
         </div>
         {errors.password && (
-          <p className="text-red-500 text-xs mt-1">
-            {errors.password.message}
-          </p>
+          <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>
         )}
 
         {/* Remember + Forgot */}
@@ -138,7 +154,10 @@ export default function SignIn() {
         {/* Footer */}
         <p className="text-center text-sm mt-5">
           Don’t have an account?{" "}
-          <Link href="/signup" className="text-[var(--primary-color)] font-medium hover:underline">
+          <Link
+            href="/signup"
+            className="text-[var(--primary-color)] font-medium hover:underline"
+          >
             Sign up
           </Link>
         </p>
@@ -155,7 +174,6 @@ export default function SignIn() {
     </section>
   );
 }
-
 
 // {/* Divider */}
 // <div className="flex items-center gap-2 my-4">
@@ -179,4 +197,3 @@ export default function SignIn() {
 //   <SigninFacebookIcon/>
 //   Sign in with Facebook
 // </button>
-

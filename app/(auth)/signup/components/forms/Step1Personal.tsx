@@ -14,7 +14,7 @@ const getStepAnimationClass = () => {
 				: "animate-slide-in-left";
 		}
 	};
-	return <div className={`${getStepAnimationClass()} w-full`}>
+	return (<div className={`${getStepAnimationClass()} w-full`}>
 							<div className="flex flex-col items-center space-y-1">
 								<User className="w-10 h-10 text-[var(--primary-color)]" />
 								<h1 className="text-2xl font-medium">
@@ -169,4 +169,4 @@ const getStepAnimationClass = () => {
 									Return to main page
 								</Link>
 							</p>
-						</div>
+						</div>)

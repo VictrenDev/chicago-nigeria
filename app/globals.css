@@ -1,110 +1,110 @@
 @import "tailwindcss";
 
 :root {
-	--orange-color: #7A1B00;
-	--purple-color: #ac0ea1;
-	--primary-color: #037244;
-	--primary-color-light: #03724421;
-	--blue-color: #0045f8;
+  --orange-color: #7a1b00;
+  --purple-color: #ac0ea1;
+  --primary-color: #037244;
+  --primary-color-light: #03724421;
+  --blue-color: #0045f8;
 }
 .container-custom {
-	width: 90%;
-	margin-inline: auto;
+  width: 90%;
+  margin-inline: auto;
 }
 
 @media (min-width: 640px) {
-	.container-custom {
-		max-width: 640px;
-	}
+  .container-custom {
+    max-width: 640px;
+  }
 }
 
 @media (min-width: 768px) {
-	.container-custom {
-		max-width: 768px;
-	}
+  .container-custom {
+    max-width: 768px;
+  }
 }
 
 @media (min-width: 1024px) {
-	.container-custom {
-		max-width: 1024px;
-	}
+  .container-custom {
+    max-width: 1024px;
+  }
 }
 
 @media (min-width: 1280px) {
-	.container-custom {
-		max-width: 1280px;
-	}
+  .container-custom {
+    max-width: 1280px;
+  }
 }
 
 .hover-effect-for-dropdown-links a,
 .hover-effect-for-dropdown-links li > button {
-	@apply flex px-4 py-2 hover:bg-[var(--primary-color-light)] rounded-md;
+  @apply flex px-4 py-2 hover:bg-[var(--primary-color-light)] rounded-md;
 }
 .community-stats-items:not(.quick-actions) > div {
-	@apply flex justify-between items-center;
-	p {
-		&:first-child {
-			@apply text-sm;
-		}
-		&:last-child {
-			@apply text-[var(--primary-color)];
-		}
-	}
+  @apply flex justify-between items-center;
+  p {
+    &:first-child {
+      @apply text-sm;
+    }
+    &:last-child {
+      @apply text-[var(--primary-color)];
+    }
+  }
 }
 .community-stats-items.quick-actions > div {
-	@apply flex justify-start gap-2 items-center text-gray-700;
-	p {
-		@apply text-sm;
-	}
+  @apply flex justify-start gap-2 items-center text-gray-700;
+  p {
+    @apply text-sm;
+  }
 }
 
 .user-page-top {
-	> button {
-		@apply cursor-pointer text-sm inline-flex items-center gap-2;
-	}
-	> button:not(:last-child) {
-		@apply py-2 px-4 border border-gray-400 rounded-md mb-0;
-	}
+  > button {
+    @apply cursor-pointer text-sm inline-flex items-center gap-2;
+  }
+  > button:not(:last-child) {
+    @apply py-2 px-4 border border-gray-400 rounded-md mb-0;
+  }
 }
 /* etc */
 .sidebar-buttons > a {
-	@apply block hover:bg-[var(--primary-color)] hover:text-white transition-colors duration-100 text-[15px] rounded-md text-left px-4 py-2 cursor-pointer flex gap-2 items-center w-full;
+  @apply block hover:bg-[var(--primary-color)] hover:text-white transition-colors duration-100 text-[15px] rounded-md text-left px-4 py-2 cursor-pointer flex gap-2 items-center w-full;
 }
 
 .feed-post-actions > * {
-	@apply inline-flex font-light items-center gap-1 mb-0;
+  @apply inline-flex font-light items-center gap-1 mb-0;
 }
 .form-style {
-	display: none;
-	width: 100%;
-	height: 100%;
-	border: none;
-	border-radius: 3px;
+  display: none;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 3px;
 }
 .activeSideNav {
-	@apply bg-[var(--primary-color)] text-white;
+  @apply bg-[var(--primary-color)] text-white;
 }
 
 .signup-form {
-	input {
-		@apply w-full bg-gray-200 py-2 px-4 rounded-lg text-sm mt-0.5;
-	}
+  input {
+    @apply w-full bg-gray-200 py-2 px-4 rounded-lg text-sm mt-0.5;
+  }
 
-	div:has(> input) {
-		@apply md:flex-1 w-full;
-	}
+  div:has(> input) {
+    @apply md:flex-1 w-full;
+  }
 }
 body {
-	@apply bg-gray-50;
-	font-family: var(--font-inter);
-    max-width: 1920px;
-    margin-inline: auto;
+  @apply bg-gray-50;
+  font-family: var(--font-inter);
+  max-width: 1920px;
+  margin-inline: auto;
 }
 
-@layer components{
-	.button-hover-effect > button{
-		@apply transition-colors duration-200 hover:bg-[var(--primary-color)] hover:text-white rounded-md;
-	}
+@layer components {
+  .button-hover-effect > button {
+    @apply transition-colors duration-200 hover:bg-[var(--primary-color)] hover:text-white rounded-md;
+  }
 }
 @keyframes slide-in-right {
   from {
