@@ -1,7 +1,7 @@
 "use client";
 
 import { useFormContext } from "react-hook-form";
-import { SubscriptionSchema } from "../libs/dals/types/zodSchemas";
+import { SubscriptionSchema } from "../libs/types/zodSchemas";
 import FormFieldErrorMessage from "../components/fieldError";
 
 export default function ContactInformation() {

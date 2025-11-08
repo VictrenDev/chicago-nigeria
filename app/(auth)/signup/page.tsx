@@ -10,6 +10,7 @@ import {
 	Globe2,
 	Heart,
 	Landmark,
+	Loader2,
 	Lock,
 	MapPin,
 	Music,
@@ -27,7 +28,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { CheckIcon, UserTick } from "@/app/components/icons";
 import { createUser } from "@/app/libs/dals/users";
-import { FormValues } from "@/app/libs/dals/types/user";
+import { FormValues } from "@/app/libs/types/user";
 import { API_BASE_URL } from "@/app/libs/dals/utils";
 
 const interestsList = [
@@ -50,7 +51,7 @@ const interestsList = [
 ];
 
 export default function Form() {
-	const [step, setStep] = useState(1);
+	const [step, setStep] = useState(5);
 	const [direction, setDirection] = useState<"left" | "right">("right");
 	const [registrationType, setRegistrationType] = useState<
 		"regular" | "vendor"
@@ -72,48 +73,33 @@ export default function Form() {
 		formState: { errors, isSubmitting },
 		getValues,
 		trigger,
+		watch,
 	} = useForm<FormValues>({
 		defaultValues: {
-			firstName: "Alice",
-			lastName: "Smith",
-			email: "alice.smith@example.com",
-			DOB: "1988-11-22",
-			phone: "4449876543",
-			countryCode: "+44",
-			currentCity: "London",
-			neighborhood: "Camden",
-			stateOfOrigin: "Kent",
-			profession: "Product Manager",
-			company: "Innovatech Ltd.",
-			business: "Mobile App Development",
-			gender: "female",
-			brandName: "Smith Solutions",
-			bio: "Experienced in product strategy and agile development, passionate about UX and team leadership.",
-			password: "SecurePass456!",
-			confirmPassword: "SecurePass456!",
+			firstName: "",
+			lastName: "",
+			email: "",
+			DOB: "",
+			phone: "",
+			gender: "male",
+			countryCode: "+1",
+			currentCity: "",
+			neighborhood: "",
+			stateOfOrigin: "",
+			profession: "",
+			company: "",
+			business: "",
+			brandName: "",
+			bio: "",
+			password: "",
+			confirmPassword: "",
 			isTermAndConditionAccepted: false,
-
-			// firstName: "",
-			// lastName: "",
-			// email: "",
-			// DOB: "",
-			// phone: "",
-			// gender: "male",
-			// countryCode: "+1",
-			// currentCity: "",
-			// neighborhood: "",
-			// stateOfOrigin: "",
-			// profession: "",
-			// company: "",
-			// business: "",
-			// brandName: "",
-			// bio: "",
-			// password: "",
-			// confirmPassword: "",
-			// 	isTermAndConditionAccepted: false,
 		},
 	});
-
+	const password = watch("password", "");
+	const isMinLength = password.length >= 8;
+	const hasUpperCase = /[A-Z]/.test(password);
+	const hasNumber = /[0-9]/.test(password);
 	const onSubmit = async (data: FormValues) => {
 		try {
 			// remove country code
@@ -132,7 +118,6 @@ export default function Form() {
 					"Form Submitted successfully. Check email for confirmation link.",
 				);
 				setStep((step) => step + 1);
-				
 			}
 			console.log(newUser);
 		} catch (error) {
@@ -778,10 +763,16 @@ export default function Form() {
 										type="password"
 										{...register("password", {
 											required: "Password is required",
-											minLength: {
-												value: 6,
-												message:
-													"At least 6 characters",
+											validate: {
+												minLength: (v) =>
+													v.length >= 8 ||
+													"At least 8 characters",
+												hasUpperCase: (v) =>
+													/[A-Z]/.test(v) ||
+													"Must include an uppercase letter",
+												hasNumber: (v) =>
+													/[0-9]/.test(v) ||
+													"Must include a number",
 											},
 										})}
 										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
@@ -819,18 +810,22 @@ export default function Form() {
 										Password Requirements
 									</h3>
 									<ul className="text-sm text-gray-600 space-y-1">
-										<li className="flex items-center gap-2">
-											<div className="w-1.5 h-1.5 bg-gray-400 rounded-full"></div>
+										<PasswordValidationCriteria
+											criteria={isMinLength}
+										>
 											At least 8 characters
-										</li>
-										<li className="flex items-center gap-2">
-											<div className="w-1.5 h-1.5 bg-gray-400 rounded-full"></div>
+										</PasswordValidationCriteria>
+										<PasswordValidationCriteria
+											criteria={hasUpperCase}
+										>
 											One uppercase character
-										</li>
-										<li className="flex items-center gap-2">
-											<div className="w-1.5 h-1.5 bg-gray-400 rounded-full"></div>
+										</PasswordValidationCriteria>
+										<PasswordValidationCriteria
+											criteria={hasNumber}
+										>
 											One number
-										</li>
+										</PasswordValidationCriteria>
+									
 									</ul>
 								</div>
 								<label className="inline-flex items-center space-x-2">
@@ -861,8 +856,8 @@ export default function Form() {
 							>
 								{isSubmitting ? (
 									<>
+										<Loader2 className="animate-spin stroke-gray-200 w-5 h-5" />
 										<span>Submitting...</span>
-										<ArrowRight className="w-4 h-4" />
 									</>
 								) : (
 									<>
@@ -888,30 +883,6 @@ export default function Form() {
 									email@mail.com
 								</p>
 							</div>
-							{/*<fieldset className="space-y-4 mt-8">
-								<div>
-									<label className="block text-sm font-semibold mb-1">
-										Verification Code
-									</label>
-									<input
-										type="text"
-										className="w-full text-center rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
-										placeholder="Enter 6 digit code"
-									/>
-								</div>
-								<button
-									type="button"
-									className="text-gray-500 text-sm mt-1 text-center w-full"
-								>
-									Didn&apos;t receive the code?
-								</button>
-								<button
-									type="button"
-									className="text-[var(--primary-color)] font-semibold text-sm text-center w-full"
-								>
-									Resend Code
-								</button>
-							</fieldset>*/}
 							<CommonButton
 								next={next}
 								isAnimating={isAnimating}
@@ -1011,5 +982,22 @@ export function CommonButton({
 			<span>Continue</span>
 			<ArrowRight className="w-4 h-4" />
 		</button>
+	);
+}
+type validationCriteriaType = {
+	children: React.ReactNode;
+	criteria: boolean;
+};
+export function PasswordValidationCriteria({
+	children,
+	criteria,
+}: validationCriteriaType) {
+	return (
+		<li className="flex items-center gap-2">
+			<div
+				className={` ${criteria ? "bg-green-400 w-2 h-2 outline outline-green-400 outline-offset-4" : "bg-gray-400 w-1.5 h-1.5"} rounded-full transition-colors duration-200 mr-1`}
+			></div>
+			{children}
+		</li>
 	);
 }

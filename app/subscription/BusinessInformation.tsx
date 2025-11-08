@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
-import type { SubscriptionSchema } from "../libs/dals/types/zodSchemas";
+import type { SubscriptionSchema } from "../libs/types/zodSchemas";
 import FormFieldErrorMessage from "../components/fieldError";
 
 export default function BusinessInformation() {
