@@ -11,17 +11,23 @@ import { API_BASE_URL } from "@/app/libs/dals/utils";
 import { FormValues } from "@/app/libs/types/user";
 import FormFieldErrorMessage from "@/app/components/fieldError";
 
-type password = Pick<FormValues, "password">;
+type resetPassword = {
+	confirmPassword: string;
+} & Pick<FormValues, "password">;
 export default function ResetPassword() {
 	const { updateUser } = useSession((state) => state.actions);
 	const {
 		register,
 		handleSubmit,
 		formState: { errors, isSubmitting },
-	} = useForm<password>();
-
-	const onSubmit = async (formData: password) => {
+		watch,
+	} = useForm<resetPassword>();
+	const confirmPassword = watch("password");
+	const onSubmit = async (formData: resetPassword) => {
 		try {
+			if (formData.password !== formData.confirmPassword) {
+				toast.error("Passwords do not match");
+			}
 			const { data, error } = await callApi<ApiResponse<IUser>>(
 				`${API_BASE_URL}/auth/password/reset`,
 				"POST",
@@ -63,44 +69,36 @@ export default function ResetPassword() {
 					Create New Password
 				</h1>
 
-				{/* Email */}
-				<label className="block text-sm font-medium mb-1">
+				{/* Password */}
+				<label className="block text-sm font-medium mb-2">
 					New Password
-				</label>
+				
 				<input
-					type="email"
+					type="password"
 					{...register("password", {
-						required: "Email is required",
-						pattern: {
-							value: /\S+@\S+\.\S+/,
-							message: "Invalid email",
-						},
+						required: "Password is required",
 					})}
 					placeholder="Enter your email"
-					className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 outline-none mb-2"
+					className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 outline-none"
 				/>
-				<FormFieldErrorMessage error={errors.password}/>
-				{/* Email */}
-				<label className="block text-sm font-medium mb-1">
-					Confirm New Password
+				<FormFieldErrorMessage error={errors.password} />
 				</label>
-				<input
-					type="email"
-					{...register("email", {
-						required: "Email is required",
-						pattern: {
-							value: /\S+@\S+\.\S+/,
-							message: "Invalid email",
-						},
-					})}
-					placeholder="Enter your email"
-					className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 outline-none mb-2"
-				/>
-				{errors.email && (
-					<p className="text-red-500 text-xs mb-2">
-						{errors.email.message}
-					</p>
-				)}
+				{/* Confirm Password */}
+				<label className="block text-sm font-medium mb-2">
+					Confirm New Password
+					<input
+						type="password"
+						{...register("confirmPassword", {
+							required: "confirm your password",
+							validate: (value) =>
+								value === confirmPassword ||
+								"Passwords do not match",
+						})}
+						placeholder="Enter your email"
+						className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 outline-none"
+					/>
+					<FormFieldErrorMessage error={errors.confirmPassword} />
+				</label>
 				{/* Sign in button */}
 				<button
 					disabled={isSubmitting}

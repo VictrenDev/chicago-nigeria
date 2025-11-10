@@ -1,51 +1,80 @@
 "use client";
-import { useForm } from "react-hook-form";
 
+import { useForm } from "react-hook-form";
 import Image from "next/image";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+
 import { callApi } from "@/app/libs/helper/callApi";
 import { ApiResponse, AppError, IUser } from "@/app/types";
 import { useSession } from "@/app/store/useSession";
 import { API_BASE_URL } from "@/app/libs/dals/utils";
 import { FormValues } from "@/app/libs/types/user";
-import { useSearchParams } from "next/navigation";
 
-type email = Pick<FormValues, "email">;
+type EmailOnly = Pick<FormValues, "email">;
+
 export default function ForgotPassword() {
+	const TIMER_DURATION = 20; // seconds
+
+	const [timer, setTimer] = useState<number | null>(null);
+	const [canResend, setCanResend] = useState(true);
+
 	const searchParams = useSearchParams();
-	const email = searchParams.get("email");
+	const emailParam = searchParams.get("email");
 	const { updateUser } = useSession((state) => state.actions);
+
 	const {
 		register,
 		handleSubmit,
 		formState: { errors, isSubmitting },
-	} = useForm<email>({
-		defaultValues: {
-			email: email ?? "",
-		},
+	} = useForm<EmailOnly>({
+		defaultValues: { email: emailParam ?? "" },
 	});
 
-	const onSubmit = async (formData: email) => {
+	// Countdown logic
+	useEffect(() => {
+		if (timer === null || canResend) return;
+
+		if (timer <= 0) {
+			setTimer(0);
+			setCanResend(true);
+			return;
+		}
+
+		const countdown = setTimeout(() => {
+			setTimer((prev) => (prev !== null ? prev - 1 : 0));
+		}, 1000);
+
+		return () => clearTimeout(countdown);
+	}, [timer, canResend]);
+
+	const onSubmit = async (formData: EmailOnly) => {
 		try {
 			const { data, error } = await callApi<ApiResponse<IUser>>(
 				`${API_BASE_URL}/auth/password/forgot`,
 				"POST",
 				formData,
 			);
+
 			if (error) throw error;
-			if (!data?.data) {
-				throw new Error("could not signin!");
-			}
-			toast.success(data?.message);
-			updateUser(data?.data as IUser);
-		} catch (error) {
-			const castErr = error as AppError;
+			if (!data?.data) throw new Error("Could not send reset email");
+
+			toast.success(data.message);
+			updateUser(data.data as IUser);
+			// Start countdown
+			setCanResend(false);
+			setTimer(TIMER_DURATION);
+		} catch (err) {
+			const castErr = err as AppError;
 			toast.error(
 				castErr.message ?? "Invalid credentials or server error",
 			);
 		}
 	};
+
+	const isButtonDisabled = isSubmitting || !canResend;
 
 	return (
 		<section className="flex justify-center items-center min-h-screen bg-gray-50 px-4">
@@ -91,19 +120,33 @@ export default function ForgotPassword() {
 					</p>
 				)}
 
-				{/* Sign in button */}
+				{/* Timer Display */}
+				{timer !== null && timer > 0 && (
+					<p className="my-1 text-gray-500 text-center">
+						Resend verification link in 00:
+						{timer.toString().padStart(2, "0")}
+					</p>
+				)}
+
+				{/* Submit Button */}
 				<button
-					disabled={isSubmitting}
+					disabled={isButtonDisabled}
 					type="submit"
-					className={` ${isSubmitting ? "bg-[var(--primary-color)]/90" : "bg-[var(--primary-color)]"} hover:bg-[var(--primary-color)]/90 cursor-pointer text-white w-full py-3 rounded-lg font-medium transition-all`}
+					className={`${
+						isButtonDisabled
+							? "bg-[var(--primary-color)]/70 cursor-not-allowed"
+							: "bg-[var(--primary-color)] hover:bg-[var(--primary-color)]/90"
+					} text-white w-full py-3 rounded-lg font-medium transition-all`}
 				>
 					{isSubmitting ? (
-						<span className="flex justify-center ">
-							<Loader2 className="w-5 h-5 text-grary-200 mr-1 animate-spin" />{" "}
-							Sending reset link to email...
+						<span className="flex justify-center items-center">
+							<Loader2 className="w-5 h-5 mr-2 animate-spin" />
+							Sending reset link...
 						</span>
-					) : (
+					) : canResend ? (
 						"Send reset password link"
+					) : (
+						"Resend link available soon..."
 					)}
 				</button>
 			</form>

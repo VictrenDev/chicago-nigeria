@@ -1,6 +1,6 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -12,17 +12,18 @@ import { useSession } from "@/app/store/useSession";
 import { API_BASE_URL } from "@/app/libs/dals/utils";
 import { FormValues } from "@/app/libs/types/user";
 
-
 export default function SignIn() {
 	const { updateUser } = useSession((state) => state.actions);
 	const {
 		register,
 		handleSubmit,
 		formState: { errors, isSubmitting },
-		watch
+		watch,
 	} = useForm<FormValues>();
-const email = watch("email")
+	const email = watch("email");
+	
 	const [showPassword, setShowPassword] = useState(false);
+
 
 	const onSubmit = async (formData: FormValues) => {
 		try {
@@ -38,7 +39,6 @@ const email = watch("email")
 			}
 			toast.success(data?.message);
 			updateUser(data?.data as IUser);
-			
 		} catch (error) {
 			const castErr = error as AppError;
 			toast.error(
@@ -60,7 +60,7 @@ const email = watch("email")
 						alt="logo"
 						width={140}
 						height={40}
-						className="h-10 object-contain"
+						className="w-30 object-contain"
 					/>
 				</div>
 
@@ -150,7 +150,14 @@ const email = watch("email")
 					type="submit"
 					className={` ${isSubmitting ? "bg-[var(--primary-color)]/90" : "bg-[var(--primary-color)]"} hover:bg-[var(--primary-color)]/90 cursor-pointer text-white w-full py-3 rounded-lg font-medium transition-all`}
 				>
-					{isSubmitting ? (<span className="flex justify-center "><Loader2 className="w-5 h-5 text-grary-200 mr-1 animate-spin"/> Signing in...</span>) : "Sign in"}
+					{isSubmitting ? (
+						<span className="flex justify-center ">
+							<Loader2 className="w-5 h-5 text-grary-200 mr-1 animate-spin" />{" "}
+							Signing in...
+						</span>
+					) : (
+						"Sign in"
+					)}
 				</button>
 				{/* Footer */}
 				<p className="text-center text-sm mt-5">
