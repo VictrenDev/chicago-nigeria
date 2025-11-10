@@ -20,8 +20,6 @@ export type SelectorFn<TStore, TResult> = (state: TStore) => TResult;
 
 const initialState = {
   user: null,
-  school: null,
-  affiliate: null,
   loading: true,
   isFirstMount: false,
 };

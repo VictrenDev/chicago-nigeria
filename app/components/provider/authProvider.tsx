@@ -1,22 +1,27 @@
 "use client";
 
-import React, { ReactNode, Suspense } from "react";
+import React, { ReactNode, Suspense, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 import { Loader } from "../loader";
 import { Protect } from "../protect";
+import { useSession } from "@/app/store/useSession";
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const path: string = usePathname();
 
-  const openPaths = ["/"];
+  const { getSession } = useSession((state) => state.actions);
+  const openPaths = ["/", "/marketplace"];
 
   const isOpenPath = openPaths.includes(path);
 
+  useEffect(() => {
+    getSession(true);
+  }, []);
+
   return (
     <Suspense fallback={<Loader />}>
-      {/* {isOpenPath ? children : <Protect>{children}</Protect>} */}
-      <Protect>{children}</Protect>
+      {isOpenPath ? children : <Protect>{children}</Protect>}
     </Suspense>
   );
 };

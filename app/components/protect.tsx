@@ -25,11 +25,6 @@ export const Protect = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const queryParams = useSearchParams();
   const { user, loading } = useSession((state) => state);
-  const { getSession } = useSession((state) => state.actions);
-
-  useEffect(() => {
-    getSession(true);
-  }, []);
 
   if (loading && !path) return <Loader />;
 
