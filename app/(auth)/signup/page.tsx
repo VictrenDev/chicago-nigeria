@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { CheckIcon, UserTick } from "@/app/components/icons";
@@ -31,27 +31,8 @@ import { createUser } from "@/app/libs/dals/users";
 import { FormValues } from "@/app/libs/types/user";
 import { API_BASE_URL } from "@/app/libs/dals/utils";
 
-const interestsList = [
-	{ id: 1, label: "Professional Networking", icon: <Briefcase size={18} /> },
-	{ id: 2, label: "Business & Entrepreneurship", icon: <Users size={18} /> },
-	{
-		id: 3,
-		label: "Nigerian culture & Heritage",
-		icon: <Landmark size={18} />,
-	},
-	{ id: 4, label: "Education & Learning", icon: <BookOpen size={18} /> },
-	{
-		id: 5,
-		label: "Social Events & Parties",
-		icon: <PartyPopper size={18} />,
-	},
-	{ id: 6, label: "Music & Entertainment", icon: <Music size={18} /> },
-	{ id: 7, label: "Travel & Tourism", icon: <Globe2 size={18} /> },
-	{ id: 8, label: "Food and Dining", icon: <Utensils size={18} /> },
-];
-
 export default function Form() {
-	const [step, setStep] = useState(5);
+	const [step, setStep] = useState(1);
 	const [direction, setDirection] = useState<"left" | "right">("right");
 	const [registrationType, setRegistrationType] = useState<
 		"regular" | "vendor"
@@ -61,12 +42,8 @@ export default function Form() {
 		`${API_BASE_URL}/auth/signup`,
 		createUser,
 	);
-	const [selected, setSelected] = useState<number[]>([]);
-	const toggleSelect = (id: number) => {
-		setSelected((prev) =>
-			prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
-		);
-	};
+	const totalSignupPages: number = 5;
+
 	const {
 		register,
 		handleSubmit,
@@ -117,7 +94,6 @@ export default function Form() {
 				toast.success(
 					"Form Submitted successfully. Check email for confirmation link.",
 				);
-				setStep((step) => step + 1);
 			}
 			console.log(newUser);
 		} catch (error) {
@@ -216,10 +192,12 @@ export default function Form() {
 					{/* Filled line */}
 					<div
 						className="absolute top-[50%] left-0 h-[2px] bg-[var(--primary-color)] transition-all duration-500"
-						style={{ width: `${((step - 1) / (7 - 1)) * 100}%` }}
+						style={{
+							width: `${((step - 1) / (totalSignupPages - 1)) * 100}%`,
+						}}
 					></div>
 
-					{[1, 2, 3, 4, 5, 6, 7].map((n) => {
+					{[1, 2, 3, 4, 5].map((n) => {
 						const isCompleted = step > n;
 						const isCurrent = step === n;
 
@@ -685,54 +663,6 @@ export default function Form() {
 										</div>
 									</fieldset>
 								)}
-
-								{/* <div>
-									<label className="block text-sm font-medium mb-1">Password</label>
-									<input
-										type="password"
-										{...register("password", {
-											required: "Password is required",
-											minLength: { value: 6, message: "At least 6 characters" },
-										})}
-										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
-										placeholder="Create a strong password"
-									/>
-									{errors.password && (
-										<p className="text-red-500 text-xs mt-1">{errors.password.message}</p>
-									)}
-								</div>
-								<div>
-									<label className="block text-sm font-medium mb-1">Confirm Password</label>
-									<input
-										type="password"
-										{...register("confirmPassword", {
-											validate: (value) =>
-												value === getValues("password") || "Passwords do not match",
-										})}
-										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
-										placeholder="Confirm your password"
-									/>
-									{errors.confirmPassword && (
-										<p className="text-red-500 text-xs mt-1">{errors.confirmPassword.message}</p>
-									)}
-								</div>
-								<div className="bg-gray-50 rounded-lg p-4 mt-4">
-									<h3 className="text-base font-medium mb-2">Password Requirements</h3>
-									<ul className="text-sm text-gray-600 space-y-1">
-										<li className="flex items-center gap-2">
-											<div className="w-1.5 h-1.5 bg-gray-400 rounded-full"></div>
-											At least 8 characters
-										</li>
-										<li className="flex items-center gap-2">
-											<div className="w-1.5 h-1.5 bg-gray-400 rounded-full"></div>
-											One uppercase character
-										</li>
-										<li className="flex items-center gap-2">
-											<div className="w-1.5 h-1.5 bg-gray-400 rounded-full"></div>
-											One number
-										</li>
-									</ul>
-								</div> */}
 							</fieldset>
 							<CommonButton
 								next={next}
@@ -825,7 +755,6 @@ export default function Form() {
 										>
 											One number
 										</PasswordValidationCriteria>
-									
 									</ul>
 								</div>
 								<label className="inline-flex items-center space-x-2">
@@ -866,96 +795,6 @@ export default function Form() {
 										<ArrowRight className="w-4 h-4" />
 									</>
 								)}
-							</button>
-						</div>
-					)}
-
-					{/* STEP 6 */}
-					{step === 6 && (
-						<div className={`${getStepAnimationClass()} w-full`}>
-							<div className="flex flex-col items-center space-y-1">
-								<CheckIcon className="w-10 h-10 text-[var(--primary-color)]" />
-								<h1 className="text-2xl font-medium">
-									Verify your email
-								</h1>
-								<p className="text-gray-400 text-center">
-									we&apos;ve sent a verification email to
-									email@mail.com
-								</p>
-							</div>
-							<CommonButton
-								next={next}
-								isAnimating={isAnimating}
-							/>
-						</div>
-					)}
-
-					{step === 7 && (
-						<div className="bg-white py-8 w-full text-center">
-							{/* Header */}
-							<div className="flex justify-center mb-3">
-								<div className="w-10 h-10 rounded-full border-2 border-green-600 flex items-center justify-center">
-									<Heart className="stroke-[var(--primary-color)]" />
-								</div>
-							</div>
-
-							<h1 className="text-lg font-semibold mb-1">
-								What Interests you?
-							</h1>
-							<p className="text-gray-500 text-sm mb-8">
-								Select interests to personalize your experience
-							</p>
-
-							{/* Interests grid */}
-							<div className="grid md:grid-cols-2 gap-3 text-left">
-								{interestsList.map((interest) => {
-									const isActive = selected.includes(
-										interest.id,
-									);
-									return (
-										<button
-											key={interest.id}
-											type="button"
-											onClick={() =>
-												toggleSelect(interest.id)
-											}
-											className={`flex items-center gap-2 p-3 rounded-xl border text-sm transition-all ${
-												isActive
-													? "border-green-600 bg-green-50 ring-1 ring-green-500"
-													: "border-gray-200 hover:bg-gray-50"
-											}`}
-										>
-											<div className="text-green-600">
-												{interest.icon}
-											</div>
-											<span className="flex-1 text-left text-gray-700">
-												{interest.label}
-											</span>
-											{isActive && (
-												<Check
-													size={16}
-													className="text-green-600 shrink-0"
-												/>
-											)}
-										</button>
-									);
-								})}
-							</div>
-
-							{/* Footer text */}
-							<p className="text-gray-500 text-xs mt-6">
-								Selected {selected.length} interest
-								{selected.length !== 1 && "s"}. You can change
-								these later.
-							</p>
-							<button
-								type="button"
-								onClick={next}
-								disabled={isAnimating}
-								className="bg-[var(--primary-color)] text-white py-3 rounded-lg flex justify-center items-center gap-2 w-full mt-8 mb-4 hover:bg-[var(--primary-color)]/90 disabled:opacity-50 transition-all duration-200"
-							>
-								<span>Complete Registration</span>
-								<ArrowRight className="w-4 h-4" />
 							</button>
 						</div>
 					)}

@@ -4,41 +4,46 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
-import useSWRMutation from "swr/mutation";
-import { Eye, EyeOff } from "lucide-react";
-import { GoogleIcon, SigninFacebookIcon } from "@/app/components/icons";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+// import { GoogleIcon, SigninFacebookIcon } from "@/app/components/icons";
+import { callApi } from "@/app/libs/helper/callApi";
+import { ApiResponse, AppError, IUser } from "@/app/types";
+import { useSession } from "@/app/store/useSession";
 import { API_BASE_URL } from "@/app/libs/dals/utils";
-import { signinUser } from "@/app/libs/dals/users";
+import { FormValues } from "@/app/libs/types/user";
 
-type FormValues = {
-	email: string;
-	password: string;
-};
+
 export default function SignIn() {
-	const { trigger } = useSWRMutation(
-		`${API_BASE_URL}/auth/signin`,
-		signinUser,
-	);
-
+	const { updateUser } = useSession((state) => state.actions);
 	const {
 		register,
 		handleSubmit,
-		formState: { errors },
+		formState: { errors, isSubmitting },
+		watch
 	} = useForm<FormValues>();
-
+const email = watch("email")
 	const [showPassword, setShowPassword] = useState(false);
 
-	const onSubmit = async (data: FormValues) => {
+	const onSubmit = async (formData: FormValues) => {
 		try {
-			const newUser = await trigger(data);
-			toast.success("Signed in successfully!");
-			console.log(newUser);
-		} catch (error) {
-			if (error instanceof Error) {
-				toast.error(error.message);
-				throw new Error(error.message);
+			const { data, error } = await callApi<ApiResponse<IUser>>(
+				`${API_BASE_URL}/auth/signin`,
+				"POST",
+				formData,
+			);
+			if (error) throw error;
+			// console.log(data)
+			if (!data?.data) {
+				throw new Error("could not signin!");
 			}
-			throw new Error("Something wrong unexpectedly occurred!!");
+			toast.success(data?.message);
+			updateUser(data?.data as IUser);
+			
+		} catch (error) {
+			const castErr = error as AppError;
+			toast.error(
+				castErr.message ?? "Invalid credentials or server error",
+			);
 		}
 	};
 
@@ -132,7 +137,7 @@ export default function SignIn() {
 						Remember Me
 					</label>*/}
 					<Link
-						href="#"
+						href={`/forgot-password?email=${encodeURIComponent(email)}`}
 						className="text-[var(--primary-color)] hover:underline text-sm font-medium"
 					>
 						Forgot Password?
@@ -141,10 +146,11 @@ export default function SignIn() {
 
 				{/* Sign in button */}
 				<button
+					disabled={isSubmitting}
 					type="submit"
-					className="bg-[var(--primary-color)] hover:bg-[var(--primary-color)]/90 cursor-pointer text-white w-full py-3 rounded-lg font-medium transition-all"
+					className={` ${isSubmitting ? "bg-[var(--primary-color)]/90" : "bg-[var(--primary-color)]"} hover:bg-[var(--primary-color)]/90 cursor-pointer text-white w-full py-3 rounded-lg font-medium transition-all`}
 				>
-					Sign in
+					{isSubmitting ? (<span className="flex justify-center "><Loader2 className="w-5 h-5 text-grary-200 mr-1 animate-spin"/> Signing in...</span>) : "Sign in"}
 				</button>
 				{/* Footer */}
 				<p className="text-center text-sm mt-5">
