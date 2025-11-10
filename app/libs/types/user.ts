@@ -5,6 +5,7 @@ export type FormValues = {
 	email: string;
 	DOB: string;
 	phone: string;
+	gender: "male" | "female";
 	countryCode?: string;
 	currentCity: string;
 	neighborhood?: string;
@@ -16,4 +17,5 @@ export type FormValues = {
 	bio?: string;
 	password: string;
 	confirmPassword: string;
+	isTermAndConditionAccepted: boolean;
 };

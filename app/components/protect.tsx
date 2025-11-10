@@ -4,7 +4,6 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { ReactNode, useEffect } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-
 import { useSession } from "../store/useSession";
 import { Loader } from "./loader";
 import { innaccessibleByUsers, restrictedRoutes } from "../constants";
@@ -43,7 +42,7 @@ export const Protect = ({ children }: { children: ReactNode }) => {
   };
 
   const isNotAccessibleByAuthUsers = innaccessibleByUsers.includes(path);
-
+  console.log(user);
   if (isNotAccessibleByAuthUsers && user) {
     void redirect("/feeds", "Please signin");
     return <Loader />;

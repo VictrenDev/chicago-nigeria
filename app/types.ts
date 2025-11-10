@@ -1,4 +1,8 @@
 export type EventStatus = "active" | "ongoing" | "completed";
+export type FormValues = {
+	email: string;
+	password: string;
+};
 export type Event = {
   eventName: string;
   eventStatus?: EventStatus;

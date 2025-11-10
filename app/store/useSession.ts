@@ -3,6 +3,7 @@ import { callApi } from "../libs/helper/callApi";
 import { ApiResponse, IUser } from "../types";
 import { useShallow } from "zustand/shallow";
 import { innaccessibleByUsers } from "../constants";
+import { API_BASE_URL } from "../libs/dals/utils";
 
 type Session = {
   loading: boolean;
@@ -35,7 +36,7 @@ export const initSession = sessionStore((set, get) => ({
       }
 
       const { data } = await callApi<ApiResponse<IUser>>(
-        "/api/v1/auth/session"
+        `${API_BASE_URL}/auth/session`
       );
       set({ user: data?.data, loading: false });
     },
