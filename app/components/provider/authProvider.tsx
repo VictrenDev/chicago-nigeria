@@ -11,12 +11,14 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const path: string = usePathname();
 
   const { getSession } = useSession((state) => state.actions);
-  const openPaths = ["/", "/marketplace"];
+  const openPaths = [""];
 
   const isOpenPath = openPaths.includes(path);
 
   useEffect(() => {
     getSession(true);
+
+    console.log("Get session initialized!");
   }, []);
 
   return (

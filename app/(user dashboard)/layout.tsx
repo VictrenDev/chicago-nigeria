@@ -1,18 +1,15 @@
-import AuthProvider from "../components/provider/authProvider";
 import SideNavigation from "./components/navigation";
 import TopNavigation from "./components/topnavigation";
 
 export default function RootLayout({
-	children,
+  children,
 }: {
-	children: React.ReactNode;
+  children: React.ReactNode;
 }) {
-	return (
-		<>
-			<AuthProvider>
-				<TopNavigation />
-				<SideNavigation>{children}</SideNavigation>
-			</AuthProvider>
-		</>
-	);
+  return (
+    <>
+      <TopNavigation />
+      <SideNavigation>{children}</SideNavigation>
+    </>
+  );
 }

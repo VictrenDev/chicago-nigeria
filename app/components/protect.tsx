@@ -34,6 +34,10 @@ export const Protect = ({ children }: { children: ReactNode }) => {
       });
     }
 
+    if (message) {
+      toast(message);
+    }
+
     if (typeof window?.location !== undefined) {
       setTimeout(() => {
         router.push(route);
@@ -41,15 +45,17 @@ export const Protect = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  console.log("Checking auth status: ", user);
+
   const isNotAccessibleByAuthUsers = innaccessibleByUsers.includes(path);
-  console.log(user);
+
   if (isNotAccessibleByAuthUsers && user) {
-    void redirect("/feeds", "Please signin");
+    void redirect("/feeds", "You cannot access this page!");
     return <Loader />;
   }
 
   if (!isNotAccessibleByAuthUsers && !user) {
-    void redirect("/signin");
+    void redirect("/signin", "You cannot access this page! Please signin");
     return <Loader />;
   }
 
@@ -57,7 +63,7 @@ export const Protect = ({ children }: { children: ReactNode }) => {
     const isAuthenticated = queryParams.get("authenticated");
 
     if (!isAuthenticated) {
-      void redirect("/signin", "Please signin ");
+      void redirect("/signin", "You cannot access this page! Please signin ");
       return <Loader />;
     }
   }
