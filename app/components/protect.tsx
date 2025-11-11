@@ -20,52 +20,53 @@ import { innaccessibleByUsers, restrictedRoutes } from "../constants";
 // only auth users should access the protected or secured pages
 
 export const Protect = ({ children }: { children: ReactNode }) => {
-	const path = usePathname();
-	const router = useRouter();
-	const queryParams = useSearchParams();
-	const { user, loading } = useSession((state) => state);
-	const { getSession } = useSession((state) => state.actions);
+  const path = usePathname();
+  const router = useRouter();
+  const queryParams = useSearchParams();
+  const { user, loading } = useSession((state) => state);
 
-	useEffect(() => {
-		getSession(true);
-	}, []);
+  if (loading && !path) return <Loader />;
 
-	if (loading && !path) return <Loader />;
+  const redirect = (route: string, message?: string) => {
+    if (message) {
+      toast.error(message, {
+        duration: 1000,
+      });
+    }
 
-	const redirect = (route: string, message?: string) => {
-		if (message) {
-			toast.error(message, {
-				duration: 1000,
-			});
-		}
+    if (message) {
+      toast(message);
+    }
 
-		if (typeof window?.location !== undefined) {
-			setTimeout(() => {
-				router.push(route);
-			}, 500);
-		}
-	};
+    if (typeof window?.location !== undefined) {
+      setTimeout(() => {
+        router.push(route);
+      }, 500);
+    }
+  };
 
-	const isNotAccessibleByAuthUsers = innaccessibleByUsers.includes(path);
-	console.log(user);
-	if (isNotAccessibleByAuthUsers && user) {
-		void redirect("/feeds", "Please signin");
-		return <Loader />;
-	}
+  console.log("Checking auth status: ", user);
 
-	if (!isNotAccessibleByAuthUsers && !user) {
-		void redirect("/signin");
-		return <Loader />;
-	}
+  const isNotAccessibleByAuthUsers = innaccessibleByUsers.includes(path);
 
-	if (restrictedRoutes.includes(path)) {
-		const isAuthenticated = queryParams.get("authenticated");
+  if (isNotAccessibleByAuthUsers && user) {
+    void redirect("/feeds", "You cannot access this page!");
+    return <Loader />;
+  }
 
-		if (!isAuthenticated) {
-			void redirect("/signin", "Please signin ");
-			return <Loader />;
-		}
-	}
+  if (!isNotAccessibleByAuthUsers && !user) {
+    void redirect("/signin", "You cannot access this page! Please signin");
+    return <Loader />;
+  }
 
-	return children;
+  if (restrictedRoutes.includes(path)) {
+    const isAuthenticated = queryParams.get("authenticated");
+
+    if (!isAuthenticated) {
+      void redirect("/signin", "You cannot access this page! Please signin ");
+      return <Loader />;
+    }
+  }
+
+  return children;
 };

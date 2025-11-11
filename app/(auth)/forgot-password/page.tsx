@@ -9,9 +9,9 @@ import { useEffect, useState } from "react";
 
 import { callApi } from "@/app/libs/helper/callApi";
 import { ApiResponse, AppError, IUser } from "@/app/types";
-import { useSession } from "@/app/store/useSession";
 import { API_BASE_URL } from "@/app/libs/dals/utils";
 import { FormValues } from "@/app/libs/types/user";
+import { useSession } from "@/app/store/useSession";
 
 type EmailOnly = Pick<FormValues, "email">;
 
@@ -93,6 +93,13 @@ export default function ForgotPassword() {
 					/>
 				</div>
 
+				{/* Timer Display */}
+				{timer !== null && timer > 0 && (
+					<p className="my-1 text-gray-500 text-center">
+						Resend verification link in 00:
+						{timer.toString().padStart(2, "0")}
+					</p>
+				)}
 				{/* Heading */}
 				<h1 className="text-lg font-semibold text-center mb-1">
 					Forgot Password
@@ -117,14 +124,6 @@ export default function ForgotPassword() {
 				{errors.email && (
 					<p className="text-red-500 text-xs mb-2">
 						{errors.email.message}
-					</p>
-				)}
-
-				{/* Timer Display */}
-				{timer !== null && timer > 0 && (
-					<p className="my-1 text-gray-500 text-center">
-						Resend verification link in 00:
-						{timer.toString().padStart(2, "0")}
 					</p>
 				)}
 
