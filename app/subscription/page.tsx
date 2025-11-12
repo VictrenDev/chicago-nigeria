@@ -3,12 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { FormProvider, useForm } from "react-hook-form";
-import {
-	type SubscriptionSchema,
-	subscriptionSchema,
-} from "../libs/dals/types/zodSchemas";
 import BusinessInformation from "./BusinessInformation";
 import ContactInformation from "./ContactInformation";
+import { subscriptionSchema, SubscriptionSchema } from "../libs/types/zodSchemas";
 
 export default function SocialSubscriptionPage() {
 	const method = useForm<SubscriptionSchema>({
