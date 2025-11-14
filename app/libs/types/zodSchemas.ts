@@ -17,4 +17,9 @@ export const subscriptionSchema = z.object({
 		.string()
 		.min(10, "Description can not be less than 10 characters"),
 });
+
 export type SubscriptionSchema = z.infer<typeof subscriptionSchema>;
+
+export const createListingsSchema = z.object({
+	title
+})
