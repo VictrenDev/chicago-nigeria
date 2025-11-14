@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import LikePost from "../../../components/likePost";
 import { postDetailsType } from "@/app/types";
+import { API_BASE_URL } from "@/app/libs/dals/utils";
 
 const postDetails: postDetailsType[] = [
 	{
@@ -62,7 +63,20 @@ const postDetails: postDetailsType[] = [
 		starRating: 4,
 	},
 ];
+async function getListings() {
+	const response = await fetch(`${API_BASE_URL}/listings`, {
+		next: {
+			revalidate: 60, // revalidate the page after every 60 seconds
+		},
+	});
+	if (!response.ok) {
+		throw new Error("Failed to get listings");
+	}
+	return response.json();
+}
 export default async function MarketplaceProducts() {
+	const listings = getListings();
+	console.log(listings);
 	return (
 		<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
 			{postDetails.map((post) => (

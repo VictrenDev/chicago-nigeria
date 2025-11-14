@@ -45,7 +45,7 @@ export const Protect = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  console.log("Checking auth status: ", user);
+  // console.log("Checking auth status: ", user);
 
   const isNotAccessibleByAuthUsers = innaccessibleByUsers.includes(path);
 

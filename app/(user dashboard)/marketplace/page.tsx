@@ -17,6 +17,7 @@ import MarketplaceStats from "./components/server/stats";
 import MarketplaceStatsSkeleton from "./components/skeletons/stats-skeleton";
 
 export default function Marketplace() {
+	
 	return (
 		<main className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-4 md:gap-12">
 			<section className="space-y-4 md:pt-4">
