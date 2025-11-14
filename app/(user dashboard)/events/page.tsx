@@ -4,11 +4,13 @@ import { Plus } from "lucide-react";
 import EventCard from "./event-components/eventCard";
 import EventStatusTabs from "./event-components/eventStatusTabs";
 import { AttendingEvent, HostedEvent, PastEvent } from "@/app/types";
+import PageInConstruction from "../components/construction";
 export default async function Events() {
 	return (
 		<>
+			<PageInConstruction/>
 			{/* Header Section */}
-			<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white px-4 sm:px-8 py-4 rounded-lg">
+			{/*<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white px-4 sm:px-8 py-4 rounded-lg">
 				<div className="flex-1">
 					<h2 className="text-lg font-bold">Upcoming Events</h2>
 					<p className="text-sm text-gray-600">
@@ -23,11 +25,11 @@ export default async function Events() {
 					<Plus className="w-4 h-4 sm:w-6 sm:h-6" />
 					<span className="whitespace-nowrap">Create Event</span>
 				</Link>
-			</div>
+			</div>*/}
 
 			{/* Main Layout */}
-			<main className="grid grid-cols-1 lg:grid-cols-[5fr_4fr] gap-12">
-				{/* Suspense Boundary for Event Cards */}
+			{/*<main className="grid grid-cols-1 lg:grid-cols-[5fr_4fr] gap-12">
+
 				<Suspense fallback={<EventCardsSkeleton />}>
 					<section className="space-y-8 pt-4">
 						<div className="space-y-4">
@@ -36,13 +38,13 @@ export default async function Events() {
 					</section>
 				</Suspense>
 
-				{/* Suspense Boundary for Event Status */}
+
 				<Suspense fallback={<EventStatusSkeleton />}>
 					<section className="space-y-8 sticky top-0 h-screen pt-4 hidden md:block">
 						<EventStatus />
 					</section>
 				</Suspense>
-			</main>
+			</main>*/}
 		</>
 	);
 }
