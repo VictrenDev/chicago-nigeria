@@ -18,6 +18,7 @@ import Link from "next/link";
 import CustomSelectButton from "../../components/customSelect";
 import { useSession } from "@/app/store/useSession";
 import { callApi } from "@/app/libs/helper/callApi";
+import { useUserLogger } from "@/app/components/custom-hooks/useUserLogger";
 
 // Enhanced types
 type PriceType = "fixed" | "negotiable";
@@ -81,11 +82,6 @@ export default function Form() {
   const [direction, setDirection] = useState<"left" | "right">("right");
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-
-  const { user } = useSession((state) => state);
-
-  console.log(user);
-
   const methods = useForm<Product>({
     defaultValues: {
       title: "Vintage Wooden Desk",

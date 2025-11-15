@@ -1,6 +1,7 @@
+// components/SignIn.tsx
 "use client";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -9,12 +10,14 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 import { callApi } from "@/app/libs/helper/callApi";
 import { ApiResponse, AppError, IUser } from "@/app/types";
-import { useSession } from "@/app/store/useSession";
+import { useSessionState } from "@/app/store/useSession";
 import { FormValues } from "@/app/libs/types/user";
-import { API_BASE_URL } from "@/app/libs/dals/utils";
 
 export default function SignIn() {
-  const { updateUser } = useSession((state) => state.actions);
+  const { updateUser, user } = useSessionState((state) => ({
+    updateUser: state.actions.updateUser,
+    user: state.user
+  }));
   const router = useRouter();
   const {
     register,
@@ -25,27 +28,45 @@ export default function SignIn() {
   const email = watch("email");
   const [showPassword, setShowPassword] = useState(false);
 
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (user) {
+      router.push("/marketplace");
+    }
+  }, [user, router]);
+
   const onSubmit = async (formData: FormValues) => {
     try {
       const { data, error } = await callApi<ApiResponse<IUser>>(
-        `${API_BASE_URL}/auth/signin`,
+        `/api/v1/auth/signin`,
         "POST",
         formData
       );
+      
       if (error) throw error;
-      // console.log(data)
+      
       if (!data?.data) {
-        throw new Error("could not signin!");
+        throw new Error("Could not sign in!");
       }
+      
       toast.success(data?.message);
-      updateUser(data?.data as IUser);
-
-      void router.push("/marketplace");
+      updateUser(data.data as IUser);
+      
+      // Router will handle redirect via useEffect above
     } catch (error) {
       const castErr = error as AppError;
       toast.error(castErr.message ?? "Invalid credentials or server error");
     }
   };
+
+  // Show loader while checking auth or if redirecting
+  if (user) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <section className="flex justify-center items-center min-h-screen bg-gray-50 px-4">
@@ -116,16 +137,9 @@ export default function SignIn() {
 
         {/* Remember + Forgot */}
         <div className="flex items-center justify-end text-sm mt-3 mb-5">
-          {/*<label className="flex items-center gap-2">
-						<input
-							type="checkbox"
-							className="accent-[var(--primary-color)]"
-						/>
-						Remember Me
-					</label>*/}
           <Link
             href={`/forgot-password?authenticated=true&email=${encodeURIComponent(
-              email
+              email || ''
             )}`}
             className="text-[var(--primary-color)] hover:underline text-sm font-medium"
           >
@@ -152,9 +166,10 @@ export default function SignIn() {
             "Sign in"
           )}
         </button>
+        
         {/* Footer */}
         <p className="text-center text-sm mt-5">
-          Don’t have an account?{" "}
+          Don't have an account?{" "}
           <Link
             href="/signup"
             className="text-[var(--primary-color)] font-medium hover:underline"
@@ -175,26 +190,3 @@ export default function SignIn() {
     </section>
   );
 }
-
-// {/* Divider */}
-// <div className="flex items-center gap-2 my-4">
-//   <div className="flex-1 h-px bg-gray-200" />
-//   <span className="text-gray-400 text-xs">Or</span>
-//   <div className="flex-1 h-px bg-gray-200" />
-// </div>
-
-// {/* Social login */}
-// <button
-//   type="button"
-//   className="w-full border border-gray-300 rounded-lg py-2 flex items-center justify-center gap-2 hover:bg-gray-50 mb-2"
-// >
-//   <GoogleIcon/>
-//   Sign in with Google
-// </button>
-// <button
-//   type="button"
-//   className="w-full border border-gray-300 rounded-lg py-2 flex items-center justify-center gap-2 hover:bg-gray-50"
-// >
-//   <SigninFacebookIcon/>
-//   Sign in with Facebook
-// </button>
