@@ -35,9 +35,9 @@ export const initSession = sessionStore((set, get) => ({
         set({ isFirstMount: true });
       }
 
-      const { data } = await callApi<ApiResponse<IUser>>(
-        `${API_BASE_URL}/auth/session`
-      );
+      const { data } = await callApi<ApiResponse<IUser>>(`api/v1/auth/session`);
+      console.log("get session response: ", data);
+
       set({ user: data?.data, loading: false });
     },
 

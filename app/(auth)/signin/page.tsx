@@ -1,16 +1,15 @@
 w"use client";
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-// import { GoogleIcon, SigninFacebookIcon } from "@/app/components/icons";
+
 import { callApi } from "@/app/libs/helper/callApi";
 import { ApiResponse, AppError, IUser } from "@/app/types";
 import { useSession } from "@/app/store/useSession";
-import { API_BASE_URL } from "@/app/libs/dals/utils";
 import { FormValues } from "@/app/libs/types/user";
 
 export default function SignIn() {
@@ -28,7 +27,7 @@ export default function SignIn() {
   const onSubmit = async (formData: FormValues) => {
     try {
       const { data, error } = await callApi<ApiResponse<IUser>>(
-        `${API_BASE_URL}/auth/signin`,
+        `api/v1/auth/signin`,
         "POST",
         formData
       );
@@ -133,31 +132,35 @@ export default function SignIn() {
           </Link>
         </div>
 
-				{/* Sign in button */}
-				<button
-					disabled={isSubmitting}
-					type="submit"
-					className={` ${isSubmitting ? "bg-[var(--primary-color)]/90" : "bg-[var(--primary-color)]"} hover:bg-[var(--primary-color)]/90 cursor-pointer text-white w-full py-3 rounded-lg font-medium transition-all`}
-				>
-					{isSubmitting ? (
-						<span className="flex justify-center ">
-							<Loader2 className="w-5 h-5 text-grary-200 mr-1 animate-spin" />{" "}
-							Signing in...
-						</span>
-					) : (
-						"Sign in"
-					)}
-				</button>
-				{/* Footer */}
-				<p className="text-center text-sm mt-5">
-					Don’t have an account?{" "}
-					<Link
-						href="/signup"
-						className="text-[var(--primary-color)] font-medium hover:underline"
-					>
-						Sign up
-					</Link>
-				</p>
+        {/* Sign in button */}
+        <button
+          disabled={isSubmitting}
+          type="submit"
+          className={` ${
+            isSubmitting
+              ? "bg-[var(--primary-color)]/90"
+              : "bg-[var(--primary-color)]"
+          } hover:bg-[var(--primary-color)]/90 cursor-pointer text-white w-full py-3 rounded-lg font-medium transition-all`}
+        >
+          {isSubmitting ? (
+            <span className="flex justify-center ">
+              <Loader2 className="w-5 h-5 text-grary-200 mr-1 animate-spin" />{" "}
+              Signing in...
+            </span>
+          ) : (
+            "Sign in"
+          )}
+        </button>
+        {/* Footer */}
+        <p className="text-center text-sm mt-5">
+          Don’t have an account?{" "}
+          <Link
+            href="/signup"
+            className="text-[var(--primary-color)] font-medium hover:underline"
+          >
+            Sign up
+          </Link>
+        </p>
 
         <div className="flex justify-center mt-3">
           <Link
