@@ -49,6 +49,8 @@ export const Protect = ({ children }: { children: ReactNode }) => {
 
   const isNotAccessibleByAuthUsers = innaccessibleByUsers.includes(path);
 
+  console.log("user state: ", user);
+
   if (isNotAccessibleByAuthUsers && user) {
     void redirect("/feeds", "You cannot access this page!");
     return <Loader />;
