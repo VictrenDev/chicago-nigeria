@@ -1,4 +1,4 @@
-w"use client";
+"use client";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import Image from "next/image";
@@ -11,6 +11,7 @@ import { callApi } from "@/app/libs/helper/callApi";
 import { ApiResponse, AppError, IUser } from "@/app/types";
 import { useSession } from "@/app/store/useSession";
 import { FormValues } from "@/app/libs/types/user";
+import { API_BASE_URL } from "@/app/libs/dals/utils";
 
 export default function SignIn() {
   const { updateUser } = useSession((state) => state.actions);
@@ -27,7 +28,7 @@ export default function SignIn() {
   const onSubmit = async (formData: FormValues) => {
     try {
       const { data, error } = await callApi<ApiResponse<IUser>>(
-        `api/v1/auth/signin`,
+        `${API_BASE_URL}/auth/signin`,
         "POST",
         formData
       );
