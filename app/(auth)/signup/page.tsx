@@ -3,23 +3,13 @@ import useSWRMutation from "swr/mutation";
 import {
 	ArrowLeft,
 	ArrowRight,
-	BookOpen,
-	Briefcase,
 	Camera,
-	Check,
-	Globe2,
-	Heart,
-	Landmark,
 	Loader2,
 	Lock,
 	MapPin,
-	Music,
-	PartyPopper,
 	Store,
 	User,
-	Users,
 	UsersRound,
-	Utensils,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

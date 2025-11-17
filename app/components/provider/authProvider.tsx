@@ -1,31 +1,40 @@
+// components/AuthProvider.tsx
 "use client";
 
-import React, { ReactNode, Suspense, useEffect } from "react";
+import React, { ReactNode, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
-
 import { Loader } from "../loader";
 import { Protect } from "../protect";
-import { useSession } from "@/app/store/useSession";
+import { useSessionState } from "@/app/store/useSession";
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const path: string = usePathname();
+  const path = usePathname();
+  const { getSession } = useSessionState((state) => state.actions);
+  const { user, loading, hasCheckedAuth } = useSessionState((state) => ({
+    user: state.user,
+    loading: state.loading,
+    hasCheckedAuth: state.hasCheckedAuth
+  }));
+  
+  const hasInitialized = useRef(false);
 
-  const { getSession } = useSession((state) => state.actions);
-  const openPaths = ["/", "/about"];
-
+  const openPaths = ["/", "/about", "/signin", "/signup", "/forgot-password"];
   const isOpenPath = openPaths.includes(path);
 
   useEffect(() => {
-    getSession(true);
+    // Prevent double initialization
+    if (!hasInitialized.current && !hasCheckedAuth) {
+      hasInitialized.current = true;
+      getSession(true);
+    }
+  }, [getSession, hasCheckedAuth]);
 
-    console.log("Get session initialized!");
-  }, []);
+  // Show loader during initial auth check for protected routes
+  if ((loading || !hasCheckedAuth) && !isOpenPath) {
+    return <Loader />;
+  }
 
-  return (
-    <Suspense fallback={<Loader />}>
-      {isOpenPath ? children : <Protect>{children}</Protect>}
-    </Suspense>
-  );
+  return isOpenPath ? children : <Protect>{children}</Protect>;
 };
 
 export default AuthProvider;

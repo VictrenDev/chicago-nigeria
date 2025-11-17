@@ -1,5 +1,5 @@
 "use client";
-import useSWRMutation from "swr/mutation";
+import { useState, useCallback } from "react";
 import {
 	AlertTriangle,
 	ArrowLeft,
@@ -11,14 +11,14 @@ import {
 	TagIcon,
 	UsersRound,
 } from "lucide-react";
-import { useState, useCallback } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { CustomPhotoInput } from "./upload";
 import Link from "next/link";
 import CustomSelectButton from "../../components/customSelect";
 import { useSession } from "@/app/store/useSession";
-import { API_BASE_URL } from "@/app/libs/dals/utils";
+import { callApi } from "@/app/libs/helper/callApi";
+import { useUserLogger } from "@/app/components/custom-hooks/useUserLogger";
 
 // Enhanced types
 type PriceType = "fixed" | "negotiable";
@@ -59,48 +59,29 @@ const validationSchema = {
 			message: "Description must be at least 10 characters",
 		},
 	},
- photo: {
-    required: "At least one photo is required",
-    validate: {
-      maxFiles: (files: FileList) => 
-        !files || files.length <= 8 || "Maximum 8 files allowed",
-      fileSize: (files: FileList) => {
-        if (!files) return true;
-        for (let i = 0; i < files.length; i++) {
-          if (files[i].size > 10 * 1024 * 1024) {
-            return "File size should be less than 10MB";
-          }
-        }
-        return true;
-      }
-    }
-  },
+	photo: {
+		required: "At least one photo is required",
+		validate: {
+			maxFiles: (files: FileList) =>
+				!files || files.length <= 8 || "Maximum 8 files allowed",
+			fileSize: (files: FileList) => {
+				if (!files) return true;
+				for (let i = 0; i < files.length; i++) {
+					if (files[i].size > 10 * 1024 * 1024) {
+						return "File size should be less than 10MB";
+					}
+				}
+				return true;
+			},
+		},
+	},
 };
-
-async function postUser(url: string, { arg }: { arg: FormData }) {
-	const res = await fetch(url, {
-		method: "POST",
-		body: arg,
-	});
-
-	if (!res.ok) throw new Error("Failed to create listing");
-	return res.json();
-}
 
 export default function Form() {
 	const [step, setStep] = useState<number>(1);
 	const [direction, setDirection] = useState<"left" | "right">("right");
 	const [isAnimating, setIsAnimating] = useState<boolean>(false);
 	const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-
-	const { trigger: triggerSubmitForm } = useSWRMutation(
-		`${API_BASE_URL}/listing`,
-		postUser,
-	);
-	const { user } = useSession((state) => state);
-
-	console.log(user);
-
 	const methods = useForm<Product>({
 		defaultValues: {
 			title: "Vintage Wooden Desk",
@@ -122,7 +103,6 @@ export default function Form() {
 		formState: { errors },
 		trigger,
 		watch,
-		setValue,
 	} = methods;
 
 	// Prevent step from going out of bounds
@@ -145,14 +125,10 @@ export default function Form() {
 
 			// Append all form fields
 			formData.append("title", data.title);
-			// formData.append("category", data.category);
-			formData.append("price", data.price);
-			// formData.append("priceType", data.priceType);
-			// formData.append("condition", data.condition);
 			formData.append("description", data.description);
+			formData.append("category", data.category);
+			formData.append("price", data.price);
 			formData.append("location", data.location);
-			// formData.append("tags", data.tags || "");
-
 			// Append photo files
 			if (data.photo && data.photo.length > 0) {
 				for (let i = 0; i < data.photo.length; i++) {
@@ -167,20 +143,32 @@ export default function Form() {
 				}
 			}
 
-			// Append user data if needed
-			if (user?.id) {
-				formData.append("userId", user.id);
+			// // Append user data if needed
+			// if (user?.id) {
+			//   formData.append("userId", user.id);
+			// }
+
+			// Use callApi instead of useSWRMutation
+			const { data: response, error } = await callApi(
+				"/listing",
+				"POST",
+				formData,
+			);
+
+			if (error) {
+				throw new Error(error.message || "Failed to create listing");
 			}
 
-			const res = await triggerSubmitForm(formData);
-			console.log("Posted:", res);
-			toast.success("Form submitted successfully");
+			console.log("Posted:", response);
+			toast.success("Listing created successfully");
 			// Optional: Reset form after successful submission
 			// methods.reset();
 			// setStep(1);
 		} catch (err) {
 			console.error(err);
-			toast.error("Something went wrong");
+			const errorMessage =
+				err instanceof Error ? err.message : "Something went wrong";
+			toast.error(errorMessage);
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -534,7 +522,7 @@ export default function Form() {
 											Add up to 8 photos. First photo will
 											be your main listing image.
 										</p>
- 
+
 										<FormProvider {...methods}>
 											<CustomPhotoInput
 												name="photo"
@@ -554,30 +542,6 @@ export default function Form() {
 												</p>
 											)}
 									</div>
-									{/*<div>
-										<label
-											htmlFor="video"
-											className="block text-sm md:text-base font-semibold mb-1"
-										>
-											Video (Premium Feature)
-										</label>
-										<p className="text-gray-400 text-xs my-1">
-											Add a video to showcase your item
-											better (available for paid members)
-										</p>
-
-										<input
-											type="file"
-											{...register("video")}
-											accept="video/*"
-											className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
-										/>
-										{errors.video && (
-											<p className="text-red-500 text-xs mt-1">
-												{errors.video.message}
-											</p>
-										)}
-									</div>*/}
 									{/* Selected Tags */}
 									<div className="flex flex-wrap gap-2 mb-6">
 										<Tag label="Handmade" active />
@@ -731,9 +695,10 @@ export default function Form() {
 											</p>
 											<p>
 												Your listing will be reviewed by
-												our team within 24 hours. You'll
-												receive an email notification
-												once it's approved and live.
+												our team within 24 hours.
+												You&apos;ll receive an email
+												notification once it&apos;s
+												approved and live.
 											</p>
 										</div>
 									</div>

@@ -1,20 +1,23 @@
+// components/SignIn.tsx
 "use client";
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-// import { GoogleIcon, SigninFacebookIcon } from "@/app/components/icons";
+
 import { callApi } from "@/app/libs/helper/callApi";
 import { ApiResponse, AppError, IUser } from "@/app/types";
-import { useSession } from "@/app/store/useSession";
-import { API_BASE_URL } from "@/app/libs/dals/utils";
+import { useSessionState } from "@/app/store/useSession";
 import { FormValues } from "@/app/libs/types/user";
 
 export default function SignIn() {
-  const { updateUser } = useSession((state) => state.actions);
+  const { updateUser, user } = useSessionState((state) => ({
+    updateUser: state.actions.updateUser,
+    user: state.user
+  }));
   const router = useRouter();
   const {
     register,
@@ -25,27 +28,45 @@ export default function SignIn() {
   const email = watch("email");
   const [showPassword, setShowPassword] = useState(false);
 
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (user) {
+      router.push("/marketplace");
+    }
+  }, [user, router]);
+
   const onSubmit = async (formData: FormValues) => {
     try {
       const { data, error } = await callApi<ApiResponse<IUser>>(
-        `${API_BASE_URL}/auth/signin`,
+        `/auth/signin`,
         "POST",
         formData
       );
+      
       if (error) throw error;
-      // console.log(data)
+      
       if (!data?.data) {
-        throw new Error("could not signin!");
+        throw new Error("Could not sign in!");
       }
+      
       toast.success(data?.message);
-      updateUser(data?.data as IUser);
-
-      void router.push("/marketplace");
+      updateUser(data.data as IUser);
+      
+      // Router will handle redirect via useEffect above
     } catch (error) {
       const castErr = error as AppError;
       toast.error(castErr.message ?? "Invalid credentials or server error");
     }
   };
+
+  // Show loader while checking auth or if redirecting
+  if (user) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <section className="flex justify-center items-center min-h-screen bg-gray-50 px-4">
@@ -116,16 +137,9 @@ export default function SignIn() {
 
         {/* Remember + Forgot */}
         <div className="flex items-center justify-end text-sm mt-3 mb-5">
-          {/*<label className="flex items-center gap-2">
-						<input
-							type="checkbox"
-							className="accent-[var(--primary-color)]"
-						/>
-						Remember Me
-					</label>*/}
           <Link
             href={`/forgot-password?authenticated=true&email=${encodeURIComponent(
-              email
+              email || ''
             )}`}
             className="text-[var(--primary-color)] hover:underline text-sm font-medium"
           >
@@ -133,31 +147,36 @@ export default function SignIn() {
           </Link>
         </div>
 
-				{/* Sign in button */}
-				<button
-					disabled={isSubmitting}
-					type="submit"
-					className={` ${isSubmitting ? "bg-[var(--primary-color)]/90" : "bg-[var(--primary-color)]"} hover:bg-[var(--primary-color)]/90 cursor-pointer text-white w-full py-3 rounded-lg font-medium transition-all`}
-				>
-					{isSubmitting ? (
-						<span className="flex justify-center ">
-							<Loader2 className="w-5 h-5 text-grary-200 mr-1 animate-spin" />{" "}
-							Signing in...
-						</span>
-					) : (
-						"Sign in"
-					)}
-				</button>
-				{/* Footer */}
-				<p className="text-center text-sm mt-5">
-					Don’t have an account?{" "}
-					<Link
-						href="/signup"
-						className="text-[var(--primary-color)] font-medium hover:underline"
-					>
-						Sign up
-					</Link>
-				</p>
+        {/* Sign in button */}
+        <button
+          disabled={isSubmitting}
+          type="submit"
+          className={` ${
+            isSubmitting
+              ? "bg-[var(--primary-color)]/90"
+              : "bg-[var(--primary-color)]"
+          } hover:bg-[var(--primary-color)]/90 cursor-pointer text-white w-full py-3 rounded-lg font-medium transition-all`}
+        >
+          {isSubmitting ? (
+            <span className="flex justify-center ">
+              <Loader2 className="w-5 h-5 text-grary-200 mr-1 animate-spin" />{" "}
+              Signing in...
+            </span>
+          ) : (
+            "Sign in"
+          )}
+        </button>
+        
+        {/* Footer */}
+        <p className="text-center text-sm mt-5">
+          Don't have an account?{" "}
+          <Link
+            href="/signup"
+            className="text-[var(--primary-color)] font-medium hover:underline"
+          >
+            Sign up
+          </Link>
+        </p>
 
         <div className="flex justify-center mt-3">
           <Link
@@ -171,26 +190,3 @@ export default function SignIn() {
     </section>
   );
 }
-
-// {/* Divider */}
-// <div className="flex items-center gap-2 my-4">
-//   <div className="flex-1 h-px bg-gray-200" />
-//   <span className="text-gray-400 text-xs">Or</span>
-//   <div className="flex-1 h-px bg-gray-200" />
-// </div>
-
-// {/* Social login */}
-// <button
-//   type="button"
-//   className="w-full border border-gray-300 rounded-lg py-2 flex items-center justify-center gap-2 hover:bg-gray-50 mb-2"
-// >
-//   <GoogleIcon/>
-//   Sign in with Google
-// </button>
-// <button
-//   type="button"
-//   className="w-full border border-gray-300 rounded-lg py-2 flex items-center justify-center gap-2 hover:bg-gray-50"
-// >
-//   <SigninFacebookIcon/>
-//   Sign in with Facebook
-// </button>
