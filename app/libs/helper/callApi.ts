@@ -63,9 +63,9 @@ export const callApi = async <T>(
         if (error.response.status === 401) {
           const { message, success } = error.response.data as AppError;
 
-          toast.error(success, {
-            description: message,
-          });
+          // toast.error(success, {
+          //   description: message,
+          // });
           
           // Set a flag for auth provider to handle
           if (typeof window !== 'undefined') {

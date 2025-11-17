@@ -38,7 +38,7 @@ export default function SignIn() {
   const onSubmit = async (formData: FormValues) => {
     try {
       const { data, error } = await callApi<ApiResponse<IUser>>(
-        `/api/v1/auth/signin`,
+        `/auth/signin`,
         "POST",
         formData
       );

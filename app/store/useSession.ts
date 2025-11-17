@@ -46,7 +46,7 @@ export const useSession = create<Session>()(
 
 					try {
 						console.log("🔍 Checking session...");
-						const { data, error } = await callApi<any>(`/api/v1/auth/session`);
+						const { data, error } = await callApi<any>(`/auth/session`);
 
 						if (error) {
 							console.log("🔐 No valid session found");
