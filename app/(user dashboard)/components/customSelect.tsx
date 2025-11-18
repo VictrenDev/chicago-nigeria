@@ -39,7 +39,7 @@ export default function CustomSelectButton({
       </button>
 
       {isOpen && (
-        <ul className="absolute left-0 z-50 mt-2 w-full rounded-lg border bg-white shadow-md">
+        <ul className="absolute left-0 z-50 mt-2 w-full rounded-lg overflow-clip bg-white shadow-md">
           {options.map((option, index) => (
             <li
               key={index}

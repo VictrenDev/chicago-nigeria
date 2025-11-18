@@ -238,7 +238,7 @@ export default function Form() {
 												required:
 													"First name is required",
 											})}
-											className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+											className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] transition-all duration-200"
 											placeholder="Enter your first name"
 										/>
 										{errors.firstName && (
@@ -260,7 +260,7 @@ export default function Form() {
 												required:
 													"Last name is required",
 											})}
-											className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+											className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 											placeholder="Enter your last name"
 										/>
 										{errors.lastName && (
@@ -274,7 +274,7 @@ export default function Form() {
 									Gender:
 									<br />
 									<select
-										className="mb-3 w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200  bg-gray-200"
+										className="mb-3 w-full rounded-lg p-3 bg-gray-100 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200 "
 										{...register("gender", {
 											required: true,
 										})}
@@ -306,7 +306,7 @@ export default function Form() {
 												message: "Invalid email",
 											},
 										})}
-										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 										placeholder="Enter your email address"
 									/>
 									{errors.email && (
@@ -325,7 +325,7 @@ export default function Form() {
 									<input
 										type="date"
 										{...register("DOB")}
-										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200 text-gray-600"
+										className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200 text-gray-600"
 									/>
 									{errors.email && (
 										<p className="text-red-500 text-xs mt-1">
@@ -342,12 +342,12 @@ export default function Form() {
 										Phone Number
 									</label>
 
-									<div className="flex rounded-lg overflow-hidden border border-gray-300 focus-within:blue-700  focus-within:ring-2 focus-within:ring-blue-700 transition-all duration-200 bg-gray-200">
+									<div className="flex rounded-lg overflow-hidden focus-within:blue-700  focus-within:ring-2 focus-within:ring-blue-700 transition-all duration-200 bg-gray-100">
 										{/* Country Code */}
 										<select
 											{...register("countryCode")}
 											defaultValue="+1"
-											className="bg-gray-200 px-3 py-3 text-sm text-gray-700 focus:outline-none max-w-16"
+											className="bg-gray-100 px-3 py-3 text-sm text-gray-700 focus:outline-none max-w-16"
 										>
 											<option value="+1">+1</option>
 											<option value="+44">+44</option>
@@ -362,7 +362,7 @@ export default function Form() {
 												required:
 													"Phone number is required",
 											})}
-											className="flex-1 px-3 py-3 text-sm sm:text-base focus:outline-none bg-white"
+											className="flex-1 px-3 py-3 text-sm sm:text-base focus:outline-none "
 											placeholder="Enter your phone number"
 										/>
 									</div>
@@ -413,7 +413,7 @@ export default function Form() {
 										{...register("currentCity", {
 											required: "City is required",
 										})}
-										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 										placeholder="Enter your current city"
 									/>
 									{errors.currentCity && (
@@ -429,7 +429,7 @@ export default function Form() {
 									<input
 										type="text"
 										{...register("neighborhood")}
-										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 										placeholder="Enter your neighborhood"
 									/>
 								</div>
@@ -442,7 +442,7 @@ export default function Form() {
 										{...register("stateOfOrigin", {
 											required: "State is required",
 										})}
-										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 										placeholder="Enter your state of origin"
 									/>
 									{errors.stateOfOrigin && (
@@ -481,7 +481,7 @@ export default function Form() {
 										{...register("profession", {
 											required: "Profession is required",
 										})}
-										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 										placeholder="e.g. Software Engineer"
 									/>
 									{errors.profession && (
@@ -499,7 +499,7 @@ export default function Form() {
 										{...register("company", {
 											required: "Company is required",
 										})}
-										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 										placeholder="Microsoft"
 									/>
 									{errors.company && (
@@ -514,7 +514,7 @@ export default function Form() {
 									</label>
 									<textarea
 										{...register("bio")}
-										className="min-h-24 w-full rounded-lg border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200 resize-none mt-1 p-3"
+										className="min-h-24 w-full rounded-lg bg-gray-100 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200 resize-none mt-1 p-3"
 										placeholder="Tell us a bit about yourself, your interests, and what you're looking for in the community..."
 									/>
 								</div>
@@ -695,7 +695,7 @@ export default function Form() {
 													"Must include a number",
 											},
 										})}
-										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 										placeholder="Create a strong password"
 									/>
 									{errors.password && (
@@ -716,7 +716,7 @@ export default function Form() {
 													getValues("password") ||
 												"Passwords do not match",
 										})}
-										className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 										placeholder="Confirm your password"
 									/>
 									{errors.confirmPassword && (
