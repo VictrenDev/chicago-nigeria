@@ -1,17 +1,18 @@
-// libs/helper/callApi.ts
 import axios, { isCancel } from "axios";
 import { isObject } from "./typeHelper";
 import { AppError } from "@/app/types";
 import { toast } from "sonner";
+import { initSession, useSession } from "@/app/store/useSession";
 
 // Use your environment variables directly
 const baseURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-const frontendURL = process.env.NEXT_PUBLIC_FRONTEND_URL || "http://localhost:3000";
+const frontendURL =
+  process.env.NEXT_PUBLIC_FRONTEND_URL || "http://localhost:3000";
 
 // Debug log to verify environment variables (remove in production)
-if (typeof window !== 'undefined') {
-  console.log('API Base URL:', baseURL);
-  console.log('Frontend URL:', frontendURL);
+if (typeof window !== "undefined") {
+  console.log("API Base URL:", baseURL);
+  console.log("Frontend URL:", frontendURL);
 }
 
 const axiosinstance = axios.create({
@@ -23,7 +24,7 @@ const axiosinstance = axios.create({
 export const callApi = async <T>(
   endpoint: string,
   method: "GET" | "POST" | "PUT" | "DELETE" = "GET",
-  payload?: Record<string, unknown> | FormData,
+  payload?: Record<string, unknown> | FormData
 ): Promise<{ data?: T; error?: AppError }> => {
   const source = axios.CancelToken.source();
 
@@ -50,52 +51,66 @@ export const callApi = async <T>(
   } catch (error) {
     let err: AppError | undefined;
 
-    if (axios.isAxiosError(error)) {
-      if (isCancel(error)) {
-        err = {
-          success: "Error",
-          message: "Request cancelled",
-        };
-        return { error: err };
+    if (axios.isCancel(error)) {
+      err = {
+        success: "Error",
+        message: "Request cancelled",
+      };
+
+      return { error: err };
+    }
+
+    if (axios.isAxiosError(error) && error.response) {
+      err = error.response.data as AppError;
+
+      if (error.response.status === 401) {
+        // toast.error("Request unauthorized, please login or signup!", {
+        //   description: error.message,
+        // });
+
+        initSession().actions.clearSession();
       }
 
-      if (error.response && error.response.data) {
-        if (error.response.status === 401) {
-          const { message, success } = error.response.data as AppError;
-
-          // toast.error(success, {
-          //   description: message,
-          // });
-          
-          // Set a flag for auth provider to handle
-          if (typeof window !== 'undefined') {
-            sessionStorage.setItem('shouldLogout', 'true');
-          }
+      if (
+        error.response.status === 423 &&
+        error.response.data.message === "Your email is yet to be verified"
+      ) {
+        // Handle email verification redirect if needed
+        // redirect to email page
+        // Set a flag for auth provider to handle
+        if (typeof window !== "undefined") {
+          window.location.replace("/resend email page");
         }
+      }
 
-        if (
-          error.response.status === 423 &&
-          error.response.data.message === "Your email is yet to be verified"
-        ) {
-          // Handle email verification redirect if needed
-        }
+      if (error.response.status === 429) {
+        toast.error("Too many requests!", {
+          description: error.message,
+        });
+      }
 
-        err = {
-          success: "Error",
-          message:
-            (error.response.data as any)?.message ||
-            "There was an error, please try again",
-        };
-      } else if (error.code === 'ECONNABORTED') {
-        err = {
-          success: "Error", 
-          message: "Request timeout - please try again",
-        };
-      } else if (!error.response) {
+      if (error.response.status === 500) {
+        toast.error("Internal server error!", {
+          description: error.message,
+        });
+      }
+
+      if (!error.response) {
         err = {
           success: "Error",
           message: "Network error - please check your connection",
         };
+      }
+
+      if (error.code === "ECONNABORTED") {
+        err = {
+          success: "Error",
+          message: "Request timeout - please try again",
+        };
+      }
+    } else {
+      if (error instanceof Error) {
+        err = { message: error.message, success: "Error" };
       }
     }
 

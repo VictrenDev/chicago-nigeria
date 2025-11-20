@@ -1,4 +1,3 @@
-// components/SignIn.tsx
 "use client";
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
@@ -10,15 +9,16 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 import { callApi } from "@/app/libs/helper/callApi";
 import { ApiResponse, AppError, IUser } from "@/app/types";
-import { useSessionState } from "@/app/store/useSession";
+import { useSession } from "@/app/store/useSession";
 import { FormValues } from "@/app/libs/types/user";
 import FormFieldErrorMessage from "@/app/components/fieldError";
 
 export default function SignIn() {
-  const { updateUser, user } = useSessionState((state) => ({
+  const { updateUser, user } = useSession((state) => ({
     updateUser: state.actions.updateUser,
-    user: state.user
+    user: state.user,
   }));
+
   const router = useRouter();
   const {
     register,
@@ -29,45 +29,40 @@ export default function SignIn() {
   const email = watch("email");
   const [showPassword, setShowPassword] = useState(false);
 
-  // Redirect if already authenticated
-  useEffect(() => {
-    if (user) {
-      router.push("/marketplace");
-    }
-  }, [user, router]);
-
   const onSubmit = async (formData: FormValues) => {
     try {
       const { data, error } = await callApi<ApiResponse<IUser>>(
-        `/auth/signin`,
+        `/api/v1/auth/signin`,
         "POST",
         formData
       );
-      
+
       if (error) throw error;
-      
+
       if (!data?.data) {
         throw new Error("Could not sign in!");
       }
-      
+
       toast.success(data?.message);
       updateUser(data.data as IUser);
-      
-      // Router will handle redirect via useEffect above
+
+      router.push("/marketplace");
     } catch (error) {
       const castErr = error as AppError;
       toast.error(castErr.message ?? "Invalid credentials or server error");
     }
   };
 
-  // Show loader while checking auth or if redirecting
-  if (user) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <Loader2 className="w-8 h-8 animate-spin" />
-      </div>
-    );
-  }
+  console.log(" <====  Back to login  ===> ");
+
+  // if (user) {
+  //   console.log(" <====  user is authenticated  ===> ");
+  //   return (
+  //     <div className="flex justify-center items-center min-h-screen">
+  //       <Loader2 className="w-8 h-8 animate-spin" />
+  //     </div>
+  //   );
+  // }
 
   return (
     <section className="flex justify-center items-center min-h-screen bg-gray-50 px-4">
@@ -136,7 +131,7 @@ export default function SignIn() {
         <div className="flex items-center justify-end text-sm mt-3 mb-5">
           <Link
             href={`/forgot-password?authenticated=true&email=${encodeURIComponent(
-              email || ''
+              email || ""
             )}`}
             className="text-[var(--primary-color)] hover:underline text-sm font-medium"
           >
@@ -163,7 +158,7 @@ export default function SignIn() {
             "Sign in"
           )}
         </button>
-        
+
         {/* Footer */}
         <p className="text-center text-sm mt-5">
           Don&apos;t have an account?{" "}
