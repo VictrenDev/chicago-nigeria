@@ -2,7 +2,7 @@
 
 import { useFormContext } from "react-hook-form";
 import { SubscriptionSchema } from "../libs/types/zodSchemas";
-// import FormFieldErrorMessage from "../components/fieldError";
+import FormFieldErrorMessage from "../components/fieldError";
 
 export default function ContactInformation() {
 	const {
@@ -23,7 +23,7 @@ export default function ContactInformation() {
 						placeholder="example@email.com"
 						className="w-full border rounded-lg p-2 mt-1 focus:ring-2 focus:ring-blue-500"
 					/>
-					{/*<FormFieldErrorMessage error={errors.businessEmail} />*/}
+					<FormFieldErrorMessage error={errors.businessEmail} />
 				</div>
 
 				<div>
@@ -36,7 +36,7 @@ export default function ContactInformation() {
 						placeholder="+1 (555) 000-0000"
 						className="w-full border rounded-lg p-2 mt-1 focus:ring-2 focus:ring-blue-500"
 					/>
-					{/*<FormFieldErrorMessage error={errors.businessPhone} />*/}
+					<FormFieldErrorMessage error={errors.businessPhone} />
 				</div>
 
 				<div>
@@ -49,7 +49,7 @@ export default function ContactInformation() {
 						rows={3}
 						className="w-full border rounded-lg p-2 mt-1 focus:ring-2 focus:ring-blue-500 resize-none"
 					></textarea>
-					{/*<FormFieldErrorMessage error={errors.businessBio} />*/}
+					<FormFieldErrorMessage error={errors.businessBio} />
 				</div>
 			</div>
 		</section>

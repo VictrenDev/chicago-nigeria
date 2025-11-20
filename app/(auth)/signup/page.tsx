@@ -13,13 +13,19 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { CheckIcon, UserTick } from "@/app/components/icons";
 import { createUser } from "@/app/libs/dals/users";
 import { FormValues } from "@/app/libs/types/user";
 import { API_BASE_URL } from "@/app/libs/dals/utils";
+import FormFieldErrorMessage from "@/app/components/fieldError";
+import {
+	createUserSchema,
+	CreateUserSchema,
+} from "@/app/libs/types/zodSchemas";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function Form() {
 	const [step, setStep] = useState(1);
@@ -38,29 +44,48 @@ export default function Form() {
 		register,
 		handleSubmit,
 		formState: { errors, isSubmitting },
-		getValues,
 		trigger,
 		watch,
 	} = useForm<FormValues>({
+		resolver: zodResolver(createUserSchema),
 		defaultValues: {
-			firstName: "",
-			lastName: "",
-			email: "",
-			DOB: "",
-			phone: "",
+			// firstName: "",
+			// lastName: "",
+			// email: "",
+			// DOB: "",
+			// phone: "",
+			// gender: "male",
+			// countryCode: "+1",
+			// currentCity: "",
+			// neighborhood: "",
+			// stateOfOrigin: "",
+			// profession: "",
+			// company: "",
+			// business: "",
+			// brandName: "",
+			// bio: "",
+			// password: "",
+			// confirmPassword: "",
+			// isTermAndConditionAccepted: false,
+
+			firstName: "Victor",
+			lastName: "Odoi",
+			email: "victorodoi@gmail.com",
+			DOB: "1997-04-12",
+			phone: "09079125326",
 			gender: "male",
-			countryCode: "+1",
-			currentCity: "",
-			neighborhood: "",
-			stateOfOrigin: "",
-			profession: "",
-			company: "",
-			business: "",
-			brandName: "",
-			bio: "",
-			password: "",
-			confirmPassword: "",
-			isTermAndConditionAccepted: false,
+			countryCode: "+234",
+			currentCity: "Lagos",
+			neighborhood: "Lekki Phase 1",
+			stateOfOrigin: "Akwa Ibom",
+			profession: "Software Developer",
+			company: "AnyLoad Technologies",
+			business: "Smart Home & IoT Solutions",
+			brandName: "Odoi Tech",
+			bio: "Software developer focused on IoT, automation, and scalable web technologies. Passionate about building smart systems that improve everyday living.",
+			password: "Victor@12345",
+			confirmPassword: "Victor@12345",
+			isTermAndConditionAccepted: true,
 		},
 	});
 	const password = watch("password", "");
@@ -68,6 +93,8 @@ export default function Form() {
 	const hasUpperCase = /[A-Z]/.test(password);
 	const hasNumber = /[0-9]/.test(password);
 	const onSubmit = async (data: FormValues) => {
+		console.log(data);
+
 		try {
 			// remove country code
 			const { countryCode, brandName, business, ...postData } = data;
@@ -79,7 +106,6 @@ export default function Form() {
 				...postData,
 				phone: fullPhoneNumber,
 			});
-
 			if (newUser) {
 				toast.success(
 					"Form Submitted successfully. Check email for confirmation link.",
@@ -234,18 +260,13 @@ export default function Form() {
 										</label>
 										<input
 											type="text"
-											{...register("firstName", {
-												required:
-													"First name is required",
-											})}
+											{...register("firstName")}
 											className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] transition-all duration-200"
 											placeholder="Enter your first name"
 										/>
-										{errors.firstName && (
-											<p className="text-red-500 text-xs mt-1">
-												{errors.firstName.message}
-											</p>
-										)}
+										<FormFieldErrorMessage
+											error={errors.firstName}
+										/>
 									</div>
 									<div>
 										<label
@@ -256,18 +277,13 @@ export default function Form() {
 										</label>
 										<input
 											type="text"
-											{...register("lastName", {
-												required:
-													"Last name is required",
-											})}
+											{...register("lastName")}
 											className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 											placeholder="Enter your last name"
 										/>
-										{errors.lastName && (
-											<p className="text-red-500 text-xs mt-1">
-												{errors.lastName.message}
-											</p>
-										)}
+										<FormFieldErrorMessage
+											error={errors.lastName}
+										/>
 									</div>
 								</div>
 								<label>
@@ -275,19 +291,15 @@ export default function Form() {
 									<br />
 									<select
 										className="mb-3 w-full rounded-lg p-3 bg-gray-100 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200 "
-										{...register("gender", {
-											required: true,
-										})}
+										{...register("gender")}
 										defaultValue={"male"}
 									>
 										<option value={`male`}>Male</option>
 										<option value={`female`}>Female</option>
 									</select>
-									{errors.gender && (
-										<p className="text-red-500 text-xs mt-1">
-											{errors.gender.message}
-										</p>
-									)}
+									<FormFieldErrorMessage
+										error={errors.gender}
+									/>
 								</label>
 
 								<div>
@@ -299,21 +311,13 @@ export default function Form() {
 									</label>
 									<input
 										type="email"
-										{...register("email", {
-											required: "Email is required",
-											pattern: {
-												value: /\S+@\S+\.\S+/,
-												message: "Invalid email",
-											},
-										})}
+										{...register("email")}
 										className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 										placeholder="Enter your email address"
 									/>
-									{errors.email && (
-										<p className="text-red-500 text-xs mt-1">
-											{errors.email.message}
-										</p>
-									)}
+									<FormFieldErrorMessage
+										error={errors.email}
+									/>
 								</div>
 								<div>
 									<label
@@ -327,11 +331,7 @@ export default function Form() {
 										{...register("DOB")}
 										className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200 text-gray-600"
 									/>
-									{errors.email && (
-										<p className="text-red-500 text-xs mt-1">
-											{errors.email.message}
-										</p>
-									)}
+									<FormFieldErrorMessage error={errors.DOB} />
 								</div>
 
 								<div>
@@ -358,20 +358,15 @@ export default function Form() {
 										{/* Phone Number */}
 										<input
 											type="text"
-											{...register("phone", {
-												required:
-													"Phone number is required",
-											})}
+											{...register("phone")}
 											className="flex-1 px-3 py-3 text-sm sm:text-base focus:outline-none "
 											placeholder="Enter your phone number"
 										/>
 									</div>
 
-									{errors.phone && (
-										<p className="text-red-500 text-xs mt-1">
-											{errors.phone.message}
-										</p>
-									)}
+									<FormFieldErrorMessage
+										error={errors.phone}
+									/>
 								</div>
 							</fieldset>
 							<CommonButton
@@ -410,17 +405,13 @@ export default function Form() {
 									</label>
 									<input
 										type="text"
-										{...register("currentCity", {
-											required: "City is required",
-										})}
+										{...register("currentCity")}
 										className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 										placeholder="Enter your current city"
 									/>
-									{errors.currentCity && (
-										<p className="text-red-500 text-xs mt-1">
-											{errors.currentCity.message}
-										</p>
-									)}
+									<FormFieldErrorMessage
+										error={errors.currentCity}
+									/>
 								</div>
 								<div>
 									<label className="block text-sm font-medium mb-1">
@@ -439,17 +430,13 @@ export default function Form() {
 									</label>
 									<input
 										type="text"
-										{...register("stateOfOrigin", {
-											required: "State is required",
-										})}
+										{...register("stateOfOrigin")}
 										className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 										placeholder="Enter your state of origin"
 									/>
-									{errors.stateOfOrigin && (
-										<p className="text-red-500 text-xs mt-1">
-											{errors.stateOfOrigin.message}
-										</p>
-									)}
+									<FormFieldErrorMessage
+										error={errors.stateOfOrigin}
+									/>
 								</div>
 							</fieldset>
 							<CommonButton
@@ -478,17 +465,13 @@ export default function Form() {
 									</label>
 									<input
 										type="text"
-										{...register("profession", {
-											required: "Profession is required",
-										})}
+										{...register("profession")}
 										className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 										placeholder="e.g. Software Engineer"
 									/>
-									{errors.profession && (
-										<p className="text-red-500 text-xs mt-1">
-											{errors.profession.message}
-										</p>
-									)}
+									<FormFieldErrorMessage
+										error={errors.profession}
+									/>
 								</div>
 								<div>
 									<label className="block text-sm font-medium mb-1">
@@ -496,17 +479,13 @@ export default function Form() {
 									</label>
 									<input
 										type="text"
-										{...register("company", {
-											required: "Company is required",
-										})}
+										{...register("company")}
 										className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 										placeholder="Microsoft"
 									/>
-									{errors.company && (
-										<p className="text-red-500 text-xs mt-1">
-											{errors.company.message}
-										</p>
-									)}
+									<FormFieldErrorMessage
+										error={errors.company}
+									/>
 								</div>
 								<div>
 									<label className="block text-sm font-medium mb-1">
@@ -619,18 +598,13 @@ export default function Form() {
 											</label>
 											<input
 												type="text"
-												{...register("business", {
-													required:
-														"Business is required",
-												})}
+												{...register("business")}
 												className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 												placeholder="e.g. Software Engineer"
 											/>
-											{errors.business && (
-												<p className="text-red-500 text-xs mt-1">
-													{errors.business.message}
-												</p>
-											)}
+											<FormFieldErrorMessage
+												error={errors.business}
+											/>
 										</div>
 										<div>
 											<label className="block text-sm font-medium mb-1">
@@ -638,18 +612,13 @@ export default function Form() {
 											</label>
 											<input
 												type="text"
-												{...register("brandName", {
-													required:
-														"Brand name is required",
-												})}
+												{...register("brandName")}
 												className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 												placeholder="Microsoft"
 											/>
-											{errors.brandName && (
-												<p className="text-red-500 text-xs mt-1">
-													{errors.brandName.message}
-												</p>
-											)}
+											<FormFieldErrorMessage
+												error={errors.brandName}
+											/>
 										</div>
 									</fieldset>
 								)}
@@ -681,28 +650,13 @@ export default function Form() {
 									</label>
 									<input
 										type="password"
-										{...register("password", {
-											required: "Password is required",
-											validate: {
-												minLength: (v) =>
-													v.length >= 8 ||
-													"At least 8 characters",
-												hasUpperCase: (v) =>
-													/[A-Z]/.test(v) ||
-													"Must include an uppercase letter",
-												hasNumber: (v) =>
-													/[0-9]/.test(v) ||
-													"Must include a number",
-											},
-										})}
+										{...register("password")}
 										className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 										placeholder="Create a strong password"
 									/>
-									{errors.password && (
-										<p className="text-red-500 text-xs mt-1">
-											{errors.password.message}
-										</p>
-									)}
+									<FormFieldErrorMessage
+										error={errors.password}
+									/>
 								</div>
 								<div>
 									<label className="block text-sm font-medium mb-1">
@@ -710,20 +664,13 @@ export default function Form() {
 									</label>
 									<input
 										type="password"
-										{...register("confirmPassword", {
-											validate: (value) =>
-												value ===
-													getValues("password") ||
-												"Passwords do not match",
-										})}
+										{...register("confirmPassword")}
 										className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 										placeholder="Confirm your password"
 									/>
-									{errors.confirmPassword && (
-										<p className="text-red-500 text-xs mt-1">
-											{errors.confirmPassword.message}
-										</p>
-									)}
+									<FormFieldErrorMessage
+										error={errors.confirmPassword}
+									/>
 								</div>
 								<div className="bg-gray-50 rounded-lg p-4 mt-4">
 									<h3 className="text-base font-medium mb-2">
@@ -752,7 +699,6 @@ export default function Form() {
 										type="checkbox"
 										{...register(
 											"isTermAndConditionAccepted",
-											{ required: true },
 										)}
 										className="w-4 h-4 text-blue-600 border-gray-300 rounded flex-1"
 									/>
