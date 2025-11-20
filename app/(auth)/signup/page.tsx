@@ -1,5 +1,4 @@
 "use client";
-import useSWRMutation from "swr/mutation";
 import {
 	ArrowLeft,
 	ArrowRight,
@@ -17,9 +16,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { CheckIcon, UserTick } from "@/app/components/icons";
-import { createUser } from "@/app/libs/dals/users";
-import { FormValues } from "@/app/libs/types/user";
-import { API_BASE_URL } from "@/app/libs/dals/utils";
 import FormFieldErrorMessage from "@/app/components/fieldError";
 import {
 	createUserSchema,
@@ -44,46 +40,29 @@ export default function Form() {
 		trigger,
 		watch,
 		setError,
-	} = useForm<FormValues>({
+	} = useForm<CreateUserSchema>({
 		resolver: zodResolver(createUserSchema),
 		defaultValues: {
 			// Use empty values for production
-			// firstName: "",
-			// lastName: "",
-			// email: "",
-			// DOB: "",
-			// phone: "",
-			// gender: "male",
-			// countryCode: "+1",
-			// currentCity: "",
-			// neighborhood: "",
-			// stateOfOrigin: "",
-			// profession: "",
-			// company: "",
-			// business: "",
-			// brandName: "",
-			// bio: "",
-			// password: "",
-			// confirmPassword: "",
-			// isTermAndConditionAccepted: false,
-			firstName: "Victor",
-			lastName: "Odoi",
-			email: "victorodoi90@gmail.com",
-			DOB: "1997-04-12",
-			phone: "09079125326",
+			firstName: "",
+			lastName: "",
+			email: "",
+			DOB: "",
+			phone: "",
 			gender: "male",
-			countryCode: "+234",
-			currentCity: "Lagos",
-			neighborhood: "Lekki Phase 1",
-			stateOfOrigin: "Akwa Ibom",
-			profession: "Software Developer",
-			company: "AnyLoad Technologies",
-			business: "Smart Home & IoT Solutions",
-			brandName: "Odoi Tech",
-			bio: "Software developer focused on IoT, automation, and scalable web technologies. Passionate about building smart systems that improve everyday living.",
-			password: "Victor@12345",
-			confirmPassword: "Victor@12345",
-			isTermAndConditionAccepted: true,
+			countryCode: "+1",
+			currentCity: "",
+			neighborhood: "",
+			stateOfOrigin: "",
+			profession: "",
+			company: "",
+			business: "",
+			brandName: "",
+			bio: "",
+			password: "",
+			confirmPassword: "",
+			isTermAndConditionAccepted: false,
+			
 		},
 	});
 
@@ -92,7 +71,7 @@ export default function Form() {
 	const hasUpperCase = /[A-Z]/.test(password);
 	const hasNumber = /[0-9]/.test(password);
 
-	const onSubmit = async (formdata: FormValues) => {
+	const onSubmit = async (formdata: CreateUserSchema) => {
 		console.log("🏁 Form submission started");
 
 		console.log("Form data:", formdata);
@@ -191,7 +170,7 @@ export default function Form() {
 	const next = async () => {
 		if (isAnimating || step >= 5) return;
 
-		let fieldsToValidate: (keyof FormValues)[] = [];
+		let fieldsToValidate: (keyof CreateUserSchema)[] = [];
 
 		if (step === 1) {
 			fieldsToValidate = [
@@ -763,9 +742,9 @@ export default function Form() {
 											{...register(
 												"isTermAndConditionAccepted",
 											)}
-											className="w-4 h-4 text-blue-600 border-gray-300 rounded mt-1"
+											className="w-4 h-4 text-blue-600 border-gray-300 rounded mt-1 flex-1"
 										/>
-										<span className="text-sm text-gray-700">
+										<span className="text-sm text-gray-700 flex-8">
 											By checking the box, you have agreed
 											to our{" "}
 											<Link
@@ -777,6 +756,7 @@ export default function Form() {
 											</Link>
 										</span>
 									</label>
+								
 									<FormFieldErrorMessage
 										error={
 											errors.isTermAndConditionAccepted

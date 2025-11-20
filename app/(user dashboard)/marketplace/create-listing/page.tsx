@@ -25,7 +25,7 @@ type Condition = "Used - Good" | "Used - Like New" | "New" | "Used - Fair";
 type Product = {
 	title: string;
 	category: string;
-	price: string;
+	price: number;
 	priceType: PriceType;
 	condition: Condition;
 	description: string;
@@ -81,15 +81,19 @@ export default function Form() {
 	const [direction, setDirection] = useState<"left" | "right">("right");
 	const [isAnimating, setIsAnimating] = useState<boolean>(false);
 	const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-	const [selectedTags, setSelectedTags] = useState<string[]>(["desk", "wood", "furniture"]);
+	const [selectedTags, setSelectedTags] = useState<string[]>([
+		"desk",
+		"wood",
+		"furniture",
+	]);
 
 	const methods = useForm<Product>({
 		defaultValues: {
 			title: "Vintage Wooden Desk",
 			category: "Furniture",
-			price: "120",
+			price: 120,
 			priceType: "fixed",
-			condition: "New",
+			condition: "Used - Fair",
 			currency: "USD",
 			description:
 				"Sturdy wooden desk with minor scratches. Perfect for home offices or study rooms.",
@@ -127,10 +131,10 @@ export default function Form() {
 
 	// Tag handlers
 	const handleTagClick = (tag: string) => {
-		setSelectedTags(prev => {
+		setSelectedTags((prev) => {
 			if (prev.includes(tag)) {
 				// Remove tag if already selected
-				return prev.filter(t => t !== tag);
+				return prev.filter((t) => t !== tag);
 			} else {
 				// Add tag if not selected (limit to 8 tags)
 				return prev.length < 8 ? [...prev, tag] : prev;
@@ -139,9 +143,9 @@ export default function Form() {
 	};
 
 	const removeTag = (tagToRemove: string) => {
-		setSelectedTags(prev => prev.filter(tag => tag !== tagToRemove));
+		setSelectedTags((prev) => prev.filter((tag) => tag !== tagToRemove));
 	};
-
+	console.log(listingPhoto);
 	const onSubmit = async (data: Product) => {
 		setIsSubmitting(true);
 		try {
@@ -156,7 +160,7 @@ export default function Form() {
 			formData.append("location", data.location);
 			// Append tags as JSON array
 			formData.append("tags", JSON.stringify(data.tags));
-			
+
 			// Append photo files
 			if (data.photo && data.photo.length > 0) {
 				for (let i = 0; i < data.photo.length; i++) {
@@ -430,7 +434,6 @@ export default function Form() {
 												Price
 											</label>
 											<div className="flex rounded-lg overflow-hidden focus-within:blue-700  focus-within:ring-2 focus-within:ring-blue-700 transition-all duration-200 bg-gray-100">
-											
 												<select
 													{...register("currency")}
 													className="bg-gray-100 px-3 py-3 text-sm text-gray-700 focus:outline-none max-w-16"
@@ -476,6 +479,7 @@ export default function Form() {
 													"Negotiable",
 												]}
 											/>
+
 											{errors.priceType && (
 												<p className="text-red-500 text-xs mt-1">
 													{errors.priceType.message}
@@ -494,21 +498,28 @@ export default function Form() {
 										<p className="text-gray-400 text-xs my-1">
 											What condition is your product in?
 										</p>
-										<CustomSelectButton
+										<select
 											{...register(
 												"condition",
 												validationSchema.condition,
 											)}
 											className="w-full text-left rounded-lg p-3 bg-gray-100 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 											name="condition"
-											label="Select Condition"
-											options={[
+										>
+											{[
 												"New",
 												"Used - Like New",
 												"Used - Good",
 												"Used - Fair",
-											]}
-										/>
+											].map((option) => (
+												<option
+													key={option}
+													value={option}
+												>
+													{option}
+												</option>
+											))}
+										</select>
 										{errors.condition && (
 											<p className="text-red-500 text-xs mt-1">
 												{errors.condition.message}
@@ -590,7 +601,9 @@ export default function Form() {
 										</label>
 										<div className="flex flex-wrap gap-2 mb-3 min-h-10">
 											{selectedTags.length === 0 ? (
-												<p className="text-gray-400 text-sm">No tags selected yet</p>
+												<p className="text-gray-400 text-sm">
+													No tags selected yet
+												</p>
 											) : (
 												selectedTags.map((tag) => (
 													<div
@@ -600,7 +613,9 @@ export default function Form() {
 														{tag}
 														<button
 															type="button"
-															onClick={() => removeTag(tag)}
+															onClick={() =>
+																removeTag(tag)
+															}
 															className="ml-1 hover:text-green-900 focus:outline-none"
 														>
 															×
@@ -610,7 +625,8 @@ export default function Form() {
 											)}
 										</div>
 										<p className="text-gray-500 text-xs">
-											{selectedTags.length}/8 tags selected
+											{selectedTags.length}/8 tags
+											selected
 										</p>
 									</div>
 
@@ -620,20 +636,40 @@ export default function Form() {
 											Suggested Tags
 										</label>
 										<p className="text-gray-400 text-xs mb-3">
-											Click to add tags that describe your product
+											Click to add tags that describe your
+											product
 										</p>
 										<div className="flex flex-wrap gap-2">
 											{[
-												"Handmade", "Nigerian", "Custom", "Authentic", "Premium",
-												"Traditional", "Modern", "Vintage", "Organic", "Imported",
-												"Local", "Eco-Friendly", "Luxury", "Affordable", "Unique",
-												"Handcrafted", "Artisanal", "Cultural", "Sustainable"
+												"Handmade",
+												"Nigerian",
+												"Custom",
+												"Authentic",
+												"Premium",
+												"Traditional",
+												"Modern",
+												"Vintage",
+												"Organic",
+												"Imported",
+												"Local",
+												"Eco-Friendly",
+												"Luxury",
+												"Affordable",
+												"Unique",
+												"Handcrafted",
+												"Artisanal",
+												"Cultural",
+												"Sustainable",
 											].map((tag) => (
-												<Tag 
-													key={tag} 
-													label={tag} 
-													active={selectedTags.includes(tag)}
-													onClick={() => handleTagClick(tag)}
+												<Tag
+													key={tag}
+													label={tag}
+													active={selectedTags.includes(
+														tag,
+													)}
+													onClick={() =>
+														handleTagClick(tag)
+													}
 												/>
 											))}
 										</div>
@@ -746,11 +782,13 @@ export default function Form() {
 										</h3>
 										<div className="flex flex-wrap gap-2">
 											{selectedTags.length === 0 ? (
-												<p className="text-gray-400 text-sm">No tags selected</p>
+												<p className="text-gray-400 text-sm">
+													No tags selected
+												</p>
 											) : (
 												selectedTags.map((tag) => (
-													<span 
-														key={tag} 
+													<span
+														key={tag}
 														className="bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full"
 													>
 														{tag}
