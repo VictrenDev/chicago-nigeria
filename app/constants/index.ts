@@ -1,4 +1,4 @@
-export const innaccessibleByUsers = [
+export const innaccessibleByAuthUsers = [
   "/",
   "/signin",
   "/signup",

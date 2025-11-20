@@ -1,7 +1,7 @@
 export type EventStatus = "active" | "ongoing" | "completed";
 export type FormValues = {
-	email: string;
-	password: string;
+  email: string;
+  password: string;
 };
 export type Event = {
   eventName: string;
@@ -54,6 +54,18 @@ export interface ApiResponse<T> {
 
 export type AppError = Omit<ApiResponse<{}>, "data">;
 
+export interface Meta {
+  page: number;
+  limit: number;
+  total?: number;
+  totalPages: number;
+}
+
+export interface PaginatedData<T> {
+  data: T[];
+  meta: Meta;
+}
+
 export interface IUser {
   _id: string;
   firstName: string;
@@ -77,4 +89,29 @@ export interface IUser {
   preference: string[];
   isEmailVerified: boolean;
   isTermAndConditionAccepted: boolean;
+}
+
+export interface IListing {
+  _id: string;
+  userId: string;
+  title: string;
+  category: string;
+  video: string;
+  photos: string[];
+  tags: string[];
+  description: string;
+  condition: string;
+  priceType: string;
+  likes: [];
+  comments: [];
+  ratings: number;
+  price: number;
+  location: string;
+  status: "aproved" | "pending";
+  isVerified: boolean;
+  isFlagged: boolean;
+  totalLikes: number;
+  currency: "NGN" | "USD";
+  createdAt: Date;
+  updatedAt: Date;
 }
