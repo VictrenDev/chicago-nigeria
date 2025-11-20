@@ -26,7 +26,6 @@ export type SubscriptionSchema = z.infer<typeof subscriptionSchema>;
 
 export const createUserSchema = z
 	.object({
-		id: z.string(),
 		firstName: z.string().min(1, "First name is required"),
 		lastName: z.string().min(1, "Last name is required"),
 		email: z.string().email("Invalid email address"),

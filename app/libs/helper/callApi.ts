@@ -69,7 +69,7 @@ export const callApi = async <T>(
         //   description: error.message,
         // });
 
-        initSession().actions.clearSession();
+        initSession.getState().actions.clearSession();
         // clearSessionAndRedirect()
       }
 

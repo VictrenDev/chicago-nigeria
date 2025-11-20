@@ -8,6 +8,7 @@ export default function RootLayout({
 }) {
   return (
     <>
+    
       <TopNavigation />
       <SideNavigation>{children}</SideNavigation>
     </>
