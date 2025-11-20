@@ -8,7 +8,7 @@ export namespace Listing {
       : "";
 
     return callApi<ApiResponse<PaginatedData<IListing>>>(
-      `/api/v1/listing?${queryString}`
+      `/listing?${queryString}`
     );
   };
 }

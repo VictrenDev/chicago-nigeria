@@ -3,6 +3,7 @@ import { isObject } from "./typeHelper";
 import { AppError } from "@/app/types";
 import { toast } from "sonner";
 import { initSession, useSession } from "@/app/store/useSession";
+import { clearSessionAndRedirect } from "./sessionUtils";
 
 // Use your environment variables directly
 const baseURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
@@ -69,6 +70,7 @@ export const callApi = async <T>(
         // });
 
         initSession().actions.clearSession();
+        // clearSessionAndRedirect()
       }
 
       if (
