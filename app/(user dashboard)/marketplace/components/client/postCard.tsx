@@ -31,7 +31,7 @@ export const PostCard = ({ post }: { post: IListing }) => (
       </div>
 
       <Link
-        href={`/marketplace/${post.title.replace(/ /g, "-")}-${post._id}`}
+        href={`/marketplace/${post._id}`}
         className="text-sm font-medium line-clamp-2 leading-tight hover:text-[var(--primary-color)] transition-colors"
       >
         {post.title}
@@ -48,7 +48,9 @@ export const PostCard = ({ post }: { post: IListing }) => (
           />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-medium truncate">john okafor</p>
+          <p className="text-xs font-medium truncate">
+            {post?.user.firstName} {post?.user.lastName}
+          </p>
           <div className="flex items-center gap-1 text-xs text-gray-500">
             <MapPin className="w-3 h-3" />
             <span className="truncate">{post.location}</span>

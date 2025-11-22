@@ -101,6 +101,7 @@ export interface IListing {
   tags: string[];
   description: string;
   condition: string;
+  user: IUser;
   priceType: string;
   likes: [];
   comments: [];

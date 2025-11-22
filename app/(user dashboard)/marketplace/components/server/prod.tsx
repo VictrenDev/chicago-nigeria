@@ -1,16 +1,12 @@
 "use client";
 
-import { Eye, Heart, MapPin, Star } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+import { Heart } from "lucide-react";
+
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
-import LikePost from "../../../components/likePost";
-import { IListing } from "@/app/types";
 
 import { useListing } from "@/hooks/useListing";
 import { PostCard, PostCardSkeleton } from "../client/postCard";
-import { div } from "framer-motion/client";
 
 export default function MarketplaceProducts() {
   const { ref, inView } = useInView({
@@ -28,10 +24,20 @@ export default function MarketplaceProducts() {
   } = useListing();
 
   useEffect(() => {
+    console.log("hasNextPage: ", hasNextPage);
+
     if (inView && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+      const meta = data?.pages[data.pages.length - 1].data?.data.meta;
+
+      const nextPage = Number(meta?.page) + 1;
+
+      console.log("infinite query: ", nextPage);
+
+      fetchNextPage({ pageParam: { page: nextPage } } as any);
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  console.log("infinite query: ", data);
 
   const allPosts = data?.pages.flatMap((page) => page?.data?.data.data) || [];
 
