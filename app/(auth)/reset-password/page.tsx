@@ -9,7 +9,6 @@ import { ApiResponse, AppError, IUser } from "@/app/types";
 import { useSession } from "@/app/store/useSession";
 import { API_BASE_URL } from "@/app/libs/dals/utils";
 import { FormValues } from "@/app/libs/types/user";
-import FormFieldErrorMessage from "@/app/components/fieldError";
 
 type resetPassword = {
 	confirmPassword: string;
@@ -81,7 +80,10 @@ export default function ResetPassword() {
 					placeholder="Enter your email"
 					className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 outline-none"
 				/>
-				<FormFieldErrorMessage error={errors.password} />
+				{errors.password && <p className="mt-1 text-red-400 text-sm">
+					{errors.password.message}
+				</p>}
+			
 				</label>
 				{/* Confirm Password */}
 				<label className="block text-sm font-medium mb-2">
@@ -97,7 +99,9 @@ export default function ResetPassword() {
 						placeholder="Enter your email"
 						className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 outline-none"
 					/>
-					<FormFieldErrorMessage error={errors.confirmPassword} />
+					{errors.confirmPassword && <p className="mt-1 text-red-400 text-sm">
+						{errors.confirmPassword.message}
+					</p>}
 				</label>
 				{/* Sign in button */}
 				<button

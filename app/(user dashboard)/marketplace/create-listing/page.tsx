@@ -16,9 +16,7 @@ import { toast } from "sonner";
 import { CustomPhotoInput } from "./upload";
 import Link from "next/link";
 import CustomSelectButton from "../../components/customSelect";
-import { useSession } from "@/app/store/useSession";
 import { callApi } from "@/app/libs/helper/callApi";
-import { useUserLogger } from "@/app/components/custom-hooks/useUserLogger";
 
 // Enhanced types
 type PriceType = "fixed" | "negotiable";
@@ -31,6 +29,7 @@ type Product = {
 	priceType: PriceType;
 	condition: Condition;
 	description: string;
+	currency?: "NGN" | "USD";
 	location: string;
 	photo?: FileList;
 	video?: FileList;
@@ -88,7 +87,8 @@ export default function Form() {
 			category: "Furniture",
 			price: "120",
 			priceType: "fixed",
-			condition: "Used - Good",
+			condition: "New",
+			currency: "USD",
 			description:
 				"Sturdy wooden desk with minor scratches. Perfect for home offices or study rooms.",
 			tags: "desk,wood,furniture,home office",
@@ -354,7 +354,7 @@ export default function Form() {
 												"title",
 												validationSchema.title,
 											)}
-											className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+											className="w-full rounded-lg p-3 focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 											placeholder="e.g. Authentic Nigerian Ankara Dresses - Made to order"
 										/>
 										{errors.title && (
@@ -379,7 +379,7 @@ export default function Form() {
 												"category",
 												validationSchema.category,
 											)}
-											className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+											className="bg-gray-100 w-full rounded-lg p-3  focus:ring-2 focus:ring-[var(--primary-color)]/80 transition-all duration-200"
 										>
 											<option value="">
 												Choose a category
@@ -400,27 +400,58 @@ export default function Form() {
 										)}
 									</div>
 									<div className="flex flex-col sm:flex-row sm:gap-8 gap-4">
-										<div className="shrink-0 flex-1">
+										{/*<div className="shrink-0 flex-1">
+
+												Price
+												<input
+													type="text"
+													{...register(
+														"price",
+														validationSchema.price,
+													)}
+													className="font-normal w-full flex-1 rounded-lg p-3 focus:ring-2 focus:ring-[var(--primary-color)]/80 transition-all duration-200"
+													placeholder="$0.00"
+												/>
+											</label>
+
+
+										</div>*/}
+										<div>
 											<label
 												htmlFor="price"
 												className="block text-sm md:text-base font-semibold mb-1"
 											>
 												Price
 											</label>
-											<input
-												type="text"
-												{...register(
-													"price",
-													validationSchema.price,
+											<div className="flex rounded-lg overflow-hidden focus-within:blue-700  focus-within:ring-2 focus-within:ring-blue-700 transition-all duration-200 bg-gray-100">
+											
+												<select
+													{...register("currency")}
+													className="bg-gray-100 px-3 py-3 text-sm text-gray-700 focus:outline-none max-w-16"
+												>
+													<option value="USD">
+														USD
+													</option>
+													<option value="NGN">
+														NGN
+													</option>
+												</select>
+
+												<input
+													type="text"
+													{...register(
+														"price",
+														validationSchema.price,
+													)}
+													className="flex-1 px-3 py-3 text-sm sm:text-base focus:outline-none "
+													placeholder=""
+												/>
+												{errors.price && (
+													<p className="text-red-500 text-xs mt-1">
+														{errors.price.message}
+													</p>
 												)}
-												className="w-full flex-1 rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
-												placeholder="$0.00"
-											/>
-											{errors.price && (
-												<p className="text-red-500 text-xs mt-1">
-													{errors.price.message}
-												</p>
-											)}
+											</div>
 										</div>
 										<div className="shrink-0 flex-1">
 											<label
@@ -431,12 +462,12 @@ export default function Form() {
 											</label>
 											<CustomSelectButton
 												{...register("priceType")}
-												className="w-full text-left rounded-lg p-3 border bg-gray-200 border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+												className="w-full text-left rounded-lg py-2.5 px-3 bg-gray-100 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 												name="priceType"
 												label="Fixed Price"
 												options={[
-													"fixed",
-													"negotiable",
+													"Fixed",
+													"Negotiable",
 												]}
 											/>
 											{errors.priceType && (
@@ -458,8 +489,11 @@ export default function Form() {
 											What condition is your product in?
 										</p>
 										<CustomSelectButton
-											{...register("condition")}
-											className="w-full text-left rounded-lg p-3 border bg-gray-200 border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+											{...register(
+												"condition",
+												validationSchema.condition,
+											)}
+											className="w-full text-left rounded-lg p-3 bg-gray-100 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 											name="condition"
 											label="Select Condition"
 											options={[
@@ -823,9 +857,9 @@ export function CommonButton({
 			>
 				<span>
 					{isSubmitting
-						? "Submitting..."
+						? "Creating..."
 						: step === 3
-							? "Submit Review"
+							? "Create Product"
 							: "Next"}
 				</span>
 				{!isSubmitting && step !== 3 && (

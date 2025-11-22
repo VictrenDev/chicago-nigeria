@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import type { SubscriptionSchema } from "../libs/types/zodSchemas";
-import FormFieldErrorMessage from "../components/fieldError";
+// import FormFieldErrorMessage from "../components/fieldError";
 
 export default function BusinessInformation() {
 	const [hasAccounts, setHasAccounts] = useState<"yes" | "no" | "">("");
@@ -26,7 +26,7 @@ export default function BusinessInformation() {
 						placeholder="Enter your business name"
 						className="w-full border rounded-lg p-2 mt-1 focus:ring-2 focus:ring-blue-500"
 					/>
-					<FormFieldErrorMessage error={errors.businessName}/>
+					{/*<FormFieldErrorMessage error={errors.businessName}/>*/}
 				</div>
 
 				<div>
