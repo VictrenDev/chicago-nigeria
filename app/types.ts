@@ -106,6 +106,7 @@ export interface IListing {
   comments: [];
   ratings: number;
   price: number;
+  user: IUser;
   location: string;
   status: "aproved" | "pending";
   isVerified: boolean;
