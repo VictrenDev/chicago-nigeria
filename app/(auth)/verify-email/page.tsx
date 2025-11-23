@@ -1,6 +1,7 @@
 "use client";
 
 import { API_BASE_URL } from "@/app/libs/dals/utils";
+import { callApi } from "@/app/libs/helper/callApi";
 import axios from "axios";
 import { Loader2, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -49,9 +50,10 @@ export default function VerifyTokenPage() {
 
 	// Only call SWR if token exists
 	const { data, error, isLoading } = useSWR(
-		token ? [`${API_BASE_URL}/auth/verify-email`, token] : null, // key is null if no token
-		verifyTokenFetcher,
-	);
+			token ? [`${API_BASE_URL}/auth/verify-email`, token] : null, // key is null if no token
+			verifyTokenFetcher,
+		);
+	console.log(data)
 	useEffect(() => {
 		if (data) {
 			// Redirect after success

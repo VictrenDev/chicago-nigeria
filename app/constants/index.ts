@@ -2,13 +2,13 @@ export const innaccessibleByAuthUsers = [
   "/",
   "/signin",
   "/signup",
-  "/verify-email",
+  // "/verify-email",
   "/reset-password",
   "/forgot-password",
 ];
 
 export const restrictedRoutes = [
-  "/verify-email",
+  // "/verify-email",
   "/reset-password",
   "/forgot-password",
 ];

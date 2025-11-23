@@ -11,6 +11,7 @@ import { callApi } from "@/app/libs/helper/callApi";
 import { ApiResponse, AppError, IUser } from "@/app/types";
 import { useSession } from "@/app/store/useSession";
 import { FormValues } from "@/app/libs/types/user";
+import FormFieldErrorMessage from "@/app/components/fieldError";
 
 export default function SignIn() {
   const { updateUser, user } = useSession((state) => ({
@@ -31,7 +32,7 @@ export default function SignIn() {
   const onSubmit = async (formData: FormValues) => {
     try {
       const { data, error } = await callApi<ApiResponse<IUser>>(
-        `/api/v1/auth/signin`,
+        `/auth/signin`,
         "POST",
         formData
       );
@@ -101,11 +102,9 @@ export default function SignIn() {
             },
           })}
           placeholder="Enter your email"
-          className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 outline-none mb-2"
+          className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 outline-none"
         />
-        {errors.email && (
-          <p className="text-red-500 text-xs mb-2">{errors.email.message}</p>
-        )}
+        <FormFieldErrorMessage error={errors.email}/>
 
         {/* Password */}
         <label className="block text-sm font-medium mb-1">Password</label>
@@ -126,9 +125,7 @@ export default function SignIn() {
             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
         </div>
-        {errors.password && (
-          <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>
-        )}
+        <FormFieldErrorMessage error={errors.password}/>
 
         {/* Remember + Forgot */}
         <div className="flex items-center justify-end text-sm mt-3 mb-5">
@@ -164,7 +161,7 @@ export default function SignIn() {
 
         {/* Footer */}
         <p className="text-center text-sm mt-5">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link
             href="/signup"
             className="text-[var(--primary-color)] font-medium hover:underline"

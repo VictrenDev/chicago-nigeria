@@ -21,7 +21,7 @@ export default function Marketplace() {
     <main className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-4 md:gap-12">
       <section className="space-y-4 md:pt-4">
         {/* Header Section - Mobile Optimized */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white px-4 sm:px-8 py-4 rounded-lg">
+        {/*<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white px-4 sm:px-8 py-4 rounded-lg">
           <div className="flex-1">
             <h2 className="text-lg font-bold">Marketplace</h2>
             <p className="text-sm text-gray-600">
@@ -35,12 +35,12 @@ export default function Marketplace() {
             <Plus className="w-4 h-4 sm:w-6 sm:h-6" />
             <span className="whitespace-nowrap">Create Listing</span>
           </Link>
-        </div>
+        </div>*/}
 
         {/* Stats Section - Mobile Horizontal Scroll */}
-        <Suspense fallback={<MarketplaceStatsSkeleton />}>
+        {/*<Suspense fallback={<MarketplaceStatsSkeleton />}>
           <MarketplaceStats />
-        </Suspense>
+        </Suspense>*/}
 
         {/* Categories Section - Mobile Optimized */}
         <div className="p-3 bg-white rounded-xl">

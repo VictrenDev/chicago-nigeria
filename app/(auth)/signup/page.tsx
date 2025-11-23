@@ -1,5 +1,4 @@
 "use client";
-import useSWRMutation from "swr/mutation";
 import {
 	ArrowLeft,
 	ArrowRight,
@@ -13,13 +12,18 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { CheckIcon, UserTick } from "@/app/components/icons";
-import { createUser } from "@/app/libs/dals/users";
-import { FormValues } from "@/app/libs/types/user";
-import { API_BASE_URL } from "@/app/libs/dals/utils";
+import FormFieldErrorMessage from "@/app/components/fieldError";
+import {
+	createUserSchema,
+	CreateUserSchema,
+} from "@/app/libs/types/zodSchemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { callApi } from "@/app/libs/helper/callApi";
+import { ApiResponse, IUser } from "@/app/types";
 
 export default function Form() {
 	const [step, setStep] = useState(1);
@@ -28,21 +32,18 @@ export default function Form() {
 		"regular" | "vendor"
 	>("regular");
 	const [isAnimating, setIsAnimating] = useState(false);
-	const { trigger: triggerSubmitForm } = useSWRMutation(
-		`${API_BASE_URL}/auth/signup`,
-		createUser,
-	);
-	const totalSignupPages: number = 5;
 
 	const {
 		register,
 		handleSubmit,
 		formState: { errors, isSubmitting },
-		getValues,
 		trigger,
 		watch,
-	} = useForm<FormValues>({
+		setError,
+	} = useForm<CreateUserSchema>({
+		resolver: zodResolver(createUserSchema),
 		defaultValues: {
+			// Use empty values for production
 			firstName: "",
 			lastName: "",
 			email: "",
@@ -61,50 +62,125 @@ export default function Form() {
 			password: "",
 			confirmPassword: "",
 			isTermAndConditionAccepted: false,
+			
 		},
 	});
+
 	const password = watch("password", "");
 	const isMinLength = password.length >= 8;
 	const hasUpperCase = /[A-Z]/.test(password);
 	const hasNumber = /[0-9]/.test(password);
-	const onSubmit = async (data: FormValues) => {
+
+	const onSubmit = async (formdata: CreateUserSchema) => {
+		console.log("🏁 Form submission started");
+
+		console.log("Form data:", formdata);
+
 		try {
-			// remove country code
-			const { countryCode, brandName, business, ...postData } = data;
-			// merge country code and phone
-			const fullPhoneNumber = `${data.countryCode}${data.phone}`;
-			// hash password before sending
+			// Create proper payload structure
+			const payload = {
+				firstName: formdata.firstName,
+				lastName: formdata.lastName,
+				email: formdata.email,
+				DOB: formdata.DOB,
+				phone: formdata.phone,
+				gender: formdata.gender,
+				fullPhoneNumber: `${formdata.countryCode}${formdata.phone}`,
+				currentCity: formdata.currentCity,
+				neighborhood: formdata.neighborhood || "", // Handle optional
+				stateOfOrigin: formdata.stateOfOrigin,
+				profession: formdata.profession,
+				company: formdata.company,
+				business: formdata.business || "", // Handle optional
+				brandName: formdata.brandName || "", // Handle optional
+				bio: formdata.bio || "", // Handle optional
+				password: formdata.password,
+				confirmPassword: formdata.confirmPassword,
+				isTermAndConditionAccepted: formdata.isTermAndConditionAccepted,
+			};
 
-			const newUser = await triggerSubmitForm({
-				...postData,
-				phone: fullPhoneNumber,
-			});
+			console.log("📤 Sending payload:", payload);
 
-			if (newUser) {
+			const { data, error } = await callApi<ApiResponse<IUser>>(
+				"/auth/signup",
+				"POST",
+				payload,
+			);
+
+			console.log("✅ API Response:", { data, error });
+
+			if (error) {
+				console.error("❌ API Error:", error);
+				// Handle specific error cases
+				if (
+					error.message?.includes("email") ||
+					error.message?.includes("Email")
+				) {
+					toast.error("Email already exists or is invalid");
+					setError("email", {
+						type: "manual",
+						message: "Email already exists",
+					});
+				} else if (
+					error.message?.includes("phone") ||
+					error.message?.includes("Phone")
+				) {
+					toast.error("Phone number already exists or is invalid");
+					setError("phone", {
+						type: "manual",
+						message: "Phone number already exists",
+					});
+				} else {
+					toast.error(
+						error.message ||
+							"Registration failed. Please try again.",
+					);
+				}
+				return;
+			}
+
+			if (data?.success) {
 				toast.success(
-					"Form Submitted successfully. Check email for confirmation link.",
+					"Account created successfully! Please check your email for verification.",
+				);
+				// Optional: Redirect to login or confirmation page
+				// router.push('/login');
+
+				// Reset form or redirect after successful submission
+				console.log("🎉 Registration successful!");
+			} else {
+				toast.error(
+					data?.message || "Registration failed. Please try again.",
 				);
 			}
-			console.log(newUser);
-		} catch (error) {
+		} catch (error: any) {
+			console.error("💥 Submission error:", error);
 			if (error instanceof Error) {
-				console.log(error.message);
-				toast.error(error.message);
+				toast.error(
+					error.message || "Something went wrong. Please try again.",
+				);
 			} else {
-				throw new Error("Something wen't wrong with creating a user");
+				toast.error(
+					"Network error. Please check your connection and try again.",
+				);
 			}
-		} finally {
-			setIsAnimating(false);
 		}
 	};
 
 	const next = async () => {
-		if (isAnimating) return;
-		if (isAnimating || step >= 7) return;
-		let fieldsToValidate: (keyof FormValues)[] = [];
+		if (isAnimating || step >= 5) return;
+
+		let fieldsToValidate: (keyof CreateUserSchema)[] = [];
 
 		if (step === 1) {
-			fieldsToValidate = ["firstName", "lastName", "email", "phone"];
+			fieldsToValidate = [
+				"firstName",
+				"lastName",
+				"email",
+				"phone",
+				"DOB",
+				"gender",
+			];
 		} else if (step === 2) {
 			fieldsToValidate = ["currentCity", "stateOfOrigin"];
 		} else if (step === 3) {
@@ -112,7 +188,11 @@ export default function Form() {
 		} else if (step === 4 && registrationType === "vendor") {
 			fieldsToValidate = ["business", "brandName"];
 		} else if (step === 5) {
-			fieldsToValidate = ["password", "confirmPassword"];
+			fieldsToValidate = [
+				"password",
+				"confirmPassword",
+				"isTermAndConditionAccepted",
+			];
 		}
 
 		const isStepValid = await trigger(fieldsToValidate);
@@ -124,11 +204,12 @@ export default function Form() {
 				setStep((current) => current + 1);
 				setIsAnimating(false);
 			}, 300);
+		} else {
+			toast.error("Please fix the errors before continuing");
 		}
 	};
 
 	const prev = () => {
-		if (isAnimating) return;
 		if (isAnimating || step <= 1) return;
 		setIsAnimating(true);
 		setDirection("left");
@@ -157,14 +238,16 @@ export default function Form() {
 				onSubmit={handleSubmit(onSubmit)}
 				className="bg-white px-4 py-8 md:px-8 rounded-xl md:w-120 text-sm relative signup-form overflow-hidden"
 			>
-				<button
-					type="button"
-					onClick={prev}
-					className="absolute top-6 left-2 cursor-pointer flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg transition-colors"
-				>
-					<ArrowLeft className="w-4 h-4" />
-					<span>Back</span>
-				</button>
+				{step > 1 && (
+					<button
+						type="button"
+						onClick={prev}
+						className="absolute top-6 left-2 cursor-pointer flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+					>
+						<ArrowLeft className="w-4 h-4" />
+						<span>Back</span>
+					</button>
+				)}
 
 				<Image
 					src={"/chicago-nigeria-logo-1.png"}
@@ -176,14 +259,11 @@ export default function Form() {
 
 				{/* PROGRESS STEPS */}
 				<div className="flex justify-between items-center relative py-14">
-					{/* Background line */}
 					<div className="absolute top-[50%] left-0 w-full h-[2px] bg-gray-200"></div>
-
-					{/* Filled line */}
 					<div
 						className="absolute top-[50%] left-0 h-[2px] bg-[var(--primary-color)] transition-all duration-500"
 						style={{
-							width: `${((step - 1) / (totalSignupPages - 1)) * 100}%`,
+							width: `${((step - 1) / 4) * 100}%`,
 						}}
 					></div>
 
@@ -225,153 +305,109 @@ export default function Form() {
 							</div>
 							<fieldset className="space-y-4 mt-8">
 								<div className="flex flex-col sm:flex-row sm:gap-2 gap-4">
-									<div>
-										<label
-											htmlFor="firstName"
-											className="block text-sm font-medium mb-1"
-										>
+									<div className="flex-1">
+										<label className="block text-sm font-medium mb-1">
 											First Name
 										</label>
 										<input
 											type="text"
-											{...register("firstName", {
-												required:
-													"First name is required",
-											})}
-											className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] transition-all duration-200"
+											{...register("firstName")}
+											className="w-full rounded-lg border border-gray-300 p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 											placeholder="Enter your first name"
 										/>
-										{errors.firstName && (
-											<p className="text-red-500 text-xs mt-1">
-												{errors.firstName.message}
-											</p>
-										)}
+										<FormFieldErrorMessage
+											error={errors.firstName}
+										/>
 									</div>
-									<div>
-										<label
-											htmlFor="lastName"
-											className="block text-sm font-medium mb-1"
-										>
+									<div className="flex-1">
+										<label className="block text-sm font-medium mb-1">
 											Last Name
 										</label>
 										<input
 											type="text"
-											{...register("lastName", {
-												required:
-													"Last name is required",
-											})}
-											className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+											{...register("lastName")}
+											className="w-full rounded-lg border border-gray-300 p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 											placeholder="Enter your last name"
 										/>
-										{errors.lastName && (
-											<p className="text-red-500 text-xs mt-1">
-												{errors.lastName.message}
-											</p>
-										)}
+										<FormFieldErrorMessage
+											error={errors.lastName}
+										/>
 									</div>
 								</div>
-								<label>
-									Gender:
-									<br />
-									<select
-										className="mb-3 w-full rounded-lg p-3 bg-gray-100 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200 "
-										{...register("gender", {
-											required: true,
-										})}
-										defaultValue={"male"}
-									>
-										<option value={`male`}>Male</option>
-										<option value={`female`}>Female</option>
-									</select>
-									{errors.gender && (
-										<p className="text-red-500 text-xs mt-1">
-											{errors.gender.message}
-										</p>
-									)}
-								</label>
 
 								<div>
-									<label
-										htmlFor="email"
-										className="block text-sm font-medium mb-1"
+									<label className="block text-sm font-medium mb-1">
+										Gender
+									</label>
+									<select
+										{...register("gender")}
+										className="w-full rounded-lg border border-gray-300 p-3 bg-white focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 									>
+										<option value="male">Male</option>
+										<option value="female">Female</option>
+									</select>
+									<FormFieldErrorMessage
+										error={errors.gender}
+									/>
+								</div>
+
+								<div>
+									<label className="block text-sm font-medium mb-1">
 										Email Address
 									</label>
 									<input
 										type="email"
-										{...register("email", {
-											required: "Email is required",
-											pattern: {
-												value: /\S+@\S+\.\S+/,
-												message: "Invalid email",
-											},
-										})}
-										className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										{...register("email")}
+										className="w-full rounded-lg border border-gray-300 p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 										placeholder="Enter your email address"
 									/>
-									{errors.email && (
-										<p className="text-red-500 text-xs mt-1">
-											{errors.email.message}
-										</p>
-									)}
+									<FormFieldErrorMessage
+										error={errors.email}
+									/>
 								</div>
+
 								<div>
-									<label
-										htmlFor="email"
-										className="block text-sm font-medium mb-1"
-									>
+									<label className="block text-sm font-medium mb-1">
 										Date of Birth
 									</label>
 									<input
 										type="date"
 										{...register("DOB")}
-										className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200 text-gray-600"
+										className="w-full rounded-lg border border-gray-300 p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200 text-gray-600"
 									/>
-									{errors.email && (
-										<p className="text-red-500 text-xs mt-1">
-											{errors.email.message}
-										</p>
-									)}
+									<FormFieldErrorMessage error={errors.DOB} />
 								</div>
 
 								<div>
-									<label
-										htmlFor="phone"
-										className="block text-sm font-medium mb-1"
-									>
+									<label className="block text-sm font-medium mb-1">
 										Phone Number
 									</label>
-
-									<div className="flex rounded-lg overflow-hidden focus-within:blue-700  focus-within:ring-2 focus-within:ring-blue-700 transition-all duration-200 bg-gray-100">
-										{/* Country Code */}
+									<div className="flex rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-[var(--primary-color)]/20 focus-within:border-[var(--primary-color)] border border-gray-300 transition-all duration-200 bg-white">
 										<select
 											{...register("countryCode")}
-											defaultValue="+1"
-											className="bg-gray-100 px-3 py-3 text-sm text-gray-700 focus:outline-none max-w-16"
+											className="bg-white px-3 py-3 text-sm text-gray-700 focus:outline-none border-r border-gray-300"
 										>
-											<option value="+1">+1</option>
-											<option value="+44">+44</option>
-											<option value="+234">+234</option>
-											<option value="+91">+91</option>
+											<option value="+1">+1 (US)</option>
+											<option value="+44">
+												+44 (UK)
+											</option>
+											<option value="+234">
+												+234 (NG)
+											</option>
+											<option value="+91">
+												+91 (IN)
+											</option>
 										</select>
-
-										{/* Phone Number */}
 										<input
 											type="text"
-											{...register("phone", {
-												required:
-													"Phone number is required",
-											})}
-											className="flex-1 px-3 py-3 text-sm sm:text-base focus:outline-none "
+											{...register("phone")}
+											className="flex-1 px-3 py-3 text-sm sm:text-base focus:outline-none"
 											placeholder="Enter your phone number"
 										/>
 									</div>
-
-									{errors.phone && (
-										<p className="text-red-500 text-xs mt-1">
-											{errors.phone.message}
-										</p>
-									)}
+									<FormFieldErrorMessage
+										error={errors.phone}
+									/>
 								</div>
 							</fieldset>
 							<CommonButton
@@ -390,6 +426,7 @@ export default function Form() {
 						</div>
 					)}
 
+					{/* STEP 2-4 remain the same as your original code */}
 					{/* STEP 2 */}
 					{step === 2 && (
 						<div className={`${getStepAnimationClass()} w-full`}>
@@ -410,17 +447,13 @@ export default function Form() {
 									</label>
 									<input
 										type="text"
-										{...register("currentCity", {
-											required: "City is required",
-										})}
-										className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										{...register("currentCity")}
+										className="w-full rounded-lg border border-gray-300 p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 										placeholder="Enter your current city"
 									/>
-									{errors.currentCity && (
-										<p className="text-red-500 text-xs mt-1">
-											{errors.currentCity.message}
-										</p>
-									)}
+									<FormFieldErrorMessage
+										error={errors.currentCity}
+									/>
 								</div>
 								<div>
 									<label className="block text-sm font-medium mb-1">
@@ -429,7 +462,7 @@ export default function Form() {
 									<input
 										type="text"
 										{...register("neighborhood")}
-										className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										className="w-full rounded-lg border border-gray-300 p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 										placeholder="Enter your neighborhood"
 									/>
 								</div>
@@ -439,17 +472,13 @@ export default function Form() {
 									</label>
 									<input
 										type="text"
-										{...register("stateOfOrigin", {
-											required: "State is required",
-										})}
-										className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										{...register("stateOfOrigin")}
+										className="w-full rounded-lg border border-gray-300 p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 										placeholder="Enter your state of origin"
 									/>
-									{errors.stateOfOrigin && (
-										<p className="text-red-500 text-xs mt-1">
-											{errors.stateOfOrigin.message}
-										</p>
-									)}
+									<FormFieldErrorMessage
+										error={errors.stateOfOrigin}
+									/>
 								</div>
 							</fieldset>
 							<CommonButton
@@ -478,17 +507,13 @@ export default function Form() {
 									</label>
 									<input
 										type="text"
-										{...register("profession", {
-											required: "Profession is required",
-										})}
-										className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										{...register("profession")}
+										className="w-full rounded-lg border border-gray-300 p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 										placeholder="e.g. Software Engineer"
 									/>
-									{errors.profession && (
-										<p className="text-red-500 text-xs mt-1">
-											{errors.profession.message}
-										</p>
-									)}
+									<FormFieldErrorMessage
+										error={errors.profession}
+									/>
 								</div>
 								<div>
 									<label className="block text-sm font-medium mb-1">
@@ -496,17 +521,13 @@ export default function Form() {
 									</label>
 									<input
 										type="text"
-										{...register("company", {
-											required: "Company is required",
-										})}
-										className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										{...register("company")}
+										className="w-full rounded-lg border border-gray-300 p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 										placeholder="Microsoft"
 									/>
-									{errors.company && (
-										<p className="text-red-500 text-xs mt-1">
-											{errors.company.message}
-										</p>
-									)}
+									<FormFieldErrorMessage
+										error={errors.company}
+									/>
 								</div>
 								<div>
 									<label className="block text-sm font-medium mb-1">
@@ -514,7 +535,7 @@ export default function Form() {
 									</label>
 									<textarea
 										{...register("bio")}
-										className="min-h-24 w-full rounded-lg bg-gray-100 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200 resize-none mt-1 p-3"
+										className="min-h-24 w-full rounded-lg border border-gray-300 bg-white focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200 resize-none mt-1 p-3"
 										placeholder="Tell us a bit about yourself, your interests, and what you're looking for in the community..."
 									/>
 								</div>
@@ -544,7 +565,7 @@ export default function Form() {
 									onClick={() =>
 										setRegistrationType("regular")
 									}
-									className="flex gap-6 border border-[var(--primary-color)] py-4 px-8 rounded-lg relative"
+									className="flex gap-6 border border-[var(--primary-color)] py-4 px-8 rounded-lg relative cursor-pointer"
 								>
 									<div
 										className={`${
@@ -565,7 +586,6 @@ export default function Form() {
 									{registrationType === "regular" && (
 										<CheckIcon className="absolute right-4 top-2" />
 									)}
-
 									<div>
 										<h2 className="font-semibold">
 											Regular Member
@@ -580,7 +600,7 @@ export default function Form() {
 									onClick={() =>
 										setRegistrationType("vendor")
 									}
-									className="flex gap-6 border border-[var(--primary-color)] py-4 px-8 rounded-lg relative"
+									className="flex gap-6 border border-[var(--primary-color)] py-4 px-8 rounded-lg relative cursor-pointer"
 								>
 									<div
 										className={`${
@@ -619,18 +639,13 @@ export default function Form() {
 											</label>
 											<input
 												type="text"
-												{...register("business", {
-													required:
-														"Business is required",
-												})}
-												className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
-												placeholder="e.g. Software Engineer"
+												{...register("business")}
+												className="w-full rounded-lg border border-gray-300 p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+												placeholder="Enter your business name"
 											/>
-											{errors.business && (
-												<p className="text-red-500 text-xs mt-1">
-													{errors.business.message}
-												</p>
-											)}
+											<FormFieldErrorMessage
+												error={errors.business}
+											/>
 										</div>
 										<div>
 											<label className="block text-sm font-medium mb-1">
@@ -638,18 +653,13 @@ export default function Form() {
 											</label>
 											<input
 												type="text"
-												{...register("brandName", {
-													required:
-														"Brand name is required",
-												})}
-												className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
-												placeholder="Microsoft"
+												{...register("brandName")}
+												className="w-full rounded-lg border border-gray-300 p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+												placeholder="Enter business category"
 											/>
-											{errors.brandName && (
-												<p className="text-red-500 text-xs mt-1">
-													{errors.brandName.message}
-												</p>
-											)}
+											<FormFieldErrorMessage
+												error={errors.brandName}
+											/>
 										</div>
 									</fieldset>
 								)}
@@ -661,7 +671,7 @@ export default function Form() {
 						</div>
 					)}
 
-					{/* STEP 5 */}
+					{/* STEP 5 - FIXED SUBMIT BUTTON */}
 					{step === 5 && (
 						<div className={`${getStepAnimationClass()} w-full`}>
 							<div className="flex flex-col items-center space-y-1">
@@ -681,28 +691,13 @@ export default function Form() {
 									</label>
 									<input
 										type="password"
-										{...register("password", {
-											required: "Password is required",
-											validate: {
-												minLength: (v) =>
-													v.length >= 8 ||
-													"At least 8 characters",
-												hasUpperCase: (v) =>
-													/[A-Z]/.test(v) ||
-													"Must include an uppercase letter",
-												hasNumber: (v) =>
-													/[0-9]/.test(v) ||
-													"Must include a number",
-											},
-										})}
-										className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										{...register("password")}
+										className="w-full rounded-lg border border-gray-300 p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 										placeholder="Create a strong password"
 									/>
-									{errors.password && (
-										<p className="text-red-500 text-xs mt-1">
-											{errors.password.message}
-										</p>
-									)}
+									<FormFieldErrorMessage
+										error={errors.password}
+									/>
 								</div>
 								<div>
 									<label className="block text-sm font-medium mb-1">
@@ -710,20 +705,13 @@ export default function Form() {
 									</label>
 									<input
 										type="password"
-										{...register("confirmPassword", {
-											validate: (value) =>
-												value ===
-													getValues("password") ||
-												"Passwords do not match",
-										})}
-										className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+										{...register("confirmPassword")}
+										className="w-full rounded-lg border border-gray-300 p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 										placeholder="Confirm your password"
 									/>
-									{errors.confirmPassword && (
-										<p className="text-red-500 text-xs mt-1">
-											{errors.confirmPassword.message}
-										</p>
-									)}
+									<FormFieldErrorMessage
+										error={errors.confirmPassword}
+									/>
 								</div>
 								<div className="bg-gray-50 rounded-lg p-4 mt-4">
 									<h3 className="text-base font-medium mb-2">
@@ -747,41 +735,53 @@ export default function Form() {
 										</PasswordValidationCriteria>
 									</ul>
 								</div>
-								<label className="inline-flex items-center space-x-2">
-									<input
-										type="checkbox"
-										{...register(
-											"isTermAndConditionAccepted",
-											{ required: true },
-										)}
-										className="w-4 h-4 text-blue-600 border-gray-300 rounded flex-1"
+								<div className="mt-4">
+									<label className="flex space-x-2">
+										<input
+											type="checkbox"
+											{...register(
+												"isTermAndConditionAccepted",
+											)}
+											className="w-4 h-4 text-blue-600 border-gray-300 rounded mt-1 flex-1"
+										/>
+										<span className="text-sm text-gray-700 flex-8">
+											By checking the box, you have agreed
+											to our{" "}
+											<Link
+												href="/terms-and-conditions"
+												className="text-blue-600 underline hover:text-blue-700"
+												target="_blank"
+											>
+												Terms and Conditions
+											</Link>
+										</span>
+									</label>
+								
+									<FormFieldErrorMessage
+										error={
+											errors.isTermAndConditionAccepted
+										}
 									/>
-									<span className="text-sm text-gray-700 flex-8">
-										By checking the box, you have agreed to
-										our{" "}
-										<Link
-											href="/terms-and-conditons"
-											className="text-blue-600 underline"
-										>
-											Terms and Conditions
-										</Link>
-									</span>
-								</label>
+								</div>
 							</fieldset>
+
 							<button
 								type="submit"
 								disabled={isSubmitting}
-								className={`${isSubmitting ? "bg-[var(--primary-color)]/80" : "bg-[var(--primary-color)]"} text-white py-3 rounded-lg flex justify-center items-center gap-2 w-full mt-8 mb-4 hover:bg-[var(--primary-color)]/90 disabled:opacity-50 transition-all duration-200`}
+								className={`${
+									isSubmitting
+										? "bg-[var(--primary-color)]/80"
+										: "bg-[var(--primary-color)]"
+								} text-white py-3 rounded-lg flex justify-center items-center gap-2 w-full mt-8 mb-4 hover:bg-[var(--primary-color)]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200`}
 							>
 								{isSubmitting ? (
 									<>
-										<Loader2 className="animate-spin stroke-gray-200 w-5 h-5" />
-										<span>Submitting...</span>
+										<Loader2 className="animate-spin stroke-white w-5 h-5" />
+										<span>Creating Account...</span>
 									</>
 								) : (
 									<>
-										{" "}
-										<span>Submit</span>
+										<span>Create Account</span>
 										<ArrowRight className="w-4 h-4" />
 									</>
 								)}
@@ -806,17 +806,19 @@ export function CommonButton({
 			type="button"
 			onClick={next}
 			disabled={isAnimating}
-			className="bg-[var(--primary-color)] text-white py-3 rounded-lg flex justify-center items-center gap-2 w-full mt-8 mb-4 hover:bg-[var(--primary-color)]/90 disabled:opacity-50 transition-all duration-200"
+			className="bg-[var(--primary-color)] text-white py-3 rounded-lg flex justify-center items-center gap-2 w-full mt-8 mb-4 hover:bg-[var(--primary-color)]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
 		>
 			<span>Continue</span>
 			<ArrowRight className="w-4 h-4" />
 		</button>
 	);
 }
+
 type validationCriteriaType = {
 	children: React.ReactNode;
 	criteria: boolean;
 };
+
 export function PasswordValidationCriteria({
 	children,
 	criteria,
@@ -824,9 +826,15 @@ export function PasswordValidationCriteria({
 	return (
 		<li className="flex items-center gap-2">
 			<div
-				className={` ${criteria ? "bg-green-400 w-2 h-2 outline outline-green-400 outline-offset-4" : "bg-gray-400 w-1.5 h-1.5"} rounded-full transition-colors duration-200 mr-1`}
+				className={`${
+					criteria
+						? "bg-green-500 w-2 h-2 outline outline-green-500 outline-offset-4"
+						: "bg-gray-400 w-1.5 h-1.5"
+				} rounded-full transition-colors duration-200 mr-1`}
 			></div>
-			{children}
+			<span className={criteria ? "text-green-700" : "text-gray-600"}>
+				{children}
+			</span>
 		</li>
 	);
 }
