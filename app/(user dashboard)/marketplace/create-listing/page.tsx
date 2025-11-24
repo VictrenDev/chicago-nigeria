@@ -71,6 +71,12 @@ const validationSchema = {
         }
         return true;
       },
+      hasFiles: (files: FileList) => {
+        if (!files || files.length === 0) {
+          return "Please add at least one photo";
+        }
+        return true;
+      },
     },
   },
 };
@@ -80,6 +86,11 @@ export default function Form() {
   const [direction, setDirection] = useState<"left" | "right">("right");
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [selectedTags, setSelectedTags] = useState<string[]>([
+    "Handmade",
+    "Nigerian",
+  ]);
+
   const methods = useForm<Product>({
     defaultValues: {
       title: "Vintage Wooden Desk",
@@ -101,6 +112,7 @@ export default function Form() {
     formState: { errors },
     trigger,
     watch,
+    setValue,
   } = methods;
 
   // Prevent step from going out of bounds
@@ -127,6 +139,8 @@ export default function Form() {
       formData.append("category", data.category);
       formData.append("price", data.price);
       formData.append("location", data.location);
+      formData.append("tags", selectedTags.join(","));
+
       // Append photo files
       if (data.photo && data.photo.length > 0) {
         for (let i = 0; i < data.photo.length; i++) {
@@ -140,11 +154,6 @@ export default function Form() {
           formData.append("videos", data.video[i]);
         }
       }
-
-      // // Append user data if needed
-      // if (user?.id) {
-      //   formData.append("userId", user.id);
-      // }
 
       // Use callApi instead of useSWRMutation
       const { data: response, error } = await callApi(
@@ -208,8 +217,10 @@ export default function Form() {
     } else if (step === 2) {
       fieldsToValidate = ["description", "photo"];
       isValid = await trigger(fieldsToValidate);
-      // Additional check for photo
-      if (isValid && (!watch("photo") || watch("photo")?.length === 0)) {
+      
+      // Better photo validation for mobile
+      const photos = watch("photo");
+      if (isValid && (!photos || photos.length === 0)) {
         toast.error("Please add at least one photo");
         return;
       }
@@ -223,6 +234,15 @@ export default function Form() {
   const prev = useCallback(() => {
     handleStepTransition("left");
   }, [handleStepTransition]);
+
+  // Tag handling functions
+  const toggleTag = (tag: string) => {
+    setSelectedTags((prev) =>
+      prev.includes(tag)
+        ? prev.filter((t) => t !== tag)
+        : [...prev, tag]
+    );
+  };
 
   // Animation classes based on direction
   const getStepAnimationClass = () => {
@@ -245,17 +265,28 @@ export default function Form() {
     "Food & Agriculture",
   ];
 
+  // Suggested tags
+  const suggestedTags = [
+    "Handmade",
+    "Nigerian",
+    "Custom",
+    "Authentic",
+    "Premium",
+    "Traditional",
+    "Modern",
+    "Vintage",
+    "Organic",
+    "Imported",
+    "Local",
+    "Eco-Friendly",
+  ];
+
   return (
-    <section className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-12">
-      <section className=" bg-white/10 space-y-4 px-2">
+    <section className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-8 lg:gap-12">
+      <section className="bg-white/10 space-y-4 px-2">
         {/* PROGRESS STEPS */}
-        <div className="bg-white px-3 md:px-12 py-6 md:py-14">
-          <div
-            className="
-      flex justify-between items-center gap-2 relative
-      overflow-x-auto no-scrollbar scroll-smooth
-    "
-          >
+        <div className="bg-white px-3 md:px-12 py-4 md:py-14 rounded-xl">
+          <div className="flex justify-between items-center gap-2 relative overflow-x-auto no-scrollbar scroll-smooth">
             {[
               {
                 id: 1,
@@ -280,25 +311,25 @@ export default function Form() {
                 <div
                   key={id}
                   className={`
-            flex-shrink-0 flex flex-col justify-center items-center
-            p-3 md:p-4 text-center rounded-lg transition-all duration-300
-            w-[110px] sm:w-[130px] md:w-auto
-            ${
-              isCompleted
-                ? "border border-[var(--primary-color)] bg-[var(--primary-color)]/5 text-[var(--primary-color)]"
-                : isCurrent
-                ? "border-2 border-[var(--primary-color)] bg-white shadow-md text-[var(--primary-color)]"
-                : "border border-gray-300 bg-white text-gray-400"
-            }
-          `}
+                    flex-shrink-0 flex flex-col justify-center items-center
+                    p-3 md:p-4 text-center rounded-lg transition-all duration-300
+                    w-[110px] sm:w-[130px] md:w-auto
+                    ${
+                      isCompleted
+                        ? "border border-[var(--primary-color)] bg-[var(--primary-color)]/5 text-[var(--primary-color)]"
+                        : isCurrent
+                        ? "border-2 border-[var(--primary-color)] bg-white shadow-md text-[var(--primary-color)]"
+                        : "border border-gray-300 bg-white text-gray-400"
+                    }
+                  `}
                 >
                   {/* Step number */}
                   <p
                     className="
-              w-6 h-6 md:w-8 md:h-8 bg-[var(--primary-color)]
-              text-white rounded-full flex items-center justify-center mb-2
-              font-semibold text-sm md:text-base
-            "
+                      w-6 h-6 md:w-8 md:h-8 bg-[var(--primary-color)]
+                      text-white rounded-full flex items-center justify-center mb-2
+                      font-semibold text-sm md:text-base
+                    "
                   >
                     {id}
                   </p>
@@ -320,15 +351,15 @@ export default function Form() {
 
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className=" md:px-8 bg-white rounded-xl w-full py-4 text-sm relative signup-form"
+          className="px-2 md:px-8 bg-white rounded-xl w-full py-4 text-sm relative signup-form"
           encType="multipart/form-data"
         >
           {/* STEP CONTENT CONTAINER */}
-          <div className="relative min-h-[400px] px-2 ">
+          <div className="relative min-h-[400px] px-2">
             {/* STEP 1 Basic Info*/}
             {step === 1 && (
-              <div className={`${getStepAnimationClass()} w-full `}>
-                <fieldset className="space-y-4 mt-8 pb-4 ">
+              <div className={`${getStepAnimationClass()} w-full`}>
+                <fieldset className="space-y-4 mt-8 pb-4">
                   <div>
                     <label
                       htmlFor="title"
@@ -457,7 +488,6 @@ export default function Form() {
             {/* STEP 2 Product Media*/}
             {step === 2 && (
               <div className={`${getStepAnimationClass()} w-full`}>
-                <div className="flex flex-col items-center space-y-1"></div>
                 <fieldset className="space-y-4 mt-8 bg-white">
                   <div>
                     <label
@@ -467,13 +497,13 @@ export default function Form() {
                       Description
                     </label>
                     <p className="text-gray-400 text-xs my-1">
-                      Write a clear, descriptive title that highlights the key
-                      features
+                      Describe your product in detail to attract buyers
                     </p>
                     <textarea
                       {...register("description", validationSchema.description)}
                       className="w-full rounded-lg resize-none min-h-30 bg-gray-200 p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
                       placeholder="Write a description for your product"
+                      rows={5}
                     />
                     {errors.description && (
                       <p className="text-red-500 text-xs mt-1">
@@ -494,7 +524,11 @@ export default function Form() {
                     </p>
 
                     <FormProvider {...methods}>
-                      <CustomPhotoInput name="photo" multiple={true} />
+                      <CustomPhotoInput 
+                        name="photo" 
+                        multiple={true}
+                        className="w-full p-3 border border-gray-300 rounded-lg cursor-pointer"
+                      />
                       {errors.photo && (
                         <p className="text-red-500 text-xs mt-1">
                           {errors.photo.message}
@@ -507,33 +541,39 @@ export default function Form() {
                       </p>
                     )}
                   </div>
-                  {/* Selected Tags */}
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    <Tag label="Handmade" active />
-                    <Tag label="Nigerian" active />
-                  </div>
 
-                  {/* Suggested Tags */}
-                  <h3 className="font-medium text-gray-700 mb-3">
-                    Suggested tags:
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {[
-                      "Handmade",
-                      "Nigerian",
-                      "Custom",
-                      "Authentic",
-                      "Premium",
-                      "Traditional",
-                      "Modern",
-                      "Vintage",
-                      "Organic",
-                      "Imported",
-                      "Local",
-                      "Eco-Friendly",
-                    ].map((tag) => (
-                      <Tag key={tag} label={tag} />
-                    ))}
+                  {/* Tags Section */}
+                  <div>
+                    <label className="block text-sm md:text-base font-semibold mb-3">
+                      Product Tags
+                    </label>
+                    
+                    {/* Selected Tags */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {selectedTags.map((tag) => (
+                        <Tag 
+                          key={tag} 
+                          label={tag} 
+                          active={true} 
+                          onClick={() => toggleTag(tag)}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Suggested Tags */}
+                    <h3 className="font-medium text-gray-700 mb-3">
+                      Suggested tags:
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      {suggestedTags.map((tag) => (
+                        <Tag
+                          key={tag}
+                          label={tag}
+                          active={selectedTags.includes(tag)}
+                          onClick={() => toggleTag(tag)}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </fieldset>
               </div>
@@ -541,7 +581,7 @@ export default function Form() {
 
             {/* STEP 3 Review and Submit*/}
             {step === 3 && (
-              <div className="space-y-4">
+              <div className={`${getStepAnimationClass()} space-y-4`}>
                 {/* Review & Submit Section */}
                 <section className="rounded-lg py-6">
                   <h2 className="font-semibold text-gray-800 mb-3">
@@ -560,12 +600,12 @@ export default function Form() {
                     </div>
                   </div>
                 </section>
-                <div className="mx-auto bg-white rounded-2xl">
+                <div className="mx-auto bg-white rounded-2xl p-4 border border-gray-200">
                   {/* Title & Price */}
                   <div className="flex justify-between items-start mb-4">
                     <Link
                       href="#"
-                      className="text-[var(--primary-color)] font-semibold hover:underline"
+                      className="text-[var(--primary-color)] font-semibold hover:underline text-base md:text-lg"
                     >
                       {listingTitle}
                     </Link>
@@ -575,7 +615,7 @@ export default function Form() {
                   </div>
 
                   {/* Category, Condition, Location, Contact */}
-                  <div className="space-y-1 text-sm">
+                  <div className="space-y-2 text-sm">
                     <p>
                       <span className="font-medium text-gray-600">
                         Category:
@@ -624,21 +664,23 @@ export default function Form() {
                   <div className="mb-6">
                     <h3 className="font-semibold text-gray-700 mb-2">Tags</h3>
                     <div className="flex flex-wrap gap-2">
-                      <span className="bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full">
-                        Handmade
-                      </span>
-                      <span className="bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full">
-                        Nigerian
-                      </span>
+                      {selectedTags.map((tag) => (
+                        <span 
+                          key={tag}
+                          className="bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full"
+                        >
+                          {tag}
+                        </span>
+                      ))}
                     </div>
                   </div>
 
                   {/* Review Process Notice */}
                   <div className="flex items-start gap-3 bg-yellow-50 border border-yellow-200 text-yellow-800 text-sm p-4 rounded-lg mb-6">
-                    <AlertTriangle className="w-5 h-5 mt-0.5 text-yellow-600" />
+                    <AlertTriangle className="w-5 h-5 mt-0.5 text-yellow-600 flex-shrink-0" />
                     <div>
                       <p className="font-semibold">Review Process</p>
-                      <p>
+                      <p className="text-xs md:text-sm">
                         Your listing will be reviewed by our team within 24
                         hours. You&apos;ll receive an email notification once
                         it&apos;s approved and live.
@@ -658,61 +700,61 @@ export default function Form() {
           />
         </form>
       </section>
-      <section className="space-y-8 sticky top-0 h-screen pt-4 hidden md:block">
-        <div className=" bg-white p-4 rounded-lg space-y-4">
-          <h2 className="flex items-center gap-1">
+      <section className="space-y-8 sticky top-0 h-screen pt-4 hidden lg:block">
+        <div className="bg-white p-4 rounded-lg space-y-4">
+          <h2 className="flex items-center gap-1 font-semibold">
             <span>Community stats</span>{" "}
             <ChartNoAxesColumnIncreasing className="w-6 h-6 text-[var(--primary-color)]" />
           </h2>
           <div className="space-y-3 community-stats-items">
-            <div>
+            <div className="flex justify-between">
               <p>Active Members</p>
-              <p>2,847</p>
+              <p className="font-semibold">2,847</p>
             </div>
-            <div>
+            <div className="flex justify-between">
               <p>Posts today</p>
-              <p>127</p>
+              <p className="font-semibold">127</p>
             </div>
-            <div>
+            <div className="flex justify-between">
               <p>Events This Week</p>
-              <p>8</p>
+              <p className="font-semibold">8</p>
             </div>
           </div>
         </div>
-        <div className=" bg-white p-4 rounded-lg space-y-4">
-          <h2>Popular Categories</h2>
+        <div className="bg-white p-4 rounded-lg space-y-4">
+          <h2 className="font-semibold">Popular Categories</h2>
           <div className="space-y-3 community-stats-items">
-            <div>
+            <div className="flex justify-between">
               <p>Fashion</p>
-              <p>28</p>
+              <p className="font-semibold">28</p>
             </div>
-            <div>
+            <div className="flex justify-between">
               <p>Services</p>
-              <p>34</p>
+              <p className="font-semibold">34</p>
             </div>
-            <div>
-              <p>Food </p>
-              <p>23</p>
+            <div className="flex justify-between">
+              <p>Food</p>
+              <p className="font-semibold">23</p>
             </div>
-            <div>
-              <p>Housing </p>
-              <p>8</p>
+            <div className="flex justify-between">
+              <p>Housing</p>
+              <p className="font-semibold">8</p>
             </div>
           </div>
           <hr className="border border-gray-200 my-4" />
 
-          <div className="space-y-3 ">
-            <h2>Quick Links</h2>
+          <div className="space-y-3">
+            <h2 className="font-semibold">Quick Links</h2>
             <div className="ml-4 space-y-3 community-stats-items quick-actions">
-              <div>
+              <div className="flex items-center gap-2 hover:text-[var(--primary-color)] cursor-pointer transition-colors">
                 <MapPin className="w-4 h-4" />
                 <p>Find Local Events</p>
               </div>
-              <div>
+              <div className="flex items-center gap-2 hover:text-[var(--primary-color)] cursor-pointer transition-colors">
                 <UsersRound className="w-4 h-4" />
                 <p>Join Groups</p>
               </div>
-              <div>
+              <div className="flex items-center gap-2 hover:text-[var(--primary-color)] cursor-pointer transition-colors">
                 <BriefcaseConveyorBelt className="w-4 h-4" />
                 <p>Browse Jobs</p>
               </div>
@@ -744,8 +786,8 @@ export function CommonButton({
       <button
         type="button"
         onClick={prev}
-        disabled={isAnimating || isSubmitting}
-        className="w-fit mr-auto py-3 px-4 border hover:text-white rounded-lg flex justify-center items-center gap-2 hover:bg-[var(--primary-color)]/90 cursor-pointer disabled:opacity-50 transition-all duration-200"
+        disabled={isAnimating || isSubmitting || step === 1}
+        className="w-fit mr-auto py-3 px-4 border hover:text-white rounded-lg flex justify-center items-center gap-2 hover:bg-[var(--primary-color)]/90 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
       >
         <ArrowLeft className="w-4 h-4" />
         <span>Previous</span>
@@ -780,20 +822,22 @@ export function CommonButton({
 type TagProps = {
   label: string;
   active?: boolean;
+  onClick?: () => void;
 };
 
-function Tag({ label, active }: TagProps) {
+function Tag({ label, active, onClick }: TagProps) {
   return (
     <button
       type="button"
-      className={`flex items-center gap-1 px-3 py-1.5 text-sm rounded-full border transition ${
+      onClick={onClick}
+      className={`flex items-center gap-1 px-3 py-1.5 text-sm rounded-full border transition-all duration-200 ${
         active
           ? "bg-green-100 text-green-700 border-green-400"
           : "text-gray-600 border-gray-300 hover:bg-gray-100"
       }`}
     >
-      <TagIcon className="w-4 h-4" />
-      {label}
+      <TagIcon className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0" />
+      <span className="whitespace-nowrap">{label}</span>
     </button>
   );
 }

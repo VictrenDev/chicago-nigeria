@@ -33,7 +33,7 @@ export const initSession = create<Session>()((set, get) => ({
       }
 
       const { data } = await callApi<ApiResponse<IUser>>(
-        `/api/v1/auth/session`
+        `/auth/session`
       );
 
       set({ ...(data?.data && { user: data.data }), loading: false });

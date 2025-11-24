@@ -11,11 +11,11 @@ export namespace Listing {
       : "";
 
     return callApi<ApiResponse<PaginatedData<IListing>>>(
-      `/api/v1/listing?${queryString}`
+      `/listing?${queryString}`
     );
   };
 
   export const getListingById = (id: string) => {
-    return callApi<ApiResponse<IListing>>(`/api/v1/listing/${id}`);
+    return callApi<ApiResponse<IListing>>(`/listing/${id}`);
   };
 }
