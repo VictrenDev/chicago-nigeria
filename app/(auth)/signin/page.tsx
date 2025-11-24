@@ -1,6 +1,6 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -32,7 +32,7 @@ export default function SignIn() {
   const onSubmit = async (formData: FormValues) => {
     try {
       const { data, error } = await callApi<ApiResponse<IUser>>(
-        `/auth/signin`,
+        `/api/v1/auth/signin`,
         "POST",
         formData
       );
@@ -55,14 +55,14 @@ export default function SignIn() {
 
   console.log(" <====  Back to login  ===> ");
 
-  // if (user) {
-  //   console.log(" <====  user is authenticated  ===> ");
-  //   return (
-  //     <div className="flex justify-center items-center min-h-screen">
-  //       <Loader2 className="w-8 h-8 animate-spin" />
-  //     </div>
-  //   );
-  // }
+  if (user) {
+    console.log(" <====  user is authenticated  ===> ");
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <section className="flex justify-center items-center min-h-screen bg-gray-50 px-4">
@@ -104,7 +104,7 @@ export default function SignIn() {
           placeholder="Enter your email"
           className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 outline-none"
         />
-        <FormFieldErrorMessage error={errors.email}/>
+        <FormFieldErrorMessage error={errors.email} />
 
         {/* Password */}
         <label className="block text-sm font-medium mb-1">Password</label>
@@ -125,7 +125,7 @@ export default function SignIn() {
             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
         </div>
-        <FormFieldErrorMessage error={errors.password}/>
+        <FormFieldErrorMessage error={errors.password} />
 
         {/* Remember + Forgot */}
         <div className="flex items-center justify-end text-sm mt-3 mb-5">
