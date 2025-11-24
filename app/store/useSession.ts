@@ -32,11 +32,13 @@ export const initSession = create<Session>()((set, get) => ({
         set({ isFirstMount: true });
       }
 
-      const { data } = await callApi<ApiResponse<IUser>>(`/auth/session`);
+      const { data } = await callApi<ApiResponse<IUser>>(
+        `/api/v1/auth/session`
+      );
 
       set({ ...(data?.data && { user: data.data }), loading: false });
 
-      //   console.log(data?.data);
+      console.log(data?.data);
     },
 
     updateUser: (data: IUser) => set({ user: data }),

@@ -49,7 +49,7 @@ export const PostCard = ({ post }: { post: IListing }) => (
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-xs font-medium truncate">
-            {post?.user.firstName} {post?.user.lastName}
+            {post?.user?.firstName} {post?.user?.lastName}
           </p>
           <div className="flex items-center gap-1 text-xs text-gray-500">
             <MapPin className="w-3 h-3" />

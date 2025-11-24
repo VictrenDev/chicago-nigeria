@@ -17,7 +17,7 @@ import Link from "next/link";
 import LikePost from "../../components/likePostContent";
 import ShareButton from "../../components/shareButton";
 import { useParams } from "next/navigation";
-import { useGetListingById } from "@/hooks/useListing";
+import { useGetListingById } from "@/app/hooks/useListing";
 
 export default function Product() {
   const { productId } = useParams();
@@ -188,7 +188,12 @@ export default function Product() {
               </p> */}
 
               {product?.tags.map((tag) => (
-                <p className="bg-gray-100 w-fit py-2 px-4 rounded-lg">{tag}</p>
+                <p
+                  className="bg-gray-100 w-fit py-2 px-4 rounded-lg"
+                  key={`${Math.random()}${tag}`}
+                >
+                  {tag}
+                </p>
               ))}
             </div>
           </section>

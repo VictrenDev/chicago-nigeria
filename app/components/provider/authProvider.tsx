@@ -9,7 +9,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const path = usePathname();
   const { getSession } = useSession((state) => state.actions);
 
-  const openPaths = ["/"];
+  const openPaths = ["/subscription"];
   const isOpenPath = openPaths.includes(path);
 
   useEffect(() => {
