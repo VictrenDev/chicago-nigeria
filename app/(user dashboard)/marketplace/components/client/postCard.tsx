@@ -1,9 +1,8 @@
 import { Eye, Heart, MapPin, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
 import LikePost from "../../../components/likePost";
-import { IListing } from "../../../../types";
+import { IListing } from "@/app/types";
 
 export const PostCard = ({ post }: { post: IListing }) => (
   <div className="rounded-xl overflow-hidden border bg-white border-gray-200 hover:shadow-md transition-shadow">
@@ -50,7 +49,7 @@ export const PostCard = ({ post }: { post: IListing }) => (
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-xs font-medium truncate">
-            {post?.user.firstName} {post?.user?.lastName}
+            {post?.user.firstName} {post?.user.lastName}
           </p>
           <div className="flex items-center gap-1 text-xs text-gray-500">
             <MapPin className="w-3 h-3" />

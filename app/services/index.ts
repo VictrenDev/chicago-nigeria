@@ -14,4 +14,8 @@ export namespace Listing {
       `/api/v1/listing?${queryString}`
     );
   };
+
+  export const getListingById = (id: string) => {
+    return callApi<ApiResponse<IListing>>(`/api/v1/listing/${id}`);
+  };
 }

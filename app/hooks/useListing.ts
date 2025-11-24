@@ -1,5 +1,5 @@
 import { Listing } from "@/app/services";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 export const useListing = () => {
   const {
@@ -11,13 +11,18 @@ export const useListing = () => {
     error,
   } = useInfiniteQuery({
     queryKey: ["marketplace-posts"],
-    queryFn: async () => await Listing.getAllListing(),
+    queryFn: async ({ pageParam }) =>
+      await Listing.getAllListing({ page: pageParam ?? 1 } as any),
     initialPageParam: 0,
-    getNextPageParam: (data) =>
-      data && data?.data?.data?.meta?.page! < data?.data?.data?.meta.totalPages!
-        ? data?.data?.data?.meta?.page! + 1
-        : undefined,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    getNextPageParam: (lastPage) => {
+      console.log(lastPage);
+
+      return Number(lastPage.data?.data.meta.page) <
+        Number(lastPage.data?.data.meta.totalPages)
+        ? Number(lastPage.data?.data.meta.page) + 1
+        : undefined;
+    },
+    staleTime: 5 * 60 * 1000,
   });
 
   return {
@@ -28,4 +33,11 @@ export const useListing = () => {
     status,
     error,
   };
+};
+
+export const useGetListingById = (id: string) => {
+  return useQuery({
+    queryKey: ["listing", id],
+    queryFn: async () => await Listing.getListingById(id),
+  });
 };

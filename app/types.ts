@@ -52,7 +52,7 @@ export interface ApiResponse<T> {
   error?: unknown;
 }
 
-export type AppError = Omit<ApiResponse<{}>, "data">;
+export type AppError = Omit<ApiResponse<object>, "data">;
 
 export interface Meta {
   page: number;
@@ -101,12 +101,12 @@ export interface IListing {
   tags: string[];
   description: string;
   condition: string;
+  user: IUser;
   priceType: string;
   likes: [];
   comments: [];
   ratings: number;
   price: number;
-  user: IUser;
   location: string;
   status: "aproved" | "pending";
   isVerified: boolean;

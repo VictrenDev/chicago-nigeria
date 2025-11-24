@@ -1,6 +1,7 @@
 "use client";
 import { useState, useCallback, useEffect } from "react";
 import {
+ 
   AlertTriangle,
   ArrowLeft,
   ArrowRight,
@@ -23,6 +24,7 @@ type PriceType = "fixed" | "negotiable";
 type Condition = "Used - Good" | "Used - Like New" | "New" | "Used - Fair";
 
 type Product = {
+
   title: string;
   category: string;
   price: number;
@@ -38,6 +40,7 @@ type Product = {
 
 // Validation schema
 const validationSchema = {
+ 
   title: {
     required: "Title is required",
     minLength: { value: 5, message: "Title must be at least 5 characters" },
@@ -180,7 +183,6 @@ export default function Form() {
         "POST",
         formData
       );
-
       if (error) {
         throw new Error(error.message || "Failed to create listing");
       }
@@ -199,7 +201,6 @@ export default function Form() {
       setIsSubmitting(false);
     }
   };
-
   const handleStepTransition = useCallback(
     (dir: "left" | "right") => {
       if (isAnimating) return;
@@ -217,13 +218,10 @@ export default function Form() {
     },
     [isAnimating]
   );
-
   const next = useCallback(async () => {
     if (isAnimating) return;
-
     let fieldsToValidate: (keyof Product)[] = [];
     let isValid = false;
-
     if (step === 1) {
       fieldsToValidate = [
         "title",
@@ -273,6 +271,7 @@ export default function Form() {
     "Food & Agriculture",
   ];
 
+
   return (
     <section className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-12">
       <section className=" bg-white/10 space-y-4 px-2">
@@ -283,6 +282,7 @@ export default function Form() {
       flex justify-between items-center gap-2 relative
       overflow-x-auto no-scrollbar scroll-smooth
     "
+       
           >
             {[
               {
@@ -304,6 +304,7 @@ export default function Form() {
               const isCompleted = step > id;
               const isCurrent = step === id;
 
+             
               return (
                 <div
                   key={id}
@@ -318,7 +319,7 @@ export default function Form() {
                 ? "border-2 border-[var(--primary-color)] bg-white shadow-md text-[var(--primary-color)]"
                 : "border border-gray-300 bg-white text-gray-400"
             }
-          `}
+       
                 >
                   {/* Step number */}
                   <p
@@ -329,8 +330,7 @@ export default function Form() {
             "
                   >
                     {id}
-                  </p>
-
+                  </p>   
                   {/* Step title */}
                   <p className="font-semibold text-xs md:text-sm text-gray-700 whitespace-nowrap">
                     {title}
@@ -344,8 +344,7 @@ export default function Form() {
               );
             })}
           </div>
-        </div>
-
+        </div>    
         <form
           onSubmit={handleSubmit(onSubmit)}
           className=" md:px-8 bg-white rounded-xl w-full py-4 text-sm relative signup-form"
@@ -550,6 +549,7 @@ export default function Form() {
                       </p>
                     )}
                   </div>
+         
 
                   {/* Selected Tags */}
                   <div className="mb-4">
@@ -584,6 +584,7 @@ export default function Form() {
                     </p>
                   </div>
 
+         
                   {/* Suggested Tags */}
                   <div className="mb-6">
                     <label className="block text-sm md:text-base font-semibold mb-2">
@@ -627,6 +628,7 @@ export default function Form() {
               </div>
             )}
 
+         
             {/* STEP 3 Review and Submit*/}
             {step === 3 && (
               <div className="space-y-4">
@@ -662,6 +664,7 @@ export default function Form() {
                     </p>
                   </div>
 
+                
                   {/* Category, Condition, Location, Contact */}
                   <div className="space-y-1 text-sm">
                     <p>
