@@ -63,17 +63,11 @@ const validationSchema = {
       maxFiles: (files: FileList) =>
         !files || files.length <= 8 || "Maximum 8 files allowed",
       fileSize: (files: FileList) => {
-        if (!files) return true;
+        if (!files) return "Please add at least one photo";
         for (let i = 0; i < files.length; i++) {
           if (files[i].size > 10 * 1024 * 1024) {
             return "File size should be less than 10MB";
           }
-        }
-        return true;
-      },
-      hasFiles: (files: FileList) => {
-        if (!files || files.length === 0) {
-          return "Please add at least one photo";
         }
         return true;
       },
@@ -199,6 +193,7 @@ export default function Form() {
     [isAnimating]
   );
 
+  // FIXED: Better photo validation logic
   const next = useCallback(async () => {
     if (isAnimating) return;
 
@@ -215,15 +210,16 @@ export default function Form() {
       ];
       isValid = await trigger(fieldsToValidate);
     } else if (step === 2) {
-      fieldsToValidate = ["description", "photo"];
-      isValid = await trigger(fieldsToValidate);
-      
-      // Better photo validation for mobile
+      // ✅ FIRST check if photos exist - better UX
       const photos = watch("photo");
-      if (isValid && (!photos || photos.length === 0)) {
+      if (!photos || photos.length === 0) {
         toast.error("Please add at least one photo");
         return;
       }
+
+      // ✅ THEN validate other fields (description only)
+      fieldsToValidate = ["description"];
+      isValid = await trigger(fieldsToValidate);
     }
 
     if (isValid) {
@@ -529,15 +525,19 @@ export default function Form() {
                         multiple={true}
                         className="w-full p-3 border border-gray-300 rounded-lg cursor-pointer"
                       />
-                      {errors.photo && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors.photo.message}
-                        </p>
-                      )}
                     </FormProvider>
+                    
+                    {/* Photo validation message */}
+                    {errors.photo && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.photo.message}
+                      </p>
+                    )}
+                    
+                    {/* Photo count display */}
                     {listingPhoto && listingPhoto.length > 0 && (
-                      <p className="text-green-600 text-xs mt-1">
-                        {listingPhoto.length} photo(s) selected
+                      <p className="text-green-600 text-xs mt-2">
+                        ✅ {listingPhoto.length} photo(s) selected - Ready to proceed
                       </p>
                     )}
                   </div>
