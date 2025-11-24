@@ -120,7 +120,6 @@
 //   }
 // };
 
-
 import axios from "axios";
 import { isObject } from "./typeHelper";
 import { AppError } from "@/app/types";
@@ -146,10 +145,10 @@ const axiosinstance = axios.create({
 
 // Helper to get cookies for debugging
 const getCookie = (name: string): string | null => {
-  if (typeof document === 'undefined') return null;
+  if (typeof document === "undefined") return null;
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
+  if (parts.length === 2) return parts.pop()?.split(";").shift() || null;
   return null;
 };
 
@@ -166,15 +165,15 @@ export const callApi = async <T>(
     const isJSONObject = isObject(payload) && !isFormData;
 
     // Debug logging
-    console.log('🔧 API Call Debug:', {
+    console.log("🔧 API Call Debug:", {
       endpoint,
       method,
       isFormData,
       isJSONObject,
       hasPayload: !!payload,
       payloadType: payload?.constructor.name,
-      accessToken: !!getCookie('accessToken'),
-      refreshToken: !!getCookie('refreshToken')
+      accessToken: !!getCookie("accessToken"),
+      refreshToken: !!getCookie("refreshToken"),
     });
 
     // Build headers - CRITICAL: No Content-Type for FormData!
@@ -201,20 +200,20 @@ export const callApi = async <T>(
     };
 
     const response = await axiosinstance.request<T>(config);
-    
-    console.log('✅ API Call Successful:', {
+
+    console.log("✅ API Call Successful:", {
       endpoint,
       status: response.status,
-      data: response.data
+      data: response.data,
     });
-    
+
     return { data: response.data };
   } catch (error) {
     // Enhanced error logging
-    console.error('❌ API Call Failed:', {
+    console.error("❌ API Call Failed:", {
       endpoint,
       method,
-      error
+      error,
     });
 
     let err: AppError | undefined;
@@ -231,33 +230,23 @@ export const callApi = async <T>(
       err = error.response.data as AppError;
 
       // Detailed error logging
-      console.error('🔍 Axios Error Details:', {
+      console.error("🔍 Axios Error Details:", {
         status: error.response.status,
         statusText: error.response.statusText,
         data: error.response.data,
         headers: error.response.headers,
-        config: error.config?.headers?.['Content-Type']
+        config: error.config?.headers?.["Content-Type"],
       });
 
       if (error.response.status === 401) {
-        console.error('🔐 401 Unauthorized - Token Debug:', {
-          accessToken: getCookie('accessToken'),
-          refreshToken: getCookie('refreshToken'),
-          allCookies: document.cookie
-        });
-
-        toast.error("Session expired - please log in again");
+        // toast.error("Session expired - please log in again");
         initSession.getState().actions.clearSession();
-        
-        // Optional: Redirect to login
-        if (typeof window !== "undefined") {
-          setTimeout(() => {
-            window.location.href = '/login';
-          }, 2000);
-        }
       }
 
-      if (error.response.status === 423 && error.response.data.message === "Your email is yet to be verified") {
+      if (
+        error.response.status === 423 &&
+        error.response.data.message === "Your email is yet to be verified"
+      ) {
         if (typeof window !== "undefined") {
           window.location.replace("/verify-email");
         }
