@@ -1,7 +1,6 @@
 "use client";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import {
- 
   AlertTriangle,
   ArrowLeft,
   ArrowRight,
@@ -24,23 +23,20 @@ type PriceType = "fixed" | "negotiable";
 type Condition = "Used - Good" | "Used - Like New" | "New" | "Used - Fair";
 
 type Product = {
-
   title: string;
   category: string;
-  price: number;
+  price: string;
   priceType: PriceType;
   condition: Condition;
   description: string;
-  currency?: "NGN" | "USD";
   location: string;
   photo?: FileList;
   video?: FileList;
-  tags: string[];
+  tags?: string;
 };
 
 // Validation schema
 const validationSchema = {
- 
   title: {
     required: "Title is required",
     minLength: { value: 5, message: "Title must be at least 5 characters" },
@@ -84,23 +80,16 @@ export default function Form() {
   const [direction, setDirection] = useState<"left" | "right">("right");
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [selectedTags, setSelectedTags] = useState<string[]>([
-    "desk",
-    "wood",
-    "furniture",
-  ]);
-
   const methods = useForm<Product>({
     defaultValues: {
       title: "Vintage Wooden Desk",
       category: "Furniture",
-      price: 120,
+      price: "120",
       priceType: "fixed",
-      condition: "Used - Fair",
-      currency: "USD",
+      condition: "Used - Good",
       description:
         "Sturdy wooden desk with minor scratches. Perfect for home offices or study rooms.",
-      tags: ["desk", "wood", "furniture"],
+      tags: "desk,wood,furniture,home office",
       location: "Chicago",
     },
     mode: "onChange",
@@ -112,13 +101,7 @@ export default function Form() {
     formState: { errors },
     trigger,
     watch,
-    setValue,
   } = methods;
-
-  // Sync selectedTags with form state
-  useEffect(() => {
-    setValue("tags", selectedTags);
-  }, [selectedTags, setValue]);
 
   // Prevent step from going out of bounds
   if (step > 3) setStep(3);
@@ -132,23 +115,6 @@ export default function Form() {
   const listingCondition = watch("condition");
   const listingPhoto = watch("photo");
 
-  // Tag handlers
-  const handleTagClick = (tag: string) => {
-    setSelectedTags((prev) => {
-      if (prev.includes(tag)) {
-        // Remove tag if already selected
-        return prev.filter((t) => t !== tag);
-      } else {
-        // Add tag if not selected (limit to 8 tags)
-        return prev.length < 8 ? [...prev, tag] : prev;
-      }
-    });
-  };
-
-  const removeTag = (tagToRemove: string) => {
-    setSelectedTags((prev) => prev.filter((tag) => tag !== tagToRemove));
-  };
-  console.log(listingPhoto);
   const onSubmit = async (data: Product) => {
     setIsSubmitting(true);
     try {
@@ -159,11 +125,8 @@ export default function Form() {
       formData.append("title", data.title);
       formData.append("description", data.description);
       formData.append("category", data.category);
-      formData.append("price", data.price.toString());
+      formData.append("price", data.price);
       formData.append("location", data.location);
-      // Append tags as JSON array
-      formData.append("tags", JSON.stringify(data.tags));
-
       // Append photo files
       if (data.photo && data.photo.length > 0) {
         for (let i = 0; i < data.photo.length; i++) {
@@ -178,11 +141,18 @@ export default function Form() {
         }
       }
 
+      // // Append user data if needed
+      // if (user?.id) {
+      //   formData.append("userId", user.id);
+      // }
+
+      // Use callApi instead of useSWRMutation
       const { data: response, error } = await callApi(
         "/listing",
         "POST",
         formData
       );
+
       if (error) {
         throw new Error(error.message || "Failed to create listing");
       }
@@ -201,6 +171,7 @@ export default function Form() {
       setIsSubmitting(false);
     }
   };
+
   const handleStepTransition = useCallback(
     (dir: "left" | "right") => {
       if (isAnimating) return;
@@ -218,10 +189,13 @@ export default function Form() {
     },
     [isAnimating]
   );
+
   const next = useCallback(async () => {
     if (isAnimating) return;
+
     let fieldsToValidate: (keyof Product)[] = [];
     let isValid = false;
+
     if (step === 1) {
       fieldsToValidate = [
         "title",
@@ -271,7 +245,6 @@ export default function Form() {
     "Food & Agriculture",
   ];
 
-
   return (
     <section className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-12">
       <section className=" bg-white/10 space-y-4 px-2">
@@ -282,7 +255,6 @@ export default function Form() {
       flex justify-between items-center gap-2 relative
       overflow-x-auto no-scrollbar scroll-smooth
     "
-       
           >
             {[
               {
@@ -304,7 +276,6 @@ export default function Form() {
               const isCompleted = step > id;
               const isCurrent = step === id;
 
-             
               return (
                 <div
                   key={id}
@@ -319,7 +290,7 @@ export default function Form() {
                 ? "border-2 border-[var(--primary-color)] bg-white shadow-md text-[var(--primary-color)]"
                 : "border border-gray-300 bg-white text-gray-400"
             }
-       
+          `}
                 >
                   {/* Step number */}
                   <p
@@ -330,7 +301,8 @@ export default function Form() {
             "
                   >
                     {id}
-                  </p>   
+                  </p>
+
                   {/* Step title */}
                   <p className="font-semibold text-xs md:text-sm text-gray-700 whitespace-nowrap">
                     {title}
@@ -344,7 +316,8 @@ export default function Form() {
               );
             })}
           </div>
-        </div>    
+        </div>
+
         <form
           onSubmit={handleSubmit(onSubmit)}
           className=" md:px-8 bg-white rounded-xl w-full py-4 text-sm relative signup-form"
@@ -370,7 +343,7 @@ export default function Form() {
                     <input
                       type="text"
                       {...register("title", validationSchema.title)}
-                      className="w-full rounded-lg p-3 focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+                      className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
                       placeholder="e.g. Authentic Nigerian Ankara Dresses - Made to order"
                     />
                     {errors.title && (
@@ -392,7 +365,7 @@ export default function Form() {
                     </p>
                     <select
                       {...register("category", validationSchema.category)}
-                      className="bg-gray-100 w-full rounded-lg p-3  focus:ring-2 focus:ring-[var(--primary-color)]/80 transition-all duration-200"
+                      className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
                     >
                       <option value="">Choose a category</option>
                       {CATEGORIES.map((category) => (
@@ -408,34 +381,24 @@ export default function Form() {
                     )}
                   </div>
                   <div className="flex flex-col sm:flex-row sm:gap-8 gap-4">
-                    <div>
+                    <div className="shrink-0 flex-1">
                       <label
                         htmlFor="price"
                         className="block text-sm md:text-base font-semibold mb-1"
                       >
                         Price
                       </label>
-                      <div className="flex rounded-lg overflow-hidden focus-within:blue-700  focus-within:ring-2 focus-within:ring-blue-700 transition-all duration-200 bg-gray-100">
-                        <select
-                          {...register("currency")}
-                          className="bg-gray-100 px-3 py-3 text-sm text-gray-700 focus:outline-none max-w-16"
-                        >
-                          <option value="USD">USD</option>
-                          <option value="NGN">NGN</option>
-                        </select>
-
-                        <input
-                          type="text"
-                          {...register("price", validationSchema.price)}
-                          className="flex-1 px-3 py-3 text-sm sm:text-base focus:outline-none "
-                          placeholder=""
-                        />
-                        {errors.price && (
-                          <p className="text-red-500 text-xs mt-1">
-                            {errors.price.message}
-                          </p>
-                        )}
-                      </div>
+                      <input
+                        type="text"
+                        {...register("price", validationSchema.price)}
+                        className="w-full flex-1 rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+                        placeholder="$0.00"
+                      />
+                      {errors.price && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.price.message}
+                        </p>
+                      )}
                     </div>
                     <div className="shrink-0 flex-1">
                       <label
@@ -446,12 +409,11 @@ export default function Form() {
                       </label>
                       <CustomSelectButton
                         {...register("priceType")}
-                        className="w-full text-left rounded-lg py-2.5 px-3 bg-gray-100 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+                        className="w-full text-left rounded-lg p-3 border bg-gray-200 border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
                         name="priceType"
                         label="Fixed Price"
-                        options={["Fixed", "Negotiable"]}
+                        options={["fixed", "negotiable"]}
                       />
-
                       {errors.priceType && (
                         <p className="text-red-500 text-xs mt-1">
                           {errors.priceType.message}
@@ -470,22 +432,18 @@ export default function Form() {
                     <p className="text-gray-400 text-xs my-1">
                       What condition is your product in?
                     </p>
-                    <select
-                      {...register("condition", validationSchema.condition)}
-                      className="w-full text-left rounded-lg p-3 bg-gray-100 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+                    <CustomSelectButton
+                      {...register("condition")}
+                      className="w-full text-left rounded-lg p-3 border bg-gray-200 border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
                       name="condition"
-                    >
-                      {[
+                      label="Select Condition"
+                      options={[
                         "New",
                         "Used - Like New",
                         "Used - Good",
                         "Used - Fair",
-                      ].map((option) => (
-                        <option key={option} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
+                      ]}
+                    />
                     {errors.condition && (
                       <p className="text-red-500 text-xs mt-1">
                         {errors.condition.message}
@@ -549,86 +507,38 @@ export default function Form() {
                       </p>
                     )}
                   </div>
-         
-
                   {/* Selected Tags */}
-                  <div className="mb-4">
-                    <label className="block text-sm md:text-base font-semibold mb-2">
-                      Selected Tags
-                    </label>
-                    <div className="flex flex-wrap gap-2 mb-3 min-h-10">
-                      {selectedTags.length === 0 ? (
-                        <p className="text-gray-400 text-sm">
-                          No tags selected yet
-                        </p>
-                      ) : (
-                        selectedTags.map((tag) => (
-                          <div
-                            key={tag}
-                            className="bg-green-100 text-green-700 text-xs font-medium px-3 py-2 rounded-full flex items-center gap-1"
-                          >
-                            {tag}
-                            <button
-                              type="button"
-                              onClick={() => removeTag(tag)}
-                              className="ml-1 hover:text-green-900 focus:outline-none"
-                            >
-                              ×
-                            </button>
-                          </div>
-                        ))
-                      )}
-                    </div>
-                    <p className="text-gray-500 text-xs">
-                      {selectedTags.length}/8 tags selected
-                    </p>
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    <Tag label="Handmade" active />
+                    <Tag label="Nigerian" active />
                   </div>
 
-         
                   {/* Suggested Tags */}
-                  <div className="mb-6">
-                    <label className="block text-sm md:text-base font-semibold mb-2">
-                      Suggested Tags
-                    </label>
-                    <p className="text-gray-400 text-xs mb-3">
-                      Click to add tags that describe your product
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {[
-                        "Handmade",
-                        "Nigerian",
-                        "Custom",
-                        "Authentic",
-                        "Premium",
-                        "Traditional",
-                        "Modern",
-                        "Vintage",
-                        "Organic",
-                        "Imported",
-                        "Local",
-                        "Eco-Friendly",
-                        "Luxury",
-                        "Affordable",
-                        "Unique",
-                        "Handcrafted",
-                        "Artisanal",
-                        "Cultural",
-                        "Sustainable",
-                      ].map((tag) => (
-                        <Tag
-                          key={tag}
-                          label={tag}
-                          active={selectedTags.includes(tag)}
-                          onClick={() => handleTagClick(tag)}
-                        />
-                      ))}
-                    </div>
+                  <h3 className="font-medium text-gray-700 mb-3">
+                    Suggested tags:
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      "Handmade",
+                      "Nigerian",
+                      "Custom",
+                      "Authentic",
+                      "Premium",
+                      "Traditional",
+                      "Modern",
+                      "Vintage",
+                      "Organic",
+                      "Imported",
+                      "Local",
+                      "Eco-Friendly",
+                    ].map((tag) => (
+                      <Tag key={tag} label={tag} />
+                    ))}
                   </div>
                 </fieldset>
               </div>
             )}
 
-         
             {/* STEP 3 Review and Submit*/}
             {step === 3 && (
               <div className="space-y-4">
@@ -664,7 +574,6 @@ export default function Form() {
                     </p>
                   </div>
 
-                
                   {/* Category, Condition, Location, Contact */}
                   <div className="space-y-1 text-sm">
                     <p>
@@ -715,20 +624,12 @@ export default function Form() {
                   <div className="mb-6">
                     <h3 className="font-semibold text-gray-700 mb-2">Tags</h3>
                     <div className="flex flex-wrap gap-2">
-                      {selectedTags.length === 0 ? (
-                        <p className="text-gray-400 text-sm">
-                          No tags selected
-                        </p>
-                      ) : (
-                        selectedTags.map((tag) => (
-                          <span
-                            key={tag}
-                            className="bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full"
-                          >
-                            {tag}
-                          </span>
-                        ))
-                      )}
+                      <span className="bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full">
+                        Handmade
+                      </span>
+                      <span className="bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full">
+                        Nigerian
+                      </span>
                     </div>
                   </div>
 
@@ -865,9 +766,9 @@ export function CommonButton({
       >
         <span>
           {isSubmitting
-            ? "Creating..."
+            ? "Submitting..."
             : step === 3
-            ? "Create Product"
+            ? "Submit Review"
             : "Next"}
         </span>
         {!isSubmitting && step !== 3 && <ArrowRight className="w-4 h-4" />}
@@ -879,14 +780,12 @@ export function CommonButton({
 type TagProps = {
   label: string;
   active?: boolean;
-  onClick: () => void;
 };
 
-function Tag({ label, active, onClick }: TagProps) {
+function Tag({ label, active }: TagProps) {
   return (
     <button
       type="button"
-      onClick={onClick}
       className={`flex items-center gap-1 px-3 py-1.5 text-sm rounded-full border transition ${
         active
           ? "bg-green-100 text-green-700 border-green-400"
