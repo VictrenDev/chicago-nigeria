@@ -10,19 +10,22 @@ type CustomPhotoInputProps = {
 };
 
 export function CustomPhotoInput({ name, label, multiple = false }: CustomPhotoInputProps) {
-	const { register, setValue, watch } = useFormContext();
+	const { setValue, watch } = useFormContext(); // Remove register
 	const [fileNames, setFileNames] = useState<string[]>([]);
 
 	const files = watch(name) as FileList | null;
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const selectedFiles = e.target.files;
+		console.log("Files selected:", selectedFiles); // Debug log
+		
 		if (selectedFiles && selectedFiles.length > 0) {
 			const names = Array.from(selectedFiles).map(file => file.name);
 			setFileNames(names);
 			
-			// Update form value
-			setValue(name, selectedFiles, { shouldValidate: true });
+			// Update form value - THIS IS WHAT MATTERS
+			setValue(name, selectedFiles, { shouldValidate: true, shouldDirty: true });
+			console.log("Form value set for:", name, selectedFiles.length, "files"); // Debug log
 		}
 	};
 
@@ -31,17 +34,12 @@ export function CustomPhotoInput({ name, label, multiple = false }: CustomPhotoI
 			const dt = new DataTransfer();
 			const fileArray = Array.from(files);
 			
-			// Remove the file at the specified index
 			fileArray.splice(index, 1);
-			
-			// Add remaining files to DataTransfer object
 			fileArray.forEach(file => dt.items.add(file));
 			
-			// Update input files and form value
 			const newFiles = dt.files;
 			setValue(name, newFiles, { shouldValidate: true });
 			
-			// Update file names state
 			const newFileNames = fileNames.filter((_, i) => i !== index);
 			setFileNames(newFileNames);
 		}
@@ -74,12 +72,10 @@ export function CustomPhotoInput({ name, label, multiple = false }: CustomPhotoI
 				htmlFor={name}
 				className="group cursor-pointer flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-gray-300 bg-gray-100 hover:bg-gray-200 transition-all duration-200 py-8"
 			>
-				{/* Top icon */}
 				<div className="text-gray-500 group-hover:text-[var(--primary-color)] transition-colors">
 					<ImageIcon size={36} />
 				</div>
 
-				{/* Center text */}
 				<div className="text-gray-600 text-center">
 					{fileNames.length > 0 ? (
 						<div className="space-y-2">
@@ -119,7 +115,6 @@ export function CustomPhotoInput({ name, label, multiple = false }: CustomPhotoI
 					)}
 				</div>
 
-				{/* Button */}
 				<button
 					type="button"
 					className="mt-3 inline-flex items-center gap-2 bg-[var(--primary-color)] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[var(--primary-color)]/90 transition"
@@ -128,19 +123,17 @@ export function CustomPhotoInput({ name, label, multiple = false }: CustomPhotoI
 					Choose File{multiple ? 's' : ''}
 				</button>
 
-				{/* Hidden input */}
+				{/* FIXED: Remove register, only use onChange */}
 				<input
 					type="file"
 					id={name}
-					{...register(name)}
-					onChange={handleChange}
+					onChange={handleChange} // Only this handler
 					className="hidden"
 					accept="image/*"
 					multiple={multiple}
 				/>
 			</label>
 
-			{/* File requirements */}
 			<p className="text-xs text-gray-500 mt-2">
 				Supported formats: PNG, JPG, JPEG, GIF • Max size: 10MB per file
 				{multiple && " • Maximum 8 files"}
