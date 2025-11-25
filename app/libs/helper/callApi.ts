@@ -198,7 +198,6 @@ export const callApi = async <T>(
       // Optional: Add timeout specifically for file uploads
       ...(isFormData && { timeout: 30000 }), // 30 seconds for file uploads
     };
-
     const response = await axiosinstance.request<T>(config);
 
     console.log("✅ API Call Successful:", {

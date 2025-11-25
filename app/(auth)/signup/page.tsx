@@ -43,7 +43,6 @@ export default function Form() {
 	} = useForm<CreateUserSchema>({
 		resolver: zodResolver(createUserSchema),
 		defaultValues: {
-			// Use empty values for production
 			firstName: "",
 			lastName: "",
 			email: "",
@@ -62,7 +61,6 @@ export default function Form() {
 			password: "",
 			confirmPassword: "",
 			isTermAndConditionAccepted: false,
-			
 		},
 	});
 
@@ -139,9 +137,9 @@ export default function Form() {
 				return;
 			}
 
-			if (data?.success) {
+			if (data?.status === "success") {
 				toast.success(
-					"Account created successfully! Please check your email for verification.",
+					data?.message || "Account created successfully! Please check your email for verification.",
 				);
 				// Optional: Redirect to login or confirmation page
 				// router.push('/login');
