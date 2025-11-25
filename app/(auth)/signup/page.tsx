@@ -24,6 +24,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { callApi } from "@/app/libs/helper/callApi";
 import { ApiResponse, IUser } from "@/app/types";
+import { useRouter } from "next/navigation";
 
 export default function Form() {
 	const [step, setStep] = useState(1);
@@ -32,6 +33,7 @@ export default function Form() {
 		"regular" | "vendor"
 	>("regular");
 	const [isAnimating, setIsAnimating] = useState(false);
+	const router = useRouter();
 
 	const {
 		register,
@@ -139,10 +141,13 @@ export default function Form() {
 
 			if (data?.status === "success") {
 				toast.success(
-					data?.message || "Account created successfully! Please check your email for verification.",
+					data?.message +
+						" " +
+						"Check your email for verification token." ||
+						"Account created successfully! Please check your email for verification.",
 				);
 				// Optional: Redirect to login or confirmation page
-				// router.push('/login');
+				router.push("/email-verification");
 
 				// Reset form or redirect after successful submission
 				console.log("🎉 Registration successful!");
@@ -754,7 +759,7 @@ export default function Form() {
 											</Link>
 										</span>
 									</label>
-								
+
 									<FormFieldErrorMessage
 										error={
 											errors.isTermAndConditionAccepted
