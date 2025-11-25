@@ -17,6 +17,7 @@ import { CustomPhotoInput } from "./upload";
 import Link from "next/link";
 import CustomSelectButton from "../../components/customSelect";
 import { callApi } from "@/app/libs/helper/callApi";
+import FormFieldErrorMessage from "@/app/components/fieldError";
 
 // Enhanced types
 type PriceType = "fixed" | "negotiable";
@@ -30,6 +31,7 @@ type Product = {
 	condition: Condition;
 	description: string;
 	location: string;
+	currency: "NGN" | "USD";
 	photo?: FileList;
 	video?: FileList;
 	tags?: string;
@@ -47,6 +49,10 @@ const validationSchema = {
 			value: /^\d+(\.\d{1,2})?$/,
 			message: "Please enter a valid price",
 		},
+	},
+	location: {
+		required: "Location is required",
+		minLength: { value: 5, message: "Must be at least 5 characters" },
 	},
 	category: { required: "Category is required" },
 	condition: { required: "Condition is required" },
@@ -87,15 +93,15 @@ export default function Form() {
 
 	const methods = useForm<Product>({
 		defaultValues: {
-			title: "Vintage Wooden Desk",
-			category: "Furniture",
-			price: "120",
-			priceType: "fixed",
-			condition: "Used - Good",
-			description:
-				"Sturdy wooden desk with minor scratches. Perfect for home offices or study rooms.",
-			tags: "desk,wood,furniture,home office",
-			location: "Chicago",
+			title: "",
+			category: "",
+			currency: "USD",
+			price: "",
+			location: "",
+			priceType: "negotiable",
+			condition: "Used - Fair",
+			description: "",
+			tags: "",
 		},
 		mode: "onChange",
 	});
@@ -119,7 +125,7 @@ export default function Form() {
 	const listingLocation = watch("location");
 	const listingCondition = watch("condition");
 	const listingPhoto = watch("photo");
-	console.log(listingPhoto);
+	const listingCurrency = watch("currency");
 	const onSubmit = async (data: Product) => {
 		setIsSubmitting(true);
 		try {
@@ -131,6 +137,7 @@ export default function Form() {
 			formData.append("description", data.description);
 			formData.append("category", data.category);
 			formData.append("price", data.price);
+			formData.append("currency", data.currency);
 			formData.append("location", data.location);
 			formData.append("tags", selectedTags.join(","));
 
@@ -142,11 +149,11 @@ export default function Form() {
 			}
 
 			// Append video files if any
-			if (data.video && data.video.length > 0) {
-				for (let i = 0; i < data.video.length; i++) {
-					formData.append("videos", data.video[i]);
-				}
-			}
+			// if (data.video && data.video.length > 0) {
+			// 	for (let i = 0; i < data.video.length; i++) {
+			// 		formData.append("videos", data.video[i]);
+			// 	}
+			// }
 
 			// Use callApi instead of useSWRMutation
 			const { data: response, error } = await callApi(
@@ -159,7 +166,7 @@ export default function Form() {
 				throw new Error(error.message || "Failed to create listing");
 			}
 
-			console.log("Posted:", response);
+			// console.log("Posted:", response);
 			toast.success("Listing created successfully");
 			// Optional: Reset form after successful submission
 			// methods.reset();
@@ -206,6 +213,7 @@ export default function Form() {
 				"priceType",
 				"category",
 				"condition",
+				"currency",
 			];
 			isValid = await trigger(fieldsToValidate);
 		} else if (step === 2) {
@@ -376,7 +384,7 @@ export default function Form() {
 												"title",
 												validationSchema.title,
 											)}
-											className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+											className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 											placeholder="e.g. Authentic Nigerian Ankara Dresses - Made to order"
 										/>
 										{errors.title && (
@@ -401,7 +409,7 @@ export default function Form() {
 												"category",
 												validationSchema.category,
 											)}
-											className="w-full rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+											className="w-full rounded-lg p-3 bg-gray-100 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 										>
 											<option value="">
 												Choose a category
@@ -421,8 +429,34 @@ export default function Form() {
 											</p>
 										)}
 									</div>
+									<div>
+										<label
+											htmlFor="location"
+											className="block text-sm md:text-base font-semibold mb-1"
+										>
+											Location
+										</label>
+										{/*<p className="text-gray-400 text-xs my-1">
+											Write a clear, descriptive title
+											that highlights the key features
+										</p>*/}
+										<input
+											type="text"
+											{...register(
+												"location",
+												validationSchema.location,
+											)}
+											className="w-full rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+											placeholder="e.g. Authentic Nigerian Ankara Dresses - Made to order"
+										/>
+										{errors.location && (
+											<p className="text-red-500 text-xs mt-1">
+												{errors.location.message}
+											</p>
+										)}
+									</div>
 									<div className="flex flex-col sm:flex-row sm:gap-8 gap-4">
-										<div className="shrink-0 flex-1">
+										{/*<div className="shrink-0 flex-1">
 											<label
 												htmlFor="price"
 												className="block text-sm md:text-base font-semibold mb-1"
@@ -435,7 +469,7 @@ export default function Form() {
 													"price",
 													validationSchema.price,
 												)}
-												className="w-full flex-1 rounded-lg p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+												className="w-full flex-1 rounded-lg p-3 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 												placeholder="$0.00"
 											/>
 											{errors.price && (
@@ -443,6 +477,37 @@ export default function Form() {
 													{errors.price.message}
 												</p>
 											)}
+										</div>*/}
+										<div>
+											<label className="block text-sm font-medium mb-1">
+												Price
+											</label>
+											<div className="flex rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-[var(--primary-color)]/20 focus-within:border-[var(--primary-color)] transition-all duration-200 bg-gray-100">
+												<select
+													{...register("currency")}
+													className="bg-gray-100 px-3 py-3 text-sm text-gray-700 focus:outline-none border-r border-gray-200"
+												>
+													{["NGN", "USD"].map(
+														(currency) => (
+															<option
+																key={currency}
+																value={currency}
+															>
+																{currency}
+															</option>
+														),
+													)}
+												</select>
+												<input
+													type="text"
+													{...register("price")}
+													className="flex-1 px-3 py-3 text-sm sm:text-base focus:outline-none"
+													placeholder="$0.00"
+												/>
+											</div>
+											<FormFieldErrorMessage
+												error={errors.price}
+											/>
 										</div>
 										<div className="shrink-0 flex-1">
 											<label
@@ -451,16 +516,23 @@ export default function Form() {
 											>
 												Price Type
 											</label>
-											<CustomSelectButton
+											<select
 												{...register("priceType")}
-												className="w-full text-left rounded-lg p-3 border bg-gray-200 border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+												className="w-full text-left rounded-lg p-3 bg-gray-100 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 												name="priceType"
-												label="Fixed Price"
-												options={[
-													"fixed",
-													"negotiable",
-												]}
-											/>
+											>
+												{["fixed", "negotiable"].map(
+													(type) => (
+														<option
+															key={type}
+															value={type}
+														>
+															{type}
+														</option>
+													),
+												)}
+											</select>
+
 											{errors.priceType && (
 												<p className="text-red-500 text-xs mt-1">
 													{errors.priceType.message}
@@ -479,18 +551,27 @@ export default function Form() {
 										<p className="text-gray-400 text-xs my-1">
 											What condition is your product in?
 										</p>
-										<CustomSelectButton
+										<select
 											{...register("condition")}
-											className="w-full text-left rounded-lg p-3 border bg-gray-200 border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+											className="w-full text-left rounded-lg p-3 bg-gray-100 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 											name="condition"
-											label="Select Condition"
-											options={[
+										>
+											{[
 												"New",
 												"Used - Like New",
 												"Used - Good",
 												"Used - Fair",
-											]}
-										/>
+											].map((type) => (
+												<option key={type} value={type}>
+													{type}
+												</option>
+											))}
+										</select>
+										{/*<CustomSelectButton
+
+											label="Select Condition"
+											options={}
+										/>*/}
 										{errors.condition && (
 											<p className="text-red-500 text-xs mt-1">
 												{errors.condition.message}
@@ -523,7 +604,7 @@ export default function Form() {
 												"description",
 												validationSchema.description,
 											)}
-											className="w-full rounded-lg resize-none min-h-30 bg-gray-200 p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
+											className="w-full rounded-lg resize-none min-h-30 bg-gray-100 p-3 border border-gray-300 focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/20 transition-all duration-200"
 											placeholder="Write a description for your product"
 											rows={5}
 										/>
@@ -650,7 +731,10 @@ export default function Form() {
 											{listingTitle}
 										</Link>
 										<p className="text-xl font-bold text-green-600">
-											${listingPrice}
+											{listingCurrency === "USD"
+												? "$"
+												: "₦"}
+											{listingPrice}
 										</p>
 									</div>
 

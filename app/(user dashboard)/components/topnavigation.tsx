@@ -83,74 +83,8 @@ export default function TopNavigation() {
 							className="object-cover w-full h-full"
 						/>
 					</button>
-
-					{/* Mobile menu button */}
-					<button
-						className="md:hidden p-2"
-						onClick={() => setMobileOpen(true)}
-						aria-label="Open Menu"
-					>
-						<Menu size={24} />
-					</button>
 				</div>
 			</div>
-
-			{/* Overlay */}
-			{mobileOpen && (
-				<div
-					className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
-					onClick={() => setMobileOpen(false)}
-				/>
-			)}
-
-			{/* Mobile Drawer */}
-			<aside
-				className={`fixed top-0 right-0 h-full w-72 bg-white shadow-2xl transform transition-transform duration-300 z-50 ${
-					mobileOpen ? "translate-x-0" : "translate-x-full"
-				}`}
-			>
-				{/* Header */}
-				<div className="flex items-center justify-between p-4 border-b">
-					<Image
-						src="/chicago-nigeria-logo-1.png"
-						alt="Logo"
-						width={113}
-						height={17}
-					/>
-					<button
-						onClick={() => setMobileOpen(false)}
-						aria-label="Close Menu"
-					>
-						<X size={24} />
-					</button>
-				</div>
-
-				{/* Navigation Links */}
-				<ul className="flex flex-col">
-					{NAV_LINKS.map((link) => (
-						<li key={link.href}>
-							<Link
-								href={link.href}
-								className="px-6 py-3 block hover:bg-gray-100 transition"
-								onClick={() => setMobileOpen(false)}
-							>
-								{link.name}
-							</Link>
-						</li>
-					))}
-				</ul>
-
-				{/* CTA */}
-				<div className="p-6 mt-auto">
-					<Link
-						href="/signup"
-						onClick={() => setMobileOpen(false)}
-						className="block w-full text-center bg-gradient-to-r from-[#037244] to-[#04C977] text-white px-4 py-2 rounded-lg font-medium hover:opacity-90 transition"
-					>
-						Join Us +
-					</Link>
-				</div>
-			</aside>
 		</nav>
 	);
 }
