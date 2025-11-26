@@ -5,6 +5,7 @@ import {
 	Camera,
 	Loader2,
 	Lock,
+	Mail,
 	MapPin,
 	Store,
 	User,
@@ -25,6 +26,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { callApi } from "@/app/libs/helper/callApi";
 import { ApiResponse, IUser } from "@/app/types";
 import { useRouter } from "next/navigation";
+const openGmail = () => {
+    // Direct link to Gmail
+    window.open('https://mail.google.com', '_blank', 'noopener,noreferrer');
+  };
 
 export default function Form() {
 	const [step, setStep] = useState(1);
@@ -141,16 +146,16 @@ export default function Form() {
 
 			if (data?.status === "success") {
 				toast.success(
-					data?.message +
-						" " +
-						"Check your email for verification token." ||
-						"Account created successfully! Please check your email for verification.",
+					data?.message 
+						// " " +
+						// "Check your email for verification token." ||
+						// "Account created successfully! Please check your email for verification.",
 				);
 				// Optional: Redirect to login or confirmation page
-				router.push("/email-verification");
 
 				// Reset form or redirect after successful submission
 				console.log("🎉 Registration successful!");
+				setStep(6);
 			} else {
 				toast.error(
 					data?.message || "Registration failed. Please try again.",
@@ -171,7 +176,7 @@ export default function Form() {
 	};
 
 	const next = async () => {
-		if (isAnimating || step >= 5) return;
+		if (isAnimating || step >= 6) return;
 
 		let fieldsToValidate: (keyof CreateUserSchema)[] = [];
 
@@ -266,11 +271,11 @@ export default function Form() {
 					<div
 						className="absolute top-[50%] left-0 h-[2px] bg-[var(--primary-color)] transition-all duration-500"
 						style={{
-							width: `${((step - 1) / 4) * 100}%`,
+							width: `${((step - 1) / 5) * 100}%`,
 						}}
 					></div>
 
-					{[1, 2, 3, 4, 5].map((n) => {
+					{[1, 2, 3, 4, 5,6].map((n) => {
 						const isCompleted = step > n;
 						const isCurrent = step === n;
 
@@ -429,7 +434,6 @@ export default function Form() {
 						</div>
 					)}
 
-					{/* STEP 2-4 remain the same as your original code */}
 					{/* STEP 2 */}
 					{step === 2 && (
 						<div className={`${getStepAnimationClass()} w-full`}>
@@ -789,6 +793,70 @@ export default function Form() {
 									</>
 								)}
 							</button>
+						</div>
+					)}
+					{step === 6 && (
+						<div className={`${getStepAnimationClass()} w-full`}>
+							<div className="w-full bg-white p-8">
+								{/* Header */}
+								<div className="text-center mb-8">
+									<div className="w-12 h-12 bg-[var(--primary-color)]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+										<Mail className="w-6 h-6 text-[var(--primary-color)]" />
+									</div>
+									<h1 className="text-2xl font-bold text-gray-900 mb-2">
+										Verify your email
+									</h1>
+									{/*<p className="text-gray-600 text-lg">
+										We&apos;ve sent a verification link
+										to
+									</p>*/}
+									
+								</div>
+
+								{/* Email Display */}
+							{/*	<div className="bg-gray-50 rounded-lg p-4 text-center mb-6">
+									<p className="text-gray-900 font-medium text-lg">
+										bcd@example.com
+									</p>
+								</div>*/}
+
+								{/* Instructions */}
+								<div className="space-y-4 mb-8">
+									<p className="text-gray-600 text-center">
+										Check your inbox and click the
+										verification link to confirm your
+										email address.
+									</p>
+									<p className="text-gray-600 text-center text-sm">
+										If you don&apos;t see the email, check
+										your spam folder or request a new
+										link.
+									</p>
+								</div>
+
+								{/* Action Buttons */}
+								<div className="space-y-3">
+
+									{/*<button onClick={openGmail} className="w-full bg-[var(--primary-color)]/90 hover:bg-[var(--primary-color)] text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2">
+										Open Gmail
+										<ArrowRight className="w-4 h-4" />
+									</button>*/}
+
+									{/*<button className="w-full border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors duration-200">
+										Resend Verification Link
+									</button>*/}
+								</div>
+
+								{/* Footer */}
+								{/*<div className="text-center mt-6">
+									<p className="text-gray-500 text-sm">
+										Wrong email?{" "}
+										<button className="text-blue-600 hover:text-blue-700 font-medium">
+											Update email address
+										</button>
+									</p>
+								</div>*/}
+							</div>
 						</div>
 					)}
 				</div>

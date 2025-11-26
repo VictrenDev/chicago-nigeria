@@ -89,15 +89,15 @@ export default function SocialSubscriptionPage() {
         <p className="text-center text-sm text-gray-500 mt-6">
           Questions? Contact us at{" "}
           <a
-            href="mailto:support@chicagonaijangardens.com"
+            href="mailto:support@chicago9ja.com"
             className="text-green-600 underline"
           >
-            support@chicagonaijangardens.com
+            support@chicago9ja.com
           </a>
         </p>
 
         <p className="text-center text-xs text-gray-400 mt-2">
-          © 2025 Chicago Naija Gardens. All rights reserved.
+          © 2025 Chicago9ja. All rights reserved.
         </p>
       </div>
     </main>
